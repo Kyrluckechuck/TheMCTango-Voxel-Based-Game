@@ -40,10 +40,10 @@ public class PhysicsWorld {
 	public static final Quat4f DEFAULT_QUAT = new Quat4f(0, 0, 0, 1);
 
 	public static final Matrix4f DEFAULT_MATRIX = new Matrix4f(DEFAULT_QUAT,
-			new Vector3f(4, 10, 4), 1.0f);
+			DEFAULT_VECTOR, 1.0f);
 
 	public static final Transform DEFAULT_TRANSFORM = new Transform(
-			new Matrix4f(DEFAULT_QUAT, new Vector3f(4, 10, 4), 1.0f));
+			new Matrix4f(DEFAULT_QUAT, DEFAULT_VECTOR, 1.0f));
 
 	public PhysicsWorld() {
 		setUpPhysics();
@@ -57,11 +57,15 @@ public class PhysicsWorld {
 	public RigidBody getPlayerBody() {
 		return playerBody;
 	}
-
 	/*
 	 * int cpu = Runtime.getRuntime().availableProcessors(); if(cpu > 1){
 	 */
 	public void setUpPhysics() {
+		setUpDynamicsWorld();
+		setUpGround();
+		setUpPlayer();
+	}
+	private void setUpDynamicsWorld() {
 		BroadphaseInterface broadphase = new DbvtBroadphase();
 		CollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
 		CollisionDispatcher dispatcher = new CollisionDispatcher(
@@ -73,11 +77,11 @@ public class PhysicsWorld {
 				worldAabbMax);
 		dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, broadphase,
 				solver, collisionConfiguration);
-		dynamicsWorld.setGravity(new Vector3f(0, -10f, 0));
+		dynamicsWorld.setGravity(new Vector3f(0, -10f, 0));		
+	}
+	private void setUpGround() {
 		CollisionShape groundShape = new StaticPlaneShape(
 				new Vector3f(0, 1, 0), 0.1f);
-		CollisionShape playerShape = new BoxShape(new Vector3f(0.5f, 1f, 0.5f));
-
 		MotionState groundMotionState = new DefaultMotionState(new Transform(
 				new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f(0, 0, 0),
 						1.0f)));
@@ -86,21 +90,20 @@ public class PhysicsWorld {
 		groundBodyConstructionInfo.restitution = 0.0f;
 		RigidBody groundRigidBody = new RigidBody(groundBodyConstructionInfo);
 		dynamicsWorld.addRigidBody(groundRigidBody);
-		MotionState ballMotion = new DefaultMotionState(new Transform(
-				DEFAULT_TRANSFORM));
-
-		Vector3f ballInertia = new Vector3f(0, 0, 0);
-		playerShape.calculateLocalInertia(2.5f, ballInertia);
+	}
+	private void setUpPlayer(){
+		CollisionShape playerShape = new BoxShape(new Vector3f(1f, 1f, 1f));
+		MotionState playerMotionState = new DefaultMotionState(new Transform(
+				new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f(0, 0, 0),  0)));
+		Vector3f playerInertia = new Vector3f(0, 0, 0);
 		RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(
-				2.5f, ballMotion, playerShape, ballInertia);
+				2.5f, playerMotionState, playerShape, playerInertia);
 		ballConstructionInfo.restitution = 0.0f;
-		ballConstructionInfo.angularDamping = 0.95f;
-
+		ballConstructionInfo.angularDamping = 0.99f;
 		playerBody = new RigidBody(ballConstructionInfo);
 		playerBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		dynamicsWorld.addRigidBody(playerBody);
 	}
-
 	public static void newBlock(float x, float y, float z) {
 		newBlock(new Vector3f(x, y, z));
 	}
@@ -109,13 +112,13 @@ public class PhysicsWorld {
 		CollisionShape blockShape = new BoxShape(new Vector3f(1, 1, 1));
 		MotionState blockMotionState = new DefaultMotionState(new Transform(
 				new Matrix4f(new Quat4f(0, 0, 0, 1), positionVector, 1.0f)));
-		RigidBodyConstructionInfo groundBodyConstructionInfo = new RigidBodyConstructionInfo(
+		RigidBodyConstructionInfo blockConstructionInfo = new RigidBodyConstructionInfo(
 				0, blockMotionState, blockShape, new Vector3f(0, 0, 0));
-		RigidBody blockRigidBody = new RigidBody(groundBodyConstructionInfo);
+		blockConstructionInfo.restitution = 0.0f;
+		blockConstructionInfo.angularDamping = 1.0f;
+		RigidBody blockRigidBody = new RigidBody(blockConstructionInfo);
 		addBody(blockRigidBody);
-
 	}
-
 	public static void addBody(RigidBody r) {
 		bodies.add(r);
 		dynamicsWorld.addRigidBody(r);
@@ -128,5 +131,19 @@ public class PhysicsWorld {
 
 	public void step(float timeStep) {
 		dynamicsWorld.stepSimulation(timeStep);
+	}
+
+	public static void moveCharacter(Vector3f vector3f) {
+		playerBody.applyCentralForce(vector3f);
+	}
+
+	public static void clearForcesOnPlayer() {
+		playerBody.clearForces();
+	}
+	public static void rotatePlayer(){
+		playerBody.getWorldTransform(DEFAULT_TRANSFORM).setRotation(null);
+	}
+	public static Quat4f getRotation(){
+		return playerBody.getWorldTransform(DEFAULT_TRANSFORM).getRotation(null);
 	}
 }

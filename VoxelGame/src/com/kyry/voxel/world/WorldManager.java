@@ -207,26 +207,26 @@ public class WorldManager {
 	}
 
 	public void saveChunk(Chunk c) {
-		BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter("/000chunk.dat"));
-			bw.write(c.getPos().getX() + " " + c.getPos().getY() + " "
-					+ c.getPos().getZ());
-			for (int x = (int) c.getPos().getX(); x < (int) c.getPos().getX()
-					+ Constants.CHUNKSIZE; x++) {
-				for (int y = (int) c.getPos().getY(); y < (int) c.getPos()
-						.getY() + Constants.CHUNKSIZE; y++) {
-					for (int z = (int) c.getPos().getZ(); z < (int) c.getPos()
-							.getZ() + Constants.CHUNKSIZE; z++) {
-						bw.write(String.valueOf(c.getTileID(x, y, z)));
-					}
-				}
-			}
-			bw.close();
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
+//		BufferedWriter bw = null;
+//		try {
+//			bw = new BufferedWriter(new FileWriter("/000chunk.dat"));
+//			bw.write(c.getPos().getX() + " " + c.getPos().getY() + " "
+//					+ c.getPos().getZ());
+//			for (int x = (int) c.getPos().getX(); x < (int) c.getPos().getX()
+//					+ Constants.CHUNKSIZE; x++) {
+//				for (int y = (int) c.getPos().getY(); y < (int) c.getPos()
+//						.getY() + Constants.CHUNKSIZE; y++) {
+//					for (int z = (int) c.getPos().getZ(); z < (int) c.getPos()
+//							.getZ() + Constants.CHUNKSIZE; z++) {
+//						bw.write(String.valueOf(c.getTileID(x, y, z)));
+//					}
+//				}
+//			}
+//			bw.close();
+//		} catch (IOException e) {
+//
+//			e.printStackTrace();
+//		}
 
 	}
 
