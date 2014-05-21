@@ -21,6 +21,6 @@ public class TileSkybox3 extends Tile{
 		float actualSize = Constants.TextureSize;
 		float size = Spritesheet.tiles.uniformSize();
 		int height = (int) (getId() / (float)actualSize);
-		return new float[] { (getId()-(size*height)) * size, height * size };
+		return new float[] { (getId()-(size*height) -1) * size , height * size };
 	}
 }

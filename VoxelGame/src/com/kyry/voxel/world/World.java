@@ -157,8 +157,8 @@ public class World extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, 0.1f,
-				30f);
+		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose,
+				Constants.viewDistance);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);

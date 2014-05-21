@@ -52,7 +52,6 @@ public class WorldManager {
 	MobManager mobManager;
 	PhysicsWorld physicsWorld;
 
-	@SuppressWarnings("unused")
 	public ArrayList<Chunk> loadedChunks;
 	public ArrayList<Chunk> activeChunks;
 
@@ -77,9 +76,9 @@ public class WorldManager {
 	}
 
 	private void createWorld() {
-		for (int x = 0; x < Constants.viewDistance; x++) {
-			for (int y = 0; y < Constants.viewDistance; y++) {
-				for (int z = 0; z < Constants.viewDistance; z++) {
+		for (int x = 0; x < Constants.WORLDSIZE; x++) {
+			for (int y = 0; y < Constants.WORLDSIZE; y++) {
+				for (int z = 0; z < Constants.WORLDSIZE; z++) {
 					activeChunks.add(new Chunk(shader, 1, x
 							* Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z
 							* Constants.CHUNKSIZE));
