@@ -2,16 +2,24 @@ package com.kyry.voxel.world;
 
 import org.lwjgl.opengl.GL11;
 
+import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.tiles.Tile;
 
-public class worldRender {
+public class WorldRender {
 
 	public static void render() {
 		float offset = 15;
 		float playerX = Player.camera.getX();
 		float playerY = Player.camera.getY();
 		float playerZ = Player.camera.getZ();
+		
+//		Shape.createCube(playerX-10,playerY-10,playerZ-10,
+//				Tile.getTile(Tile.Brick.getId()).getColor(),
+//				Tile.getTile(Tile.Brick.getId()).getTexCoords(),
+//				20);
+		
+		
 		   //Front Face
 		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, Tile.Skybox1.getId());
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, Tile.Brick.getId());

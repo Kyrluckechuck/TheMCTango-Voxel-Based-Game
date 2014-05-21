@@ -80,7 +80,7 @@ public class World extends Screen {
 		render3D();
 		logic();
 		worldRender();
-		skyBoxRender();
+		//skyBoxRender();
 		
 		glLoadIdentity();
 

@@ -17,6 +17,8 @@ import org.lwjgl.opengl.GL20;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.World;
+import com.kyry.voxel.world.WorldRender;
+import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.ShaderProgram;
@@ -124,11 +126,22 @@ public class Chunk {
 			// "u_texture");
 			// GL20.glUniform1i(texLoc, 0);
 			glCallList(vcID);
+			
+			glBegin(GL_QUADS);
+			float playerX = Player.camera.getX();
+			float playerY = Player.camera.getY();
+			float playerZ = Player.camera.getZ();
+			
+			Shape.createSkybox(playerX-10,playerY-10,playerZ-10,
+					Tile.getTile(Tile.Brick.getId()).getColor(),
+					Tile.getTile(Tile.Brick.getId()).getTexCoords(),
+					20);
+			glEnd();
 			// shader.release();
-			// System.out.println("AirChunk");
+			// System.out.println("MixedChunk");
 		}
 		if (type != World.MIXEDCHUNK) {
-			System.out.println("MixedChunk");
+			System.out.println("AirChunk");
 		}
 	}
 
@@ -151,6 +164,8 @@ public class Chunk {
 					}
 				}
 			}
+			//WorldRender.render();
+			//float offset = 15;
 			glEnd();
 			glEndList();
 		}

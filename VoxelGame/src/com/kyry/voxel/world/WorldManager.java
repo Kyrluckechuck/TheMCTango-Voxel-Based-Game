@@ -106,19 +106,19 @@ public class WorldManager {
 	}
 
 	public void render() {
-		float groundDim = 10000f;
-		{
-			glBegin(GL_QUADS);
-			glColor4f(0.5f, 0.5f, 0.5f, 1);
-			glVertex4f(-groundDim, 0, -groundDim, 1);
-			glColor4f(0.5f, 0.5f, 0.5f, 1);
-			glVertex4f(-groundDim, 0, +groundDim, 1);
-			glColor4f(0.5f, 0.5f, 0.5f, 1);
-			glVertex4f(+groundDim, 0, +groundDim, 1);
-			glColor4f(0.5f, 0.5f, 0.5f, 1);
-			glVertex4f(+groundDim, 0, -groundDim, 1);
-			glEnd();
-		}
+//		float groundDim = 10000f;
+//		{
+//			glBegin(GL_QUADS);
+//			glColor4f(0.5f, 0.5f, 0.5f, 1);
+//			glVertex4f(-groundDim, 0, -groundDim, 1);
+//			glColor4f(0.5f, 0.5f, 0.5f, 1);
+//			glVertex4f(-groundDim, 0, +groundDim, 1);
+//			glColor4f(0.5f, 0.5f, 0.5f, 1);
+//			glVertex4f(+groundDim, 0, +groundDim, 1);
+//			glColor4f(0.5f, 0.5f, 0.5f, 1);
+//			glVertex4f(+groundDim, 0, -groundDim, 1);
+//			glEnd();
+//		}
 		// ////////
 		Constants.chunksFrustum = 0;
 		Spritesheet.tiles.bind();
@@ -150,7 +150,7 @@ public class WorldManager {
 	}// end render
 
 	public void skyBoxRender() {
-		worldRender.render();
+		WorldRender.render();
 		
 	}
 	
