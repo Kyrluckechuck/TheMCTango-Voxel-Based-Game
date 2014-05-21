@@ -25,9 +25,9 @@ public class MobManager implements GameObject {
 
 	private void init() {
 		mobs = new ArrayList<Mob>();
-		// player = new Player(new Camera(0, (Constants.WORLDSIZE *
+		// player = new Player(new Camera(0, (Constants.viewDistance *
 		// Constants.CHUNKSIZE) + 2, 0, 5, 131, 0, 1, 90, -90, 1), 0);
-		player = new Player(new Camera(4, 9, 4, 5, 131,
+		player = new Player(new Camera(Constants.initX, Constants.initY, Constants.initZ, 5, 131,
 				0, 1, 90, -90, 1), 0);
 	}
 
@@ -47,6 +47,7 @@ public class MobManager implements GameObject {
 
 	@Override
 	public void render() {
+		player.render();
 		for (int i = 0; i < mobs.size(); i++) {
 			mobs.get(i).render();
 		}

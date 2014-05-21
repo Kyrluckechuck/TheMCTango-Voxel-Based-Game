@@ -12,6 +12,8 @@ import static org.lwjgl.opengl.GL11.glNewList;
 
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
 import com.kyry.voxel.geometry.Shape;
@@ -127,16 +129,8 @@ public class Chunk {
 			// GL20.glUniform1i(texLoc, 0);
 			glCallList(vcID);
 			
-			glBegin(GL_QUADS);
-			float playerX = Player.camera.getX();
-			float playerY = Player.camera.getY();
-			float playerZ = Player.camera.getZ();
+			WorldRender.render();
 			
-			Shape.createSkybox(playerX-10,playerY-10,playerZ-10,
-					Tile.getTile(Tile.Brick.getId()).getColor(),
-					Tile.getTile(Tile.Brick.getId()).getTexCoords(),
-					20);
-			glEnd();
 			// shader.release();
 			// System.out.println("MixedChunk");
 		}

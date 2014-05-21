@@ -6,8 +6,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.bulletphysics.linearmath.Transform;
+import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.entities.mobs.Player;
+import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.Time;
 
@@ -56,9 +58,18 @@ public class Camera extends Entity {
 		} else if (getPitch() - dy > maxU) {
 			setPitch(maxU);
 		}
+		//System.out.println(PhysicsWorld.checkCollision());
 	}
 
 	public void updateKeyboard(float delay, float speed) {
+		int x = (int) (Constants.PLAYER_SPEED * Math.cos((double)(getPitch()/180 * Math.PI)) * Math.sin((double)(getYaw()/180 * Math.PI)));
+		int y = 0;/*(int) (Constants.PLAYER_SPEED * Math.cos((double)(getYaw()/180 * Math.PI)) * Math.sin((double)(getPitch()/180 * Math.PI)));*/
+		int z = -1* (int) (Constants.PLAYER_SPEED * Math.cos((double)(getYaw()/180 * Math.PI)));
+		Vector3f vectorY = new Vector3f(0, 1, 0);
+		Vector3f DOWN = new Vector3f(0, -2, 0);
+		Vector3f UP = new Vector3f(0, 2, 0);
+		
+		//PhysicsWorld.clearForcesOnPlayer();
 		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_W);
 		boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_S);
 		boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_A);
@@ -66,48 +77,63 @@ public class Camera extends Entity {
 		boolean space = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
 		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 
-		if (keyUp && keyRight && !keyLeft && !keyDown) {
-			move(speed * delay * (float) Time.getDelta(), 0, -speed * delay
-					* (float) Time.getDelta());
+		if (keyUp && keyRight && !keyLeft && !keyDown) {//NE
+			Vector3f vectorUP = new Vector3f(x,y,z);
+			Vector3f vectorRight = new Vector3f();
+			vectorRight.cross(vectorUP, vectorY);
+			Vector3f v = new Vector3f();
+			v.add(vectorRight, vectorUP);
+			v.scale(0.5f);//the vector addition has too big of a magnitude make a bit smaller (half)
+			PhysicsWorld.moveCharacter(v);
 		}
-		if (keyUp && keyLeft && !keyRight && !keyDown) {
-			move(-speed * delay * (float) Time.getDelta(), 0, -speed * delay
-					* (float) Time.getDelta());
+		if (keyUp && keyLeft && !keyRight && !keyDown) {//NW
+			Vector3f vectorUP = new Vector3f(x,y,z);
+			Vector3f vectorLeft = new Vector3f();
+			vectorLeft.cross(vectorY, vectorUP);
+			Vector3f v = new Vector3f();
+			v.add(vectorLeft, vectorUP);
+			v.scale(0.5f);//the vector addition has too big of a magnitude make a bit smaller (half)
+			PhysicsWorld.moveCharacter(v);
 		}
-		if (keyUp && !keyLeft && !keyRight && !keyDown) {
-			move(0, 0, -speed * delay * (float) Time.getDelta());
+		if (keyUp && !keyLeft && !keyRight && !keyDown) {//N
+			PhysicsWorld.moveCharacter(new Vector3f(x, y, z));
 		}
-		if (keyDown && keyLeft && !keyRight && !keyUp) {
-			move(-speed * delay * (float) Time.getDelta(), 0, speed * delay
-					* (float) Time.getDelta());
+		if (keyDown && keyLeft && !keyRight && !keyUp) {//SW
+			Vector3f vectorDown = new Vector3f(-x,-y,-z);
+			Vector3f vectorLeft = new Vector3f();
+			vectorLeft.cross(vectorDown, vectorY);
+			Vector3f v = new Vector3f();
+			v.add(vectorLeft, vectorDown);
+			v.scale(0.5f);//the vector addition has too big of a magnitude make a bit smaller (half)
+			PhysicsWorld.moveCharacter(v);
 		}
-		if (keyDown && keyRight && !keyLeft && !keyUp) {
-			move(speed * delay * (float) Time.getDelta(), 0, speed * delay
-					* (float) Time.getDelta());
+		if (keyDown && keyRight && !keyLeft && !keyUp) {//SE
+			Vector3f vectorDown = new Vector3f(-x,-y,-z);
+			Vector3f vectorLeft = new Vector3f();
+			vectorLeft.cross(vectorY, vectorDown);
+			Vector3f v = new Vector3f();
+			v.add(vectorLeft, vectorDown);
+			v.scale(0.5f);//the vector addition has too big of a magnitude make a bit smaller (half)
+			PhysicsWorld.moveCharacter(v);
 		}
-		if (keyDown && !keyUp && !keyLeft && !keyRight) {
-			move(0, 0, speed * delay * (float) Time.getDelta());
+		if (keyDown && !keyUp && !keyLeft && !keyRight) {//S
+			PhysicsWorld.moveCharacter(new Vector3f(-x, -y, -z));
 		}
-		if (keyLeft && !keyRight && !keyUp && !keyDown) {
-			move(-speed * delay * (float) Time.getDelta(), 0, 0);
+		if (keyLeft && !keyRight && !keyUp && !keyDown) {//W
+			Vector3f vector = new Vector3f(x,y,z);
+			vector.cross(vectorY, vector);
+			PhysicsWorld.moveCharacter(vector);
 		}
-		if (keyRight && !keyLeft && !keyUp && !keyDown) {
-			move(speed * delay * (float) Time.getDelta(), 0, 0);
+		if (keyRight && !keyLeft && !keyUp && !keyDown) {//E
+			Vector3f vector = new Vector3f(x,y,z);
+			vector.cross(vector, vectorY);
+			PhysicsWorld.moveCharacter(vector);
 		}
-		if (space && !shift) {
-			setY(getY() + speed * delay * (float) Time.getDelta());
+		if (space && !shift) {//UP
+			PhysicsWorld.moveCharacter(UP);
 		}
-		if (shift && !space) {// && Chunk.tiles[(int) getCamera().getX()][(int)
-								// (getCamera().getY() -1) ][(int)
-								// getCamera().getZ()] == Tile.Air.getId()) {
-			// System.out.println("X: " + (int)Player.camera.getX() +" Y: " +
-			// (int) Player.camera.getY() + " Z: "+(int) Player.camera.getZ());
-			/*if (Chunk.tiles[(int) Player.camera.getX()][(int) Player.camera.getY() - 4][(int) Player.camera.getZ()] != 0) {
-				System.out.println("Missing Tile: "
-						+ Chunk.tiles[(int) Player.camera.getX()][(int) Player.camera.getY()][(int) Player.camera.getZ()]);
-				// System.out.println();
-			}*/
-			setY(getY() - speed * delay * (float) Time.getDelta());
+		if (shift && !space) {//DOWN
+			PhysicsWorld.moveCharacter(DOWN);
 		}
 	}
 

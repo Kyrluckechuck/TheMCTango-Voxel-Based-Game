@@ -88,6 +88,7 @@ public class PhysicsWorld {
 		RigidBodyConstructionInfo groundBodyConstructionInfo = new RigidBodyConstructionInfo(
 				0, groundMotionState, groundShape, new Vector3f(0, 0, 0));
 		groundBodyConstructionInfo.restitution = 0.0f;
+		groundBodyConstructionInfo.friction = 1.5f;
 		RigidBody groundRigidBody = new RigidBody(groundBodyConstructionInfo);
 		dynamicsWorld.addRigidBody(groundRigidBody);
 	}
@@ -96,11 +97,12 @@ public class PhysicsWorld {
 		MotionState playerMotionState = new DefaultMotionState(new Transform(
 				new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f(0, 0, 0),  0)));
 		Vector3f playerInertia = new Vector3f(0, 0, 0);
-		RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(
-				2.5f, playerMotionState, playerShape, playerInertia);
-		ballConstructionInfo.restitution = 0.0f;
-		ballConstructionInfo.angularDamping = 0.99f;
-		playerBody = new RigidBody(ballConstructionInfo);
+		RigidBodyConstructionInfo playerConstructionInfo = new RigidBodyConstructionInfo(
+				60f, playerMotionState, playerShape, playerInertia);
+		playerConstructionInfo.restitution = 0.0f;
+		playerConstructionInfo.angularDamping = 0.99f;
+		playerConstructionInfo.friction = 1f;
+		playerBody = new RigidBody(playerConstructionInfo);
 		playerBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		dynamicsWorld.addRigidBody(playerBody);
 	}
@@ -109,19 +111,22 @@ public class PhysicsWorld {
 	}
 
 	public static void newBlock(Vector3f positionVector) {
-		CollisionShape blockShape = new BoxShape(new Vector3f(1, 1, 1));
+		float boxSize = 0.25f;
+		CollisionShape blockShape = new BoxShape(new Vector3f(boxSize, boxSize, boxSize));
 		MotionState blockMotionState = new DefaultMotionState(new Transform(
 				new Matrix4f(new Quat4f(0, 0, 0, 1), positionVector, 1.0f)));
 		RigidBodyConstructionInfo blockConstructionInfo = new RigidBodyConstructionInfo(
 				0, blockMotionState, blockShape, new Vector3f(0, 0, 0));
 		blockConstructionInfo.restitution = 0.0f;
 		blockConstructionInfo.angularDamping = 1.0f;
+		blockConstructionInfo.friction = 1.5f;
 		RigidBody blockRigidBody = new RigidBody(blockConstructionInfo);
 		addBody(blockRigidBody);
 	}
 	public static void addBody(RigidBody r) {
+		int id = bodies.size();
 		bodies.add(r);
-		dynamicsWorld.addRigidBody(r);
+		dynamicsWorld.addRigidBody(bodies.get(id));
 	}
 
 	public void deleteBody(RigidBody r) {
@@ -134,7 +139,9 @@ public class PhysicsWorld {
 	}
 
 	public static void moveCharacter(Vector3f vector3f) {
-		playerBody.applyCentralForce(vector3f);
+		//playerBody.applyCentralForce(vector3f);
+		//playerBody.applyCentralImpulse(vector3f);
+		playerBody.setLinearVelocity(vector3f);
 	}
 
 	public static void clearForcesOnPlayer() {
@@ -144,6 +151,15 @@ public class PhysicsWorld {
 		playerBody.getWorldTransform(DEFAULT_TRANSFORM).setRotation(null);
 	}
 	public static Quat4f getRotation(){
-		return playerBody.getWorldTransform(DEFAULT_TRANSFORM).getRotation(null);
+		return playerBody.getWorldTransform(DEFAULT_TRANSFORM).getRotation(new Quat4f(0, 0, 0, 1));
+	}
+	public static boolean checkCollision(){
+        for(RigidBody r : PhysicsWorld.bodies){
+        	if(playerBody.checkCollideWith(r)){
+        		return true;
+        	}
+        }
+		return false;
+		
 	}
 }

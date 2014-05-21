@@ -36,7 +36,7 @@ public class Main extends Screen{
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		
-		gluPerspective(67.0f, Constants.WIDTH / Constants.HEIGHT, 0.001f, 1000f);
+		gluPerspective(67.0f, Constants.WIDTH / Constants.HEIGHT, Constants.viewClose, Constants.viewDistance);
 		glMatrixMode(GL_MODELVIEW);
 		
 		glEnable(GL_DEPTH_TEST);
@@ -64,7 +64,7 @@ public class Main extends Screen{
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0, 0, 0.75f, 1);
+		glClearColor(0.5f, 0f, 0.75f, 1f);
 		
 		world.render();
 	}
