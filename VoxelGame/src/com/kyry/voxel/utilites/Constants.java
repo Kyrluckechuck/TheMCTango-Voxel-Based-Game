@@ -12,6 +12,7 @@ public class Constants {
 	
 	public static int viewDistance = 1;
 	public static int CHUNKSIZE = 8;
+	public static final int TextureSize = 16;
 	
 	public static int chunksLoaded = 0;
 	public static int chunksFrustum = 0;

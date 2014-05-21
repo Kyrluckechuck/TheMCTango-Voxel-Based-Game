@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Entity {
 
-	protected static Camera camera;
+	public static Camera camera;
 	private Vector3f pos, rot;
 	private int id;
 

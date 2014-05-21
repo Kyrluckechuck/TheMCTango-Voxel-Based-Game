@@ -1,12 +1,13 @@
 package com.kyry.voxel.world.tiles;
 
+import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
 public class TileDirt extends Tile{
 
 	@Override
-	public byte getId() {
+	public short getId() {
 		return 4;
 	}
 
@@ -17,6 +18,9 @@ public class TileDirt extends Tile{
 
 	@Override
 	public float[] getTexCoords() {
-		return new float[] { (getId()) * Spritesheet.tiles.uniformSize(), 0f };
+		float actualSize = Constants.TextureSize;
+		float size = Spritesheet.tiles.uniformSize();
+		int height = (int) (getId() / (float)actualSize);
+		return new float[] { (getId()-(size*height)) * size, height * size };
 	}
 }

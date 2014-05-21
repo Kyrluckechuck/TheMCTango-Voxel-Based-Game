@@ -25,7 +25,7 @@ import com.nishu.utils.Vector3f;
 public class Chunk {
 
 	public Vector3f pos;
-	public byte[][][] tiles;
+	public short[][][] tiles;
 	public ShaderProgram shader;
 
 	public int vcID, sizeX, sizeY, sizeZ, type;
@@ -55,7 +55,7 @@ public class Chunk {
 
 		vcID = glGenLists(1);
 
-		tiles = new byte[sizeX][sizeY][sizeZ];
+		tiles = new short[sizeX][sizeY][sizeZ];
 
 		createChunk();
 		rebuild();
@@ -221,7 +221,7 @@ public class Chunk {
 		return isActive;
 	}
 
-	public byte getTileID(int x, int y, int z) {
+	public short getTileID(int x, int y, int z) {
 		if (x < pos.getX() || x > pos.getX() + Constants.CHUNKSIZE
 				|| y < pos.getY() || y > pos.getY() + Constants.CHUNKSIZE
 				|| z < pos.getZ() || z > pos.getZ() + Constants.CHUNKSIZE)

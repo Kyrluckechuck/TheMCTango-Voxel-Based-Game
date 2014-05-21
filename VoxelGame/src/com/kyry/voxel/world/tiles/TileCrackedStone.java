@@ -1,12 +1,13 @@
 package com.kyry.voxel.world.tiles;
 
+import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
 public class TileCrackedStone extends Tile{
 
 	@Override
-	public byte getId() {
+	public short getId() {
 		return 3;
 	}
 
@@ -17,7 +18,10 @@ public class TileCrackedStone extends Tile{
 
 	@Override
 	public float[] getTexCoords() {
-		return new float[] { 2 * Spritesheet.tiles.uniformSize(), 0* Spritesheet.tiles.uniformSize() };
+		float actualSize = Constants.TextureSize;
+		float size = Spritesheet.tiles.uniformSize();
+		int height = (int) (getId() / (float)actualSize);
+		return new float[] { (getId()-(size*height) -1) * size, height * size };
 	}
 
 }

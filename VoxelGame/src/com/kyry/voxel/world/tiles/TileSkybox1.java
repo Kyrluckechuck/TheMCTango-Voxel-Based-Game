@@ -4,11 +4,11 @@ import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class TileBrick extends Tile{
+public class TileSkybox1 extends Tile{
 
 	@Override
 	public short getId() {
-		return 6;
+		return 209;
 	}
 
 	@Override

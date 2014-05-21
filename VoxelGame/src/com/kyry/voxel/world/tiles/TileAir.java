@@ -5,7 +5,7 @@ import com.nishu.utils.Color4f;
 public class TileAir extends Tile{
 
 	@Override
-	public byte getId() {
+	public short getId() {
 		return 0;
 	}
 

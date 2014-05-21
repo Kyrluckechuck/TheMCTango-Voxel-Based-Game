@@ -150,6 +150,11 @@ public class WorldManager {
 		mobManager.render();
 	}// end render
 
+	public void skyBoxRender() {
+		worldRender.render();
+		
+	}
+	
 	public void logic() {
 		// Reset the model-view matrix.
 
@@ -258,5 +263,7 @@ public class WorldManager {
 	public MobManager getMobManager() {
 		return mobManager;
 	}
+
+
 
 }

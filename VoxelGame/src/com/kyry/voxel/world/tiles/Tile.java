@@ -16,7 +16,7 @@ public abstract class Tile {
 	 * right - sixth
 	 */
 	
-	public static HashMap<Byte, Tile> tileMap = new HashMap<Byte, Tile>();
+	public static HashMap<Short, Tile> tileMap = new HashMap<Short, Tile>();
 	
 	public static Tile Air = new TileAir();
 	public static Tile Void = new TileVoid();
@@ -26,23 +26,35 @@ public abstract class Tile {
 	public static Tile Sand = new TileSand();
 	public static Tile Brick = new TileBrick();
 	public static Tile Glass = new TileGlass();
+	public static Tile Skybox1 = new TileSkybox1();
+	public static Tile Skybox2 = new TileSkybox1();
+	public static Tile Skybox3 = new TileSkybox1();
+	public static Tile Skybox4 = new TileSkybox1();
+	public static Tile Skybox5 = new TileSkybox1();
+	public static Tile Skybox6 = new TileSkybox1();
 
-	public abstract byte getId();
+	public abstract short getId();
 	public abstract Color4f getColor();
 	public abstract float[] getTexCoords();
 	
-	public static Tile getTile(byte id) {
+	public static Tile getTile(short id) {
 		return tileMap.get(id);
 	}
 	
 	public static void createTileMap() {
-		tileMap.put((byte) 0, Air);
-		tileMap.put((byte) 1, Void);
-		tileMap.put((byte) 2, Grass);
-		tileMap.put((byte) 3, CrackedStone);
-		tileMap.put((byte) 4, Dirt);
-		tileMap.put((byte) 5, Sand);
-		tileMap.put((byte) 6, Brick);
-		tileMap.put((byte) 7, Glass);
+		tileMap.put((short) 0, Air);
+		tileMap.put((short) 1, Void);
+		tileMap.put((short) 2, Grass);
+		tileMap.put((short) 3, CrackedStone);
+		tileMap.put((short) 4, Dirt);
+		tileMap.put((short) 5, Sand);
+		tileMap.put((short) 6, Brick);
+		tileMap.put((short) 7, Glass);
+		tileMap.put((short) 209, Skybox1);
+		tileMap.put((short) 224, Skybox2);
+		tileMap.put((short) 225, Skybox3);
+		tileMap.put((short) 226, Skybox4);
+		tileMap.put((short) 227, Skybox5);
+		tileMap.put((short) 241, Skybox6);
 	}
 }

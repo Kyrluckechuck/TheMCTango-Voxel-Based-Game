@@ -80,6 +80,7 @@ public class World extends Screen {
 		render3D();
 		logic();
 		worldRender();
+		skyBoxRender();
 		
 		glLoadIdentity();
 
@@ -90,12 +91,18 @@ public class World extends Screen {
 		
 	}
 
+
 	private void logic() {
 		worldManager.logic();
 	}
 	private void worldRender(){
 		worldManager.render();
 	}
+	private void skyBoxRender() {
+		worldManager.skyBoxRender();
+		
+	}
+
 
 	private void renderText() {
 		font.drawString(10, 15, "FPS: " + GameLoop.getFPS());

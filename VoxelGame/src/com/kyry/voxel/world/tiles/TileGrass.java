@@ -16,7 +16,7 @@ public class TileGrass extends Tile {
 	 */
 	
 	@Override
-	public byte getId() {
+	public short getId() {
 		return 2;
 	}
 
