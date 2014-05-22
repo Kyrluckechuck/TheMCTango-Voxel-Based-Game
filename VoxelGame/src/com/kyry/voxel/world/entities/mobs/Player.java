@@ -24,8 +24,8 @@ public class Player extends Mob {
 //		GL11.glBegin(GL11.GL_QUADS);
 //		Vector3f playerPos= PhysicsWorld.playerBody.getWorldTransform(PhysicsWorld.DEFAULT_TRANSFORM).origin;
 //		Shape.createCube(playerPos.x, playerPos.y, playerPos.z,
-//				Tile.getTile(Tile.Brick.getId()).getColor(),
-//				Tile.getTile(Tile.Brick.getId()).getTexCoords(), 0.01f);
+//				Tile.getTile(Tile.Void.getId()).getColor(),
+//				Tile.getTile(Tile.Void.getId()).getTexCoords(), 0.01f);
 //		GL11.glEnd();
 		//System.out.println("HEYY!");
 	}

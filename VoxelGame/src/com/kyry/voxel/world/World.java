@@ -99,10 +99,10 @@ public class World extends Screen {
 	private void worldRender(){
 		worldManager.render();
 	}
-	private void skyBoxRender() {
+/*	private void skyBoxRender() {
 		worldManager.skyBoxRender();
 		
-	}
+	}*/
 
 
 	private void renderText() {

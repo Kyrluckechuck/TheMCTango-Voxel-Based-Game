@@ -30,6 +30,7 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
@@ -38,12 +39,14 @@ import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
+import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Frustum;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.entities.mobs.MobManager;
 import com.kyry.voxel.world.physics.PhysicsWorld;
+import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 
@@ -122,6 +125,12 @@ public class WorldManager {
 		// ////////
 		Constants.chunksFrustum = 0;
 		Spritesheet.tiles.bind();
+		GL11.glBegin(GL11.GL_QUADS);
+		Vector3f playerPos= PhysicsWorld.playerBody.getWorldTransform(PhysicsWorld.DEFAULT_TRANSFORM).origin;
+		Shape.createCube(playerPos.x, playerPos.y, playerPos.z,
+				Tile.getTile(Tile.Glass.getId()).getColor(),
+				Tile.getTile(Tile.Glass.getId()).getTexCoords(), 0.01f);
+		GL11.glEnd();
 		// get vector from physics()
 
 		//
@@ -145,6 +154,7 @@ public class WorldManager {
 
 				}
 			}
+			
 		}
 		mobManager.render();
 	}// end render

@@ -20,7 +20,13 @@ public class TileSkybox6 extends Tile{
 	public float[] getTexCoords() {
 		float actualSize = Constants.TextureSize;
 		float size = Spritesheet.tiles.uniformSize();
-		int height = (int) (getId() / (float)actualSize);
-		return new float[] { (getId()-(size*height) -1) * size , height * size };
+		int height = (int) (getId() / (float) actualSize);
+		if (height == (getId() / (float) actualSize)) {
+			return new float[] { (getId() - (actualSize * height)) * size,
+					(height) * size };
+		} else {
+			return new float[] { (getId() - (actualSize * height)) * size,
+					(height + 1) * size };
+		}
 	}
 }

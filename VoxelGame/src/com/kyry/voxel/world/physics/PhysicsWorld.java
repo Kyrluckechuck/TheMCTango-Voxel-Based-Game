@@ -77,7 +77,7 @@ public class PhysicsWorld {
 				worldAabbMax);
 		dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, broadphase,
 				solver, collisionConfiguration);
-		dynamicsWorld.setGravity(new Vector3f(0, -10f, 0));		
+		dynamicsWorld.setGravity(new Vector3f(0, -9.80665f, 0));	//Setting gravity (aka fall speed);	
 	}
 	private void setUpGround() {
 		CollisionShape groundShape = new StaticPlaneShape(
@@ -88,7 +88,7 @@ public class PhysicsWorld {
 		RigidBodyConstructionInfo groundBodyConstructionInfo = new RigidBodyConstructionInfo(
 				0, groundMotionState, groundShape, new Vector3f(0, 0, 0));
 		groundBodyConstructionInfo.restitution = 0.0f;
-		groundBodyConstructionInfo.friction = 1.5f;
+		groundBodyConstructionInfo.friction = 35.5f; //was 1.5f
 		RigidBody groundRigidBody = new RigidBody(groundBodyConstructionInfo);
 		dynamicsWorld.addRigidBody(groundRigidBody);
 	}
@@ -117,9 +117,9 @@ public class PhysicsWorld {
 				new Matrix4f(new Quat4f(0, 0, 0, 1), positionVector, 1.0f)));
 		RigidBodyConstructionInfo blockConstructionInfo = new RigidBodyConstructionInfo(
 				0, blockMotionState, blockShape, new Vector3f(0, 0, 0));
-		blockConstructionInfo.restitution = 0.0f;
+		blockConstructionInfo.restitution = 0.0f; //New block buoyancy
 		blockConstructionInfo.angularDamping = 1.0f;
-		blockConstructionInfo.friction = 1.5f;
+		blockConstructionInfo.friction = 35.5f; //Block friction *was 1.5f
 		RigidBody blockRigidBody = new RigidBody(blockConstructionInfo);
 		addBody(blockRigidBody);
 	}
