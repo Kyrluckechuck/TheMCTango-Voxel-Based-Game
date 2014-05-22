@@ -81,6 +81,7 @@ public class World extends Screen {
 		logic();
 		worldRender();
 		//skyBoxRender();
+		renderSkyBox();
 		
 		glLoadIdentity();
 
@@ -162,6 +163,19 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
+	}
+	public void renderSkyBox() {
+		glCullFace(GL_BACK);
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose,
+				Constants.viewDistance);
+		glMatrixMode(GL_MODELVIEW);
+
+		glEnable(GL_DEPTH_TEST);
+		WorldRender.render();
 	}
 
 	@Override

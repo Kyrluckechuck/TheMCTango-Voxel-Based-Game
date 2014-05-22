@@ -129,7 +129,7 @@ public class Chunk {
 			// GL20.glUniform1i(texLoc, 0);
 			glCallList(vcID);
 			
-			WorldRender.render();
+			
 			
 			// shader.release();
 			// System.out.println("MixedChunk");
