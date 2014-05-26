@@ -2,6 +2,8 @@ package com.kyry.voxel.utilites;
 
 import java.util.Random;
 
+import org.newdawn.slick.Color;
+
 public class Constants {
 	
 	public static final int WIDTH = 1280; //Window Width
@@ -15,6 +17,10 @@ public class Constants {
 	public static int WORLDSIZE = 1; //How many chunks in the world
 	public static int CHUNKSIZE = 8; //How many blocks a chunk is
 	public static final int TextureSize = 16; //The pixel size of a texture (the entire file is 256x256 pixels, but each texture is 16x16 pixels)
+	
+	public static float fogNear = 5f;
+	public static float fogFar = 10f;
+	public static Color fogColor = new Color(0.3f, 0.6f, 0.8f, 1f);
 	
 	
 	public static final int initX = 4, initY = 10, initZ = 4;

@@ -3,8 +3,12 @@ package com.kyry.voxel;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.World;
@@ -43,6 +47,22 @@ public class Main extends Screen{
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+		
+		GL11.glEnable(GL11.GL_FOG);
+
+        {
+            FloatBuffer fogColours = BufferUtils.createFloatBuffer(
+                    4);
+            fogColours.put(new float[]{Constants.fogColor.r, Constants.fogColor.g, Constants.fogColor.b, Constants.fogColor.a});
+            GL11.glClearColor(Constants.fogColor.r, Constants.fogColor.g, Constants.fogColor.b, Constants.fogColor.a);
+            fogColours.flip();
+            GL11.glFog(GL11.GL_FOG_COLOR, fogColours);
+            GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+            GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_NICEST);
+            GL11.glFogf(GL11.GL_FOG_START, Constants.fogNear);
+            GL11.glFogf(GL11.GL_FOG_END, Constants.fogFar);
+            GL11.glFogf(GL11.GL_FOG_DENSITY, 0.005f);
+        }
 	}
 	
 	private void initCamera(){
