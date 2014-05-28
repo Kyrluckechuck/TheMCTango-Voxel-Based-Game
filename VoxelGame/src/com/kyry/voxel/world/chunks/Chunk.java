@@ -21,7 +21,7 @@ import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldRender;
 import com.kyry.voxel.world.entities.mobs.Player;
-import com.kyry.voxel.world.physics.PhysicsWorld;
+//import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Vector3f;
@@ -107,7 +107,8 @@ public class Chunk {
 						 */
 						try {
 							if (tiles[x][y][z] != Tile.Air.getId()){
-								PhysicsWorld.newBlock(x, y, z);
+								//PhysicsWorld.newBlock(x, y, z);
+								//CollisionLibrary.newBlock(x,y,z);
 							}
 						} catch (NullPointerException e) {
 							System.out.println("Block error at X: "+ x +" Y: "+y+" Z: "+z);

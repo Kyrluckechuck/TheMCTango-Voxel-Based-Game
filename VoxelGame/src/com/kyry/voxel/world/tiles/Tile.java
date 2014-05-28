@@ -26,6 +26,7 @@ public abstract class Tile {
 	public static Tile Sand = new TileSand();
 	public static Tile Brick = new TileBrick();
 	public static Tile Glass = new TileGlass();
+	public static Tile Wireframe = new TileWireframe();
 	public static Tile Skybox1 = new TileSkybox1();
 	public static Tile Skybox2 = new TileSkybox1();
 	public static Tile Skybox3 = new TileSkybox1();
@@ -50,6 +51,7 @@ public abstract class Tile {
 		tileMap.put((short) 5, Sand);
 		tileMap.put((short) 6, Brick);
 		tileMap.put((short) 7, Glass);
+		tileMap.put((short) 8, Wireframe);
 		tileMap.put((short) 209, Skybox1);
 		tileMap.put((short) 224, Skybox2);
 		tileMap.put((short) 225, Skybox3);

@@ -11,10 +11,9 @@ import org.lwjgl.opengl.Display;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.Color4f;
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
-import com.bulletphysics.linearmath.Transform;
+//import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.kyry.voxel.world.tiles.Tile;
@@ -125,7 +124,7 @@ public class World extends Screen {
 
 		font.drawString(10, 120, "Chunks: "
 				+ worldManager.activeChunks.get(0).tiles[0][0][0]);
-		font.drawString(
+	/*	font.drawString(
 				10,
 				150,
 				"vector data: "
@@ -135,7 +134,7 @@ public class World extends Screen {
 						.getWorldTransform(new Transform()).origin.y
 						+ " " + worldManager.physicsWorld.getPlayerBody()
 						.getWorldTransform(new Transform()).origin.z
-						+ " " + Constants.FPS);
+						+ " " + Constants.FPS);*/
 
 		TextureImpl.unbind();
 

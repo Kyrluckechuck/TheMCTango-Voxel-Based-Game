@@ -68,6 +68,7 @@ public class Main extends Screen{
 	private void initCamera(){
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	public void update() {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {

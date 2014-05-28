@@ -1,21 +1,6 @@
 package com.kyry.voxel.world;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_FILL;
-import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11.GL_LINE;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glPolygonMode;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex4f;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -45,7 +30,6 @@ import com.kyry.voxel.utilites.Frustum;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.entities.mobs.MobManager;
-import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
@@ -53,8 +37,8 @@ import com.nishu.utils.ShaderProgram;
 public class WorldManager {
 
 	MobManager mobManager;
-	PhysicsWorld physicsWorld;
-
+	//PhysicsWorld physicsWorld;
+	
 	public ArrayList<Chunk> loadedChunks;
 	public ArrayList<Chunk> activeChunks;
 
@@ -72,7 +56,7 @@ public class WorldManager {
 	}
 
 	private void init() {
-		physicsWorld = new PhysicsWorld();
+		//physicsWorld = new PhysicsWorld();
 		mobManager = new MobManager();
 		loadedChunks = new ArrayList<Chunk>();
 		activeChunks = new ArrayList<Chunk>();
@@ -94,7 +78,7 @@ public class WorldManager {
 				}
 			}
 		}
-		saveChunksTemp();
+		//saveChunksTemp();
 	}
 
 	private void saveChunksTemp() {
@@ -125,12 +109,13 @@ public class WorldManager {
 		// ////////
 		Constants.chunksFrustum = 0;
 		Spritesheet.tiles.bind();
-		GL11.glBegin(GL11.GL_QUADS);
+	/*	GL11.glBegin(GL11.GL_QUADS);
 		Vector3f playerPos= PhysicsWorld.playerBody.getWorldTransform(PhysicsWorld.DEFAULT_TRANSFORM).origin;
-		Shape.createCube(playerPos.x, playerPos.y, playerPos.z,
-				Tile.getTile(Tile.Glass.getId()).getColor(),
-				Tile.getTile(Tile.Glass.getId()).getTexCoords(), 0.01f);
-		GL11.glEnd();
+		Shape.createCube(playerPos.x, playerPos.y + 0.2f, playerPos.z,
+				Tile.getTile(Tile.Wireframe.getId()).getColor(),
+				Tile.getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
+		GL11.glEnd();*/
+
 		// get vector from physics()
 
 		//
@@ -169,14 +154,14 @@ public class WorldManager {
 
 		// glLoadIdentity();
 		getMobManager().getPlayer().getCamera().applyTranslations();
-		Vector3f playerPosition = getMobManager().getPlayer().getCamera()
+		/*Vector3f playerPosition = getMobManager().getPlayer().getCamera()
 				.getPosition();
 		Transform transform = new Transform(new Matrix4f(physicsWorld.DEFAULT_QUAT, playerPosition, 1.0f));
 		physicsWorld.playerBody.setWorldTransform(transform);
 		physicsWorld.step(1 / Constants.FPS);
 		playerPosition = physicsWorld.playerBody
 				.getWorldTransform(new Transform()).origin;
-		getMobManager().getPlayer().getCamera().applyPhysics(playerPosition);
+		getMobManager().getPlayer().getCamera().applyPhysics(playerPosition);*/
 
 		/*
 		 * // If the attraction between the green ball and the camera is enabled

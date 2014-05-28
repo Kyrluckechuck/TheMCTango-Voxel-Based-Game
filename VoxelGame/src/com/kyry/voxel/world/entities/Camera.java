@@ -5,11 +5,11 @@ import javax.vecmath.Vector3f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.bulletphysics.linearmath.Transform;
+//import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.entities.mobs.Player;
-import com.kyry.voxel.world.physics.PhysicsWorld;
+//import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.Time;
 
@@ -84,7 +84,7 @@ public class Camera extends Entity {
 			Vector3f v = new Vector3f();
 			v.add(vectorRight, vectorUP);
 			v.scale(0.5f);//the vector addition has too big of a magnitude make a bit smaller (half)
-			PhysicsWorld.moveCharacter(v);
+			//PhysicsWorld.moveCharacter(v);
 		}
 		if (keyUp && keyLeft && !keyRight && !keyDown) {//NW
 			Vector3f vectorUP = new Vector3f(x,y,z);
@@ -93,10 +93,10 @@ public class Camera extends Entity {
 			Vector3f v = new Vector3f();
 			v.add(vectorLeft, vectorUP);
 			v.scale(0.5f);//the vector addition has too big of a magnitude make a bit smaller (half)
-			PhysicsWorld.moveCharacter(v);
+			//PhysicsWorld.moveCharacter(v);
 		}
 		if (keyUp && !keyLeft && !keyRight && !keyDown) {//N
-			PhysicsWorld.moveCharacter(new Vector3f(x, y, z));
+			//PhysicsWorld.moveCharacter(new Vector3f(x, y, z));
 		}
 		if (keyDown && keyLeft && !keyRight && !keyUp) {//SW
 			Vector3f vectorDown = new Vector3f(-x,-y,-z);
@@ -105,7 +105,7 @@ public class Camera extends Entity {
 			Vector3f v = new Vector3f();
 			v.add(vectorLeft, vectorDown);
 			v.scale(0.5f);//the vector addition has too big of a magnitude make a bit smaller (half)
-			PhysicsWorld.moveCharacter(v);
+			//PhysicsWorld.moveCharacter(v);
 		}
 		if (keyDown && keyRight && !keyLeft && !keyUp) {//SE
 			Vector3f vectorDown = new Vector3f(-x,-y,-z);
@@ -114,26 +114,26 @@ public class Camera extends Entity {
 			Vector3f v = new Vector3f();
 			v.add(vectorLeft, vectorDown);
 			v.scale(0.5f);//the vector addition has too big of a magnitude make a bit smaller (half)
-			PhysicsWorld.moveCharacter(v);
+			//PhysicsWorld.moveCharacter(v);
 		}
 		if (keyDown && !keyUp && !keyLeft && !keyRight) {//S
-			PhysicsWorld.moveCharacter(new Vector3f(-x, -y, -z));
+			//PhysicsWorld.moveCharacter(new Vector3f(-x, -y, -z));
 		}
 		if (keyLeft && !keyRight && !keyUp && !keyDown) {//W
 			Vector3f vector = new Vector3f(x,y,z);
 			vector.cross(vectorY, vector);
-			PhysicsWorld.moveCharacter(vector);
+			//PhysicsWorld.moveCharacter(vector);
 		}
 		if (keyRight && !keyLeft && !keyUp && !keyDown) {//E
 			Vector3f vector = new Vector3f(x,y,z);
 			vector.cross(vector, vectorY);
-			PhysicsWorld.moveCharacter(vector);
+			//PhysicsWorld.moveCharacter(vector);
 		}
 		if (space && !shift) {//UP
-			PhysicsWorld.moveCharacter(UP);
+			//PhysicsWorld.moveCharacter(UP);
 		}
 		if (shift && !space) {//DOWN
-			PhysicsWorld.moveCharacter(DOWN);
+			//PhysicsWorld.moveCharacter(DOWN);
 		}
 	}
 

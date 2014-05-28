@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.world.entities.Camera;
-import com.kyry.voxel.world.physics.PhysicsWorld;
+//import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.kyry.voxel.world.tiles.Tile;
 
 public class Player extends Mob {

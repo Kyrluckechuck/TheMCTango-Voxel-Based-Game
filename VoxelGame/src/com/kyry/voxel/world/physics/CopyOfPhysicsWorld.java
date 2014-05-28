@@ -22,20 +22,21 @@ import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSo
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.MotionState;
 import com.bulletphysics.linearmath.Transform;
+import com.kyry.voxel.utilites.Constants;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-public class PhysicsWorld {
+public class CopyOfPhysicsWorld {
 	public static DynamicsWorld dynamicsWorld;
 	public static RigidBody playerBody;
 	public static ArrayList<RigidBody> bodies;
 	Vector3f worldAabbMin = new Vector3f(-10000, -10000, -10000);
 	Vector3f worldAabbMax = new Vector3f(10000, 10000, 10000);
 
-	public static final Vector3f DEFAULT_VECTOR = new Vector3f(4, 10, 4);
+	public static final Vector3f DEFAULT_VECTOR = new Vector3f(Constants.initX, Constants.initY, Constants.initZ);
 
 	public static final Quat4f DEFAULT_QUAT = new Quat4f(0, 0, 0, 1);
 
@@ -45,7 +46,7 @@ public class PhysicsWorld {
 	public static final Transform DEFAULT_TRANSFORM = new Transform(
 			new Matrix4f(DEFAULT_QUAT, DEFAULT_VECTOR, 1.0f));
 
-	public PhysicsWorld() {
+	public CopyOfPhysicsWorld() {
 		setUpPhysics();
 		bodies = new ArrayList<RigidBody>();
 	}
@@ -87,13 +88,14 @@ public class PhysicsWorld {
 						1.0f)));
 		RigidBodyConstructionInfo groundBodyConstructionInfo = new RigidBodyConstructionInfo(
 				0, groundMotionState, groundShape, new Vector3f(0, 0, 0));
-		groundBodyConstructionInfo.restitution = 0.0f;
+		groundBodyConstructionInfo.restitution = -10.0f;
 		groundBodyConstructionInfo.friction = 35.5f; //was 1.5f
 		RigidBody groundRigidBody = new RigidBody(groundBodyConstructionInfo);
 		dynamicsWorld.addRigidBody(groundRigidBody);
 	}
 	private void setUpPlayer(){
-		CollisionShape playerShape = new BoxShape(new Vector3f(1f, 1f, 1f));
+		float boxSize = 1f;
+		CollisionShape playerShape = new BoxShape(new Vector3f(boxSize, boxSize, boxSize));
 		MotionState playerMotionState = new DefaultMotionState(new Transform(
 				new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f(0, 0, 0),  0)));
 		Vector3f playerInertia = new Vector3f(0, 0, 0);
@@ -111,7 +113,7 @@ public class PhysicsWorld {
 	}
 
 	public static void newBlock(Vector3f positionVector) {
-		float boxSize = 0.25f;
+		float boxSize = 1f;
 		CollisionShape blockShape = new BoxShape(new Vector3f(boxSize, boxSize, boxSize));
 		MotionState blockMotionState = new DefaultMotionState(new Transform(
 				new Matrix4f(new Quat4f(0, 0, 0, 1), positionVector, 1.0f)));
@@ -119,7 +121,7 @@ public class PhysicsWorld {
 				0, blockMotionState, blockShape, new Vector3f(0, 0, 0));
 		blockConstructionInfo.restitution = 0.0f; //New block buoyancy
 		blockConstructionInfo.angularDamping = 1.0f;
-		blockConstructionInfo.friction = 35.5f; //Block friction *was 1.5f
+		blockConstructionInfo.friction = 1.5f; //Block friction *was 1.5f
 		RigidBody blockRigidBody = new RigidBody(blockConstructionInfo);
 		addBody(blockRigidBody);
 	}
@@ -154,7 +156,7 @@ public class PhysicsWorld {
 		return playerBody.getWorldTransform(DEFAULT_TRANSFORM).getRotation(new Quat4f(0, 0, 0, 1));
 	}
 	public static boolean checkCollision(){
-        for(RigidBody r : PhysicsWorld.bodies){
+        for(RigidBody r : CopyOfPhysicsWorld.bodies){
         	if(playerBody.checkCollideWith(r)){
         		return true;
         	}

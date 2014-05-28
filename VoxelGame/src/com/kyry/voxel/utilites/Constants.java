@@ -23,7 +23,7 @@ public class Constants {
 	public static Color fogColor = new Color(0.3f, 0.6f, 0.8f, 1f);
 	
 	
-	public static final int initX = 4, initY = 10, initZ = 4;
+	public static final int initX = 0, initY = 15, initZ = 0;
 	public static int chunksLoaded = 0; //How many chunks have been loaded
 	public static int chunksFrustum = 0; //How many chunks are in the visible frustum
 	
