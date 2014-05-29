@@ -15,17 +15,18 @@ public class Constants {
 	public static float viewDistance = 50f; //The view distance (how far)
 	public static float viewClose = 0.01f; //How closely it renders (helps the text not get chopped off)
 	public static int WORLDSIZE = 1; //How many chunks in the world
-	public static int CHUNKSIZE = 8; //How many blocks a chunk is
+	public static int CHUNKSIZE = 8; //How many blocks^3 a chunk is
 	public static final int TextureSize = 16; //The pixel size of a texture (the entire file is 256x256 pixels, but each texture is 16x16 pixels)
 	
-	public static float fogNear = 5f;
-	public static float fogFar = 10f;
+	public static float fogNear = 50f;
+	public static float fogFar = 60f;
 	public static Color fogColor = new Color(0.3f, 0.6f, 0.8f, 1f);
 	
 	
 	public static final int initX = 0, initY = 15, initZ = 0;
 	public static int chunksLoaded = 0; //How many chunks have been loaded
 	public static int chunksFrustum = 0; //How many chunks are in the visible frustum
+	public static int BlocksLoaded = 0; //How many chunks are in the visible frustum
 	
 	public static float textSize = 0.35f; //The physical size of the text being rendered on screen
 }

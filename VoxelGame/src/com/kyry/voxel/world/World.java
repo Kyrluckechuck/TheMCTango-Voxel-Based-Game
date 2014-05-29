@@ -106,7 +106,7 @@ public class World extends Screen {
 
 	private void renderText() {
 		font.drawString(10, 15, "FPS: " + GameLoop.getFPS());
-		font.drawString(10, 40, "X: "
+		font.drawString(10, 40, "Camera X: "
 				+ (int) worldManager.getMobManager().getPlayer().getX()
 				+ " Y: "
 				+ (int) worldManager.getMobManager().getPlayer().getY()
@@ -119,22 +119,14 @@ public class World extends Screen {
 				+ " Rotz: "
 				+ (int) worldManager.getMobManager().getPlayer().getRoll());
 		font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " ("
-				+ Constants.chunksFrustum + ")");
-		// int p =
+				+ Constants.chunksFrustum + ")" + "Blocks: " + Constants.BlocksLoaded);
 
-		font.drawString(10, 120, "Chunks: "
-				+ worldManager.activeChunks.get(0).tiles[0][0][0]);
-	/*	font.drawString(
-				10,
-				150,
-				"vector data: "
-						+ worldManager.physicsWorld.getPlayerBody()
-								.getWorldTransform(new Transform()).origin.x
-						+ " " + worldManager.physicsWorld.getPlayerBody()
-						.getWorldTransform(new Transform()).origin.y
-						+ " " + worldManager.physicsWorld.getPlayerBody()
-						.getWorldTransform(new Transform()).origin.z
-						+ " " + Constants.FPS);*/
+		font.drawString(10, 115, "playerSphere X: "
+				+ (int) WorldManager.playerSphere.getX()
+				+ " Y: "
+				+ (int) WorldManager.playerSphere.getY()
+				+ " Z: "
+				+ (int) WorldManager.playerSphere.getZ());
 
 		TextureImpl.unbind();
 

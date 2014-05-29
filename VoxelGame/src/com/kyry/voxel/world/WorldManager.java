@@ -25,6 +25,7 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.geometry.Shape;
+import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Frustum;
 import com.kyry.voxel.utilites.Spritesheet;
@@ -37,6 +38,7 @@ import com.nishu.utils.ShaderProgram;
 public class WorldManager {
 
 	MobManager mobManager;
+	public static Sphere playerSphere = new Sphere(0.5f);;
 	//PhysicsWorld physicsWorld;
 	
 	public ArrayList<Chunk> loadedChunks;

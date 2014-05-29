@@ -6,9 +6,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Sphere;
+import com.kyry.voxel.utilites.Constants;
 
 public class CollisionLibrary {
-	private static ArrayList<AABB> BlockList = new ArrayList<AABB>();
+	public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
 
 	public static void newBlock(float x, float y, float z) {
 		newBlock(x, y, z, 1);
@@ -16,6 +17,7 @@ public class CollisionLibrary {
 
 	public static void newBlock(float x, float y, float z, float r) {
 		BlockList.add(new AABB(x, y, z, r));
+		Constants.BlocksLoaded++;
 	}
 
 	public static boolean testAABBAABB(final AABB box1, final AABB box2) {
