@@ -26,7 +26,7 @@ public class Constants {
 	public static final int initX = 0, initY = 15, initZ = 0;
 	public static int chunksLoaded = 0; //How many chunks have been loaded
 	public static int chunksFrustum = 0; //How many chunks are in the visible frustum
-	public static int BlocksLoaded = 0; //How many chunks are in the visible frustum
+	public static int BlocksLoaded = -1; //How many chunks are in the visible frustum
 	
 	public static float textSize = 0.35f; //The physical size of the text being rendered on screen
 }

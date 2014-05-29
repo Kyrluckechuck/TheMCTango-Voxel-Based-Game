@@ -20,13 +20,14 @@ import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.World;
+import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.WorldRender;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
 //import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.ShaderProgram;
-import com.nishu.utils.Vector3f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Chunk {
 
@@ -87,6 +88,8 @@ public class Chunk {
 						tiles[x][y][z] = Tile.Grass.getId();
 						if (y == 14) {
 							tiles[x][y][z] = Tile.Sand.getId();
+						} else if ((x==0)&&(z==0)) {
+							tiles[x][y][z] = Tile.Air.getId();
 						} else if (y == 0) {
 							tiles[x][y][z] = Tile.Brick.getId();
 						} else if (y > 14) {
@@ -112,6 +115,8 @@ public class Chunk {
 								//PhysicsWorld.newBlock(x, y, z);
 								//CollisionLibrary.newBlock(x,y,z);
 								CollisionLibrary.newBlock(x,y,z);
+								Vector3f somePosition = new Vector3f(x,y,z);
+								CollisionLibrary.BlockList.get(Constants.BlocksLoaded).update(somePosition);
 							}
 						} catch (NullPointerException e) {
 							System.out.println("Block error at X: "+ x +" Y: "+y+" Z: "+z);

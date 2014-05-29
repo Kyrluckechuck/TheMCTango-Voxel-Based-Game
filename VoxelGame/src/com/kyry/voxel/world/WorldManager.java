@@ -31,6 +31,7 @@ import com.kyry.voxel.utilites.Frustum;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.entities.mobs.MobManager;
+import com.kyry.voxel.world.physics.CollisionLibrary;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
@@ -39,8 +40,8 @@ public class WorldManager {
 
 	MobManager mobManager;
 	public static Sphere playerSphere = new Sphere(0.5f);;
-	//PhysicsWorld physicsWorld;
-	
+	// PhysicsWorld physicsWorld;
+
 	public ArrayList<Chunk> loadedChunks;
 	public ArrayList<Chunk> activeChunks;
 
@@ -58,7 +59,7 @@ public class WorldManager {
 	}
 
 	private void init() {
-		//physicsWorld = new PhysicsWorld();
+		// physicsWorld = new PhysicsWorld();
 		mobManager = new MobManager();
 		loadedChunks = new ArrayList<Chunk>();
 		activeChunks = new ArrayList<Chunk>();
@@ -80,7 +81,7 @@ public class WorldManager {
 				}
 			}
 		}
-		//saveChunksTemp();
+		// saveChunksTemp();
 	}
 
 	private void saveChunksTemp() {
@@ -95,28 +96,31 @@ public class WorldManager {
 	}
 
 	public void render() {
-//		float groundDim = 10000f;
-//		{
-//			glBegin(GL_QUADS);
-//			glColor4f(0.5f, 0.5f, 0.5f, 1);
-//			glVertex4f(-groundDim, 0, -groundDim, 1);
-//			glColor4f(0.5f, 0.5f, 0.5f, 1);
-//			glVertex4f(-groundDim, 0, +groundDim, 1);
-//			glColor4f(0.5f, 0.5f, 0.5f, 1);
-//			glVertex4f(+groundDim, 0, +groundDim, 1);
-//			glColor4f(0.5f, 0.5f, 0.5f, 1);
-//			glVertex4f(+groundDim, 0, -groundDim, 1);
-//			glEnd();
-//		}
+		// float groundDim = 10000f;
+		// {
+		// glBegin(GL_QUADS);
+		// glColor4f(0.5f, 0.5f, 0.5f, 1);
+		// glVertex4f(-groundDim, 0, -groundDim, 1);
+		// glColor4f(0.5f, 0.5f, 0.5f, 1);
+		// glVertex4f(-groundDim, 0, +groundDim, 1);
+		// glColor4f(0.5f, 0.5f, 0.5f, 1);
+		// glVertex4f(+groundDim, 0, +groundDim, 1);
+		// glColor4f(0.5f, 0.5f, 0.5f, 1);
+		// glVertex4f(+groundDim, 0, -groundDim, 1);
+		// glEnd();
+		// }
 		// ////////
 		Constants.chunksFrustum = 0;
 		Spritesheet.tiles.bind();
-	/*	GL11.glBegin(GL11.GL_QUADS);
-		Vector3f playerPos= PhysicsWorld.playerBody.getWorldTransform(PhysicsWorld.DEFAULT_TRANSFORM).origin;
-		Shape.createCube(playerPos.x, playerPos.y + 0.2f, playerPos.z,
-				Tile.getTile(Tile.Wireframe.getId()).getColor(),
-				Tile.getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
-		GL11.glEnd();*/
+		/*
+		 * GL11.glBegin(GL11.GL_QUADS); Vector3f playerPos=
+		 * PhysicsWorld.playerBody
+		 * .getWorldTransform(PhysicsWorld.DEFAULT_TRANSFORM).origin;
+		 * Shape.createCube(playerPos.x, playerPos.y + 0.2f, playerPos.z,
+		 * Tile.getTile(Tile.Wireframe.getId()).getColor(),
+		 * Tile.getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
+		 * GL11.glEnd();
+		 */
 
 		// get vector from physics()
 
@@ -141,29 +145,42 @@ public class WorldManager {
 
 				}
 			}
-			
+
 		}
 		mobManager.render();
+		glBegin(GL_QUADS);
+		for (int x = 0; x < Constants.BlocksLoaded; x++) {
+
+			Shape.createCube(CollisionLibrary.BlockList.get(x).center.x,
+					CollisionLibrary.BlockList.get(x).center.y + .01f,
+					CollisionLibrary.BlockList.get(x).center.z,
+					Tile.getTile(Tile.Wireframe.getId()).getColor(), Tile
+							.getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
+
+		}
+		System.out.println(Constants.BlocksLoaded);
+		glEnd();
 	}// end render
 
 	public void skyBoxRender() {
 		WorldRender.render();
-		
+
 	}
-	
+
 	public void logic() {
 		// Reset the model-view matrix.
 
 		// glLoadIdentity();
 		getMobManager().getPlayer().getCamera().applyTranslations();
-		/*Vector3f playerPosition = getMobManager().getPlayer().getCamera()
-				.getPosition();
-		Transform transform = new Transform(new Matrix4f(physicsWorld.DEFAULT_QUAT, playerPosition, 1.0f));
-		physicsWorld.playerBody.setWorldTransform(transform);
-		physicsWorld.step(1 / Constants.FPS);
-		playerPosition = physicsWorld.playerBody
-				.getWorldTransform(new Transform()).origin;
-		getMobManager().getPlayer().getCamera().applyPhysics(playerPosition);*/
+		/*
+		 * Vector3f playerPosition = getMobManager().getPlayer().getCamera()
+		 * .getPosition(); Transform transform = new Transform(new
+		 * Matrix4f(physicsWorld.DEFAULT_QUAT, playerPosition, 1.0f));
+		 * physicsWorld.playerBody.setWorldTransform(transform);
+		 * physicsWorld.step(1 / Constants.FPS); playerPosition =
+		 * physicsWorld.playerBody .getWorldTransform(new Transform()).origin;
+		 * getMobManager().getPlayer().getCamera().applyPhysics(playerPosition);
+		 */
 
 		/*
 		 * // If the attraction between the green ball and the camera is enabled
@@ -208,26 +225,26 @@ public class WorldManager {
 	}
 
 	public void saveChunk(Chunk c) {
-//		BufferedWriter bw = null;
-//		try {
-//			bw = new BufferedWriter(new FileWriter("/000chunk.dat"));
-//			bw.write(c.getPos().getX() + " " + c.getPos().getY() + " "
-//					+ c.getPos().getZ());
-//			for (int x = (int) c.getPos().getX(); x < (int) c.getPos().getX()
-//					+ Constants.CHUNKSIZE; x++) {
-//				for (int y = (int) c.getPos().getY(); y < (int) c.getPos()
-//						.getY() + Constants.CHUNKSIZE; y++) {
-//					for (int z = (int) c.getPos().getZ(); z < (int) c.getPos()
-//							.getZ() + Constants.CHUNKSIZE; z++) {
-//						bw.write(String.valueOf(c.getTileID(x, y, z)));
-//					}
-//				}
-//			}
-//			bw.close();
-//		} catch (IOException e) {
-//
-//			e.printStackTrace();
-//		}
+		// BufferedWriter bw = null;
+		// try {
+		// bw = new BufferedWriter(new FileWriter("/000chunk.dat"));
+		// bw.write(c.getPos().getX() + " " + c.getPos().getY() + " "
+		// + c.getPos().getZ());
+		// for (int x = (int) c.getPos().getX(); x < (int) c.getPos().getX()
+		// + Constants.CHUNKSIZE; x++) {
+		// for (int y = (int) c.getPos().getY(); y < (int) c.getPos()
+		// .getY() + Constants.CHUNKSIZE; y++) {
+		// for (int z = (int) c.getPos().getZ(); z < (int) c.getPos()
+		// .getZ() + Constants.CHUNKSIZE; z++) {
+		// bw.write(String.valueOf(c.getTileID(x, y, z)));
+		// }
+		// }
+		// }
+		// bw.close();
+		// } catch (IOException e) {
+		//
+		// e.printStackTrace();
+		// }
 
 	}
 
@@ -259,7 +276,5 @@ public class WorldManager {
 	public MobManager getMobManager() {
 		return mobManager;
 	}
-
-
 
 }

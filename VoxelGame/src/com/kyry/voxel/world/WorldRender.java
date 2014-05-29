@@ -7,7 +7,9 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import org.lwjgl.opengl.GL11;
 
 import com.kyry.voxel.geometry.Shape;
+import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.entities.mobs.Player;
+import com.kyry.voxel.world.physics.CollisionLibrary;
 import com.kyry.voxel.world.tiles.Tile;
 
 public class WorldRender {
@@ -99,7 +101,6 @@ public class WorldRender {
 		 * GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f(-playerX + offset,
 		 * -playerY - offset, -playerZ + offset); GL11.glEnd();
 		 */
-
 		glEnd();
 
 	}
