@@ -8,6 +8,7 @@ import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Sphere;
 //import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.entities.mobs.Player;
@@ -93,103 +94,42 @@ public class Camera extends Entity {
 		WorldManager.playerSphere.update(somePosition);
 
 		if (keyUp && keyRight && !keyLeft && !keyDown) {// NE
-			/*
-			 * Vector3f vectorUP = new Vector3f(x,y,z); Vector3f vectorRight =
-			 * new Vector3f(); vectorRight.cross(vectorUP, vectorY); Vector3f v
-			 * = new Vector3f(); v.add(vectorRight, vectorUP);
-			 * v.scale(0.5f);//the vector addition has too big of a magnitude
-			 * make a bit smaller (half)
-			 */// PhysicsWorld.moveCharacter(v);
-			/*
-			 * for (x = 0; x < Constants.BlocksLoaded; x++) { Vector3f
-			 * someNewPosition = new Vector3f(camera.getX(), camera.getY() + 1f,
-			 * camera.getZ());
-			 * if((CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
-			 * CollisionLibrary.BlockList.get(x)))){
-			 * WorldManager.playerSphere.update(somePosition); }; }
-			 */
 			move(speed * delay * (float) Time.getDelta(), 0, -speed * delay
 					* (float) Time.getDelta());
-
 		}
 		if (keyUp && keyLeft && !keyRight && !keyDown) {// NW
-			/*
-			 * Vector3f vectorUP = new Vector3f(x,y,z); Vector3f vectorLeft =
-			 * new Vector3f(); vectorLeft.cross(vectorY, vectorUP); Vector3f v =
-			 * new Vector3f(); v.add(vectorLeft, vectorUP); v.scale(0.5f);//the
-			 * vector addition has too big of a magnitude make a bit smaller
-			 * (half)
-			 */// PhysicsWorld.moveCharacter(v);
 			move(-speed * delay * (float) Time.getDelta(), 0, -speed * delay
 					* (float) Time.getDelta());
 		}
 		if (keyUp && !keyLeft && !keyRight && !keyDown) {// N
-			// PhysicsWorld.moveCharacter(new Vector3f(x, y, z));
 			move(0, 0, -speed * delay * (float) Time.getDelta());
 		}
 		if (keyDown && keyLeft && !keyRight && !keyUp) {// SW
-			/*
-			 * Vector3f vectorDown = new Vector3f(-x,-y,-z); Vector3f vectorLeft
-			 * = new Vector3f(); vectorLeft.cross(vectorDown, vectorY); Vector3f
-			 * v = new Vector3f(); v.add(vectorLeft, vectorDown);
-			 * v.scale(0.5f);//the vector addition has too big of a magnitude
-			 * make a bit smaller (half) //PhysicsWorld.moveCharacter(v);
-			 */
 			move(-speed * delay * (float) Time.getDelta(), 0, speed * delay
 					* (float) Time.getDelta());
 		}
 		if (keyDown && keyRight && !keyLeft && !keyUp) {// SE
-			/*
-			 * Vector3f vectorDown = new Vector3f(-x,-y,-z); Vector3f vectorLeft
-			 * = new Vector3f(); vectorLeft.cross(vectorY, vectorDown); Vector3f
-			 * v = new Vector3f(); v.add(vectorLeft, vectorDown);
-			 * v.scale(0.5f);//the vector addition has too big of a magnitude
-			 * make a bit smaller (half) //PhysicsWorld.moveCharacter(v);
-			 */
 			move(speed * delay * (float) Time.getDelta(), 0, speed * delay
 					* (float) Time.getDelta());
 		}
 		if (keyDown && !keyUp && !keyLeft && !keyRight) {// S
-			// PhysicsWorld.moveCharacter(new Vector3f(-x, -y, -z));
 			move(0, 0, speed * delay * (float) Time.getDelta());
 		}
 		if (keyLeft && !keyRight && !keyUp && !keyDown) {// W
-			/*
-			 * Vector3f vector = new Vector3f(x,y,z); vector.cross(vectorY,
-			 * vector); //PhysicsWorld.moveCharacter(vector);
-			 */
 			move(-speed * delay * (float) Time.getDelta(), 0, 0);
 		}
 		if (keyRight && !keyLeft && !keyUp && !keyDown) {// E
-			/*
-			 * Vector3f vector = new Vector3f(x,y,z); vector.cross(vector,
-			 * vectorY); //PhysicsWorld.moveCharacter(vector);
-			 */
 			move(speed * delay * (float) Time.getDelta(), 0, 0);
 		}
 		if (space && !shift) {// UP
-			// PhysicsWorld.moveCharacter(UP);
-			move(0, -0.1f, 0);
+			Constants.jumpEnabled = false;
+			move(0, -100.0f, 0);
 		}
 		if (shift && !space) {// DOWN
-			// PhysicsWorld.moveCharacter(DOWN);
-//			boolean moveAllowed = true;
-//			for (x = 0; x < Constants.BlocksLoaded; x++) {
-//
-//				if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
-//						CollisionLibrary.BlockList.get(x))) {
-//					moveAllowed = false;
-//					System.out.println(x);
-//				}
-//				if (!moveAllowed)
-//					break;
-//			}
-//			// camera.setY(camera.getY() - 1f);
-//			if (moveAllowed == true) {
-//				move(0, 0.1f, 0);
-//			}
 			move(0, 0.1f, 0);
 		}
+		if(!World.noClip)
+			gravity();
 	}
 
 	public Vector3f getPosition() {
@@ -201,42 +141,79 @@ public class Camera extends Entity {
 		float origX = getX();
 		float origY = getY();
 		float origZ = getZ();
+		
 		Vector3f someOldPosition = new Vector3f(getX(), getY(), getZ());
-		//WorldManager.playerSphere.update(someOldPosition);
-		
-		setZ((float) (getZ() + (dX
-				* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
-				* Math.cos(Math.toRadians(getYaw())))));
+		// WorldManager.playerSphere.update(someOldPosition);
+		if (World.noClip) {
+			setZ((float) (getZ() + (dX
+					* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
+					* Math.cos(Math.toRadians(getYaw())))));
 
-		setX((float) (getX() - (dX
-				* (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ
-				* Math.sin(Math.toRadians(getYaw())))));
-		setY((float) (getY() + (dY
-				* (float) Math.sin(Math.toRadians(getPitch() - 90)) + dZ
-				* Math.sin(Math.toRadians(getPitch())))));
-		// Move Player
-		Vector3f somePosition = new Vector3f(getX(), getY(), getZ());
-		WorldManager.playerSphere.update(somePosition);
+			setX((float) (getX() - (dX
+					* (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ
+					* Math.sin(Math.toRadians(getYaw())))));
+			setY((float) (getY() + (dY
+					* (float) Math.sin(Math.toRadians(getPitch() - 90)) + dZ
+					* Math.sin(Math.toRadians(getPitch())))));
+			// Move Player
+			Vector3f somePosition = new Vector3f(getX(), getY(), getZ());
+			WorldManager.playerSphere.update(somePosition);
+		} else if (!World.noClip) {
+			setZ((float) (getZ() + (dX
+					* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
+					* Math.cos(Math.toRadians(getYaw())))));
+
+			setX((float) (getX() - (dX
+					* (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ
+					* Math.sin(Math.toRadians(getYaw())))));
+			setY((float) (getY()));
+			// Move Player
+			Vector3f somePosition = new Vector3f(getX(), getY(), getZ());
+			WorldManager.playerSphere.update(somePosition);
+			boolean moveAllowed = true;
+			for (int x = 0; x < Constants.BlocksLoaded; x++) {
+
+				if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
+						CollisionLibrary.BlockList.get(x))) {
+					moveAllowed = false;
+					// System.out.println(x);
+				}
+				if (!moveAllowed)
+					break;
+			}
+			// camera.setY(camera.getY() - 1f);
+			if (!moveAllowed) {
+				setX(origX);
+				setY(origY);
+				setZ(origZ);
+				WorldManager.playerSphere.update(someOldPosition);
+				System.out.println("Collision!  - STAHPED MOVING");
+			}
+			
+		}
+	}
+
+	private void gravity() {
+		float origY = getY();
 		
+		setY((float) (getY()-Constants.gravity));
+		WorldManager.playerSphere.update(new Vector3f(getX(),getY(),getZ()));
 		boolean moveAllowed = true;
 		for (int x = 0; x < Constants.BlocksLoaded; x++) {
-
-			if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
-					CollisionLibrary.BlockList.get(x))) {
-				moveAllowed = false;
-				//System.out.println(x);
-			}
-			if (!moveAllowed)
-				break;
+		if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
+				CollisionLibrary.BlockList.get(x))) {
+			moveAllowed = false;
+			// System.out.println(x);
 		}
-		// camera.setY(camera.getY() - 1f);
-		if (!moveAllowed) {
-			setX(origX);
-			setY(origY);
-			setZ(origZ);
-			WorldManager.playerSphere.update(someOldPosition);
-			System.out.println("Collision!  - STAHPED MOVING");
-		}
+		if (!moveAllowed)
+			break;
+	}
+	// camera.setY(camera.getY() - 1f);
+	if (!moveAllowed) {
+		setY(origY);
+		WorldManager.playerSphere.update(new Vector3f(getX(),getY(),getZ()));
+		Constants.jumpEnabled=true;
+	}
 	}
 
 	public void applyPhysics(Vector3f playerPosition) {

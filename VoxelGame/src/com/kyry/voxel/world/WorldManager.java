@@ -39,7 +39,8 @@ import com.nishu.utils.ShaderProgram;
 public class WorldManager {
 
 	MobManager mobManager;
-	public static Sphere playerSphere = new Sphere(0.5f);;
+	public static Sphere playerSphere = new Sphere(0.25f);;
+	public static boolean[][][] legalBlocks = new boolean[Constants.CHUNKSIZE][Constants.CHUNKSIZE][Constants.CHUNKSIZE];
 	// PhysicsWorld physicsWorld;
 
 	public ArrayList<Chunk> loadedChunks;
@@ -158,7 +159,6 @@ public class WorldManager {
 							.getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
 
 		}
-		System.out.println(Constants.BlocksLoaded);
 		glEnd();
 	}// end render
 

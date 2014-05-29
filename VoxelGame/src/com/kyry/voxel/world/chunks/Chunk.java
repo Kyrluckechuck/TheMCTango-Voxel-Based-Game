@@ -115,8 +115,8 @@ public class Chunk {
 								//PhysicsWorld.newBlock(x, y, z);
 								//CollisionLibrary.newBlock(x,y,z);
 								CollisionLibrary.newBlock(x,y,z);
-								Vector3f somePosition = new Vector3f(x,y,z);
-								CollisionLibrary.BlockList.get(Constants.BlocksLoaded).update(somePosition);
+								/*Vector3f somePosition = new Vector3f(x,y,z);
+								CollisionLibrary.BlockList.get(Constants.BlocksLoaded).update(somePosition);*/
 							}
 						} catch (NullPointerException e) {
 							System.out.println("Block error at X: "+ x +" Y: "+y+" Z: "+z);

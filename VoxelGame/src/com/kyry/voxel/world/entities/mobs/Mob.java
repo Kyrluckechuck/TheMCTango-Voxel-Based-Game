@@ -26,7 +26,7 @@ public class Mob extends Entity implements GameObject{
 
 	public void move() {
 		getCamera().updateMouse();
-		getCamera().updateKeyboard(32, 0.2f);
+		getCamera().updateKeyboard(320, 0.01f);
 		setPos(getCamera().getX(), getCamera().getY(), getCamera().getZ());
 		setRot(getCamera().getPitch(), getCamera().getYaw(), getCamera().getRoll());
 	}

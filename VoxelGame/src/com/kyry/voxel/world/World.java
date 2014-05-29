@@ -25,6 +25,7 @@ public class World extends Screen {
 	private WorldManager worldManager;
 	private TrueTypeFont font;
 
+	public static boolean noClip = false;
 	private boolean renderText = true;
 
 	public World() {
@@ -70,8 +71,13 @@ public class World extends Screen {
 				if (Keyboard.isKeyDown(Keyboard.KEY_F3)) {
 					renderText = !renderText;
 				}
+				if (Keyboard.isKeyDown(Keyboard.KEY_F4)) {
+					noClip = !noClip;
+				}
 			}
+			
 		}
+		
 	}
 
 	@Override

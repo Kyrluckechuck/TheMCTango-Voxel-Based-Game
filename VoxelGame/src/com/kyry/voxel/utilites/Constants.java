@@ -21,6 +21,7 @@ public class Constants {
 	public static float fogNear = 50f;
 	public static float fogFar = 60f;
 	public static Color fogColor = new Color(0.3f, 0.6f, 0.8f, 1f);
+	public static float gravity = 0.01f;
 	
 	
 	public static final int initX = 0, initY = 15, initZ = 0;
@@ -29,4 +30,6 @@ public class Constants {
 	public static int BlocksLoaded = -1; //How many chunks are in the visible frustum
 	
 	public static float textSize = 0.35f; //The physical size of the text being rendered on screen
+	public static boolean jumpEnabled = true;
+
 }
