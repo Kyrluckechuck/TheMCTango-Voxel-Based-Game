@@ -12,13 +12,13 @@ public class AABB {
 		this(pos.x, pos.y, pos.z, size);
 	}
 
-	public AABB(final float x, final float y, final float z, final float radius) {
+	public AABB(final float x, final float y, final float z, final float size) {
 		center = new Vector3f();
 
 		r = new float[3];
-		r[0] = x * (radius * 0.5f);
-		r[1] = y * (radius * 0.5f);
-		r[2] = z * (radius * 0.5f);
+		r[0] = x * (size * 0.5f); //size*0.5 to make it radius
+		r[1] = y * (size * 0.5f);
+		r[2] = z * (size * 0.5f);
 	}
 
 	public void update(final Vector3f position) {

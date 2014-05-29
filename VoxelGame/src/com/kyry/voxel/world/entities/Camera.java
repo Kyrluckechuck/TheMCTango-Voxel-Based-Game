@@ -169,27 +169,26 @@ public class Camera extends Entity {
 		}
 		if (space && !shift) {// UP
 			// PhysicsWorld.moveCharacter(UP);
-			camera.setY(camera.getY() + 1f);
+			move(0, -0.1f, 0);
 		}
 		if (shift && !space) {// DOWN
 			// PhysicsWorld.moveCharacter(DOWN);
-			boolean moveAllowed = true;
-			for (x = 0; x < Constants.BlocksLoaded; x++) {
-
-				if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere, CollisionLibrary.BlockList.get(x))) {
-
-					
-					moveAllowed = false;
-					System.out.println(x);
-				}
-				if (!moveAllowed)
-					break;
-			}
-			// camera.setY(camera.getY() - 1f);
-			if (moveAllowed == true) {
-				move(0, 0.1f, 0);
-			}
-
+//			boolean moveAllowed = true;
+//			for (x = 0; x < Constants.BlocksLoaded; x++) {
+//
+//				if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
+//						CollisionLibrary.BlockList.get(x))) {
+//					moveAllowed = false;
+//					System.out.println(x);
+//				}
+//				if (!moveAllowed)
+//					break;
+//			}
+//			// camera.setY(camera.getY() - 1f);
+//			if (moveAllowed == true) {
+//				move(0, 0.1f, 0);
+//			}
+			move(0, 0.1f, 0);
 		}
 	}
 
@@ -199,6 +198,12 @@ public class Camera extends Entity {
 
 	public void move(float dX, float dY, float dZ) {
 		// Move Camera
+		float origX = getX();
+		float origY = getY();
+		float origZ = getZ();
+		Vector3f someOldPosition = new Vector3f(getX(), getY(), getZ());
+		//WorldManager.playerSphere.update(someOldPosition);
+		
 		setZ((float) (getZ() + (dX
 				* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
 				* Math.cos(Math.toRadians(getYaw())))));
@@ -212,6 +217,26 @@ public class Camera extends Entity {
 		// Move Player
 		Vector3f somePosition = new Vector3f(getX(), getY(), getZ());
 		WorldManager.playerSphere.update(somePosition);
+		
+		boolean moveAllowed = true;
+		for (int x = 0; x < Constants.BlocksLoaded; x++) {
+
+			if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
+					CollisionLibrary.BlockList.get(x))) {
+				moveAllowed = false;
+				//System.out.println(x);
+			}
+			if (!moveAllowed)
+				break;
+		}
+		// camera.setY(camera.getY() - 1f);
+		if (!moveAllowed) {
+			setX(origX);
+			setY(origY);
+			setZ(origZ);
+			WorldManager.playerSphere.update(someOldPosition);
+			System.out.println("Collision!  - STAHPED MOVING");
+		}
 	}
 
 	public void applyPhysics(Vector3f playerPosition) {
