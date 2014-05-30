@@ -127,12 +127,19 @@ public class World extends Screen {
 		font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " ("
 				+ Constants.chunksFrustum + ")" + "Blocks: " + Constants.BlocksLoaded);
 
-		font.drawString(10, 115, "playerSphere X: "
-				+ (int) WorldManager.playerSphere.getX()
+		font.drawString(10, 115, "playerSphereUpper X: "
+				+ (int) WorldManager.playerSphereUpper.getX()
 				+ " Y: "
-				+ (int) WorldManager.playerSphere.getY()
+				+ (int) WorldManager.playerSphereUpper.getY()
 				+ " Z: "
-				+ (int) WorldManager.playerSphere.getZ());
+				+ (int) WorldManager.playerSphereUpper.getZ());
+		
+		font.drawString(10, 140, "playerSphereLower X: "
+				+ (int) WorldManager.playerSphereLower.getX()
+				+ " Y: "
+				+ (int) WorldManager.playerSphereLower.getY()
+				+ " Z: "
+				+ (int) WorldManager.playerSphereLower.getZ());
 
 		TextureImpl.unbind();
 

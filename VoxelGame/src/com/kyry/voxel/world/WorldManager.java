@@ -39,7 +39,8 @@ import com.nishu.utils.ShaderProgram;
 public class WorldManager {
 
 	MobManager mobManager;
-	public static Sphere playerSphere = new Sphere(0.25f);;
+	public static Sphere playerSphereUpper = new Sphere(0.25f);;
+	public static Sphere playerSphereLower = new Sphere(0.25f);;
 	public static boolean[][][] legalBlocks = new boolean[Constants.CHUNKSIZE][Constants.CHUNKSIZE][Constants.CHUNKSIZE];
 	// PhysicsWorld physicsWorld;
 
@@ -149,7 +150,7 @@ public class WorldManager {
 
 		}
 		mobManager.render();
-		glBegin(GL_QUADS);
+/*		glBegin(GL_QUADS);
 		for (int x = 0; x < Constants.BlocksLoaded; x++) {
 
 			Shape.createCube(CollisionLibrary.BlockList.get(x).center.x,
@@ -158,7 +159,7 @@ public class WorldManager {
 					Tile.getTile(Tile.Wireframe.getId()).getColor(), Tile
 							.getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
 
-		}
+		}*/
 		glEnd();
 	}// end render
 

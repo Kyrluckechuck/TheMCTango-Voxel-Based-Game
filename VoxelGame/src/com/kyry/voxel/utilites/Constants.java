@@ -14,14 +14,15 @@ public class Constants {
 	public static final float PLAYER_SPEED = 10f; //Player speed
 	public static float viewDistance = 50f; //The view distance (how far)
 	public static float viewClose = 0.01f; //How closely it renders (helps the text not get chopped off)
-	public static int WORLDSIZE = 1; //How many chunks in the world
+	public static int WORLDSIZE = 2; //How many chunks in the world
 	public static int CHUNKSIZE = 8; //How many blocks^3 a chunk is
+	public static float playerHeight = 0.8f; //How many blocks^3 a chunk is
 	public static final int TextureSize = 16; //The pixel size of a texture (the entire file is 256x256 pixels, but each texture is 16x16 pixels)
 	
-	public static float fogNear = 50f;
-	public static float fogFar = 60f;
+	public static float fogNear = 6.5f;
+	public static float fogFar = 9.4f;
 	public static Color fogColor = new Color(0.3f, 0.6f, 0.8f, 1f);
-	public static float gravity = 0.01f;
+	public static float gravity = 0.1f;
 	
 	
 	public static final int initX = 0, initY = 15, initZ = 0;

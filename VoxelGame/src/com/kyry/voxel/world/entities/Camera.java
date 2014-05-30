@@ -22,6 +22,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Camera extends Entity {
 
 	private float speed, maxU, maxD;
+	private final float playerHeight = Constants.playerHeight;
 
 	/*
 	 * Rotation x - pitch y - yaw z - roll
@@ -91,7 +92,10 @@ public class Camera extends Entity {
 
 		Vector3f somePosition = new Vector3f(camera.getX(), camera.getY(),
 				camera.getZ());
-		WorldManager.playerSphere.update(somePosition);
+		Vector3f someOtherPosition = new Vector3f(camera.getX(),
+				camera.getY() - playerHeight, camera.getZ());
+		WorldManager.playerSphereUpper.update(somePosition);
+		WorldManager.playerSphereLower.update(someOtherPosition);
 
 		if (keyUp && keyRight && !keyLeft && !keyDown) {// NE
 			move(speed * delay * (float) Time.getDelta(), 0, -speed * delay
@@ -128,7 +132,7 @@ public class Camera extends Entity {
 		if (shift && !space) {// DOWN
 			move(0, 0.1f, 0);
 		}
-		if(!World.noClip)
+		if (!World.noClip)
 			gravity();
 	}
 
@@ -141,9 +145,9 @@ public class Camera extends Entity {
 		float origX = getX();
 		float origY = getY();
 		float origZ = getZ();
-		
+
 		Vector3f someOldPosition = new Vector3f(getX(), getY(), getZ());
-		// WorldManager.playerSphere.update(someOldPosition);
+		// WorldManager.playerSphereUpper.update(someOldPosition);
 		if (World.noClip) {
 			setZ((float) (getZ() + (dX
 					* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
@@ -157,7 +161,9 @@ public class Camera extends Entity {
 					* Math.sin(Math.toRadians(getPitch())))));
 			// Move Player
 			Vector3f somePosition = new Vector3f(getX(), getY(), getZ());
-			WorldManager.playerSphere.update(somePosition);
+			Vector3f someOtherPosition = new Vector3f(getX(), getY()-playerHeight, getZ());
+			WorldManager.playerSphereUpper.update(somePosition);
+			WorldManager.playerSphereLower.update(someOtherPosition);
 		} else if (!World.noClip) {
 			setZ((float) (getZ() + (dX
 					* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
@@ -169,12 +175,19 @@ public class Camera extends Entity {
 			setY((float) (getY()));
 			// Move Player
 			Vector3f somePosition = new Vector3f(getX(), getY(), getZ());
-			WorldManager.playerSphere.update(somePosition);
+			Vector3f someOtherPosition = new Vector3f(getX(), getY() - playerHeight,
+					getZ());
+			WorldManager.playerSphereUpper.update(somePosition);
+			WorldManager.playerSphereLower.update(someOtherPosition);
 			boolean moveAllowed = true;
 			for (int x = 0; x < Constants.BlocksLoaded; x++) {
 
-				if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
-						CollisionLibrary.BlockList.get(x))) {
+				if ((CollisionLibrary.testCircleAABB(
+						WorldManager.playerSphereUpper,
+						CollisionLibrary.BlockList.get(x)))
+						|| (CollisionLibrary.testCircleAABB(
+								WorldManager.playerSphereLower,
+								CollisionLibrary.BlockList.get(x)))) {
 					moveAllowed = false;
 					// System.out.println(x);
 				}
@@ -186,34 +199,46 @@ public class Camera extends Entity {
 				setX(origX);
 				setY(origY);
 				setZ(origZ);
-				WorldManager.playerSphere.update(someOldPosition);
+				WorldManager.playerSphereUpper.update(someOldPosition);
+				WorldManager.playerSphereLower.update(new Vector3f(origX,
+						origY - playerHeight, origZ));
 				System.out.println("Collision!  - STAHPED MOVING");
 			}
-			
+
 		}
 	}
 
 	private void gravity() {
 		float origY = getY();
-		
-		setY((float) (getY()-Constants.gravity));
-		WorldManager.playerSphere.update(new Vector3f(getX(),getY(),getZ()));
+
+		setY((float) (getY() - Constants.gravity));
+		WorldManager.playerSphereUpper.update(new Vector3f(getX(), getY(),
+				getZ()));
+		WorldManager.playerSphereLower.update(new Vector3f(getX(), getY() - playerHeight,
+				getZ()));
 		boolean moveAllowed = true;
 		for (int x = 0; x < Constants.BlocksLoaded; x++) {
-		if (CollisionLibrary.testCircleAABB(WorldManager.playerSphere,
-				CollisionLibrary.BlockList.get(x))) {
-			moveAllowed = false;
-			// System.out.println(x);
+			if ((CollisionLibrary.testCircleAABB(
+					WorldManager.playerSphereUpper,
+					CollisionLibrary.BlockList.get(x)))
+					|| (CollisionLibrary.testCircleAABB(
+							WorldManager.playerSphereLower,
+							CollisionLibrary.BlockList.get(x)))) {
+				moveAllowed = false;
+				// System.out.println(x);
+			}
+			if (!moveAllowed)
+				break;
 		}
-		if (!moveAllowed)
-			break;
-	}
-	// camera.setY(camera.getY() - 1f);
-	if (!moveAllowed) {
-		setY(origY);
-		WorldManager.playerSphere.update(new Vector3f(getX(),getY(),getZ()));
-		Constants.jumpEnabled=true;
-	}
+		// camera.setY(camera.getY() - 1f);
+		if (!moveAllowed) {
+			setY(origY);
+			WorldManager.playerSphereUpper.update(new Vector3f(getX(), getY(),
+					getZ()));
+			WorldManager.playerSphereLower.update(new Vector3f(getX(),
+					getY() - playerHeight, getZ()));
+			Constants.jumpEnabled = true;
+		}
 	}
 
 	public void applyPhysics(Vector3f playerPosition) {

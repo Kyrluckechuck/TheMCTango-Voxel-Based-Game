@@ -16,7 +16,9 @@ public class Player extends Mob {
 		super(camera, camera.getX(), camera.getY(), camera.getZ(), camera
 				.getPitch(), camera.getYaw(), camera.getRoll(), id, 0);
 		Vector3f somePosition = new Vector3f(camera.getX(), camera.getY(), camera.getZ());
-		WorldManager.playerSphere.update(somePosition);
+		Vector3f someOtherPosition = new Vector3f(camera.getX(), camera.getY()-1, camera.getZ());
+		WorldManager.playerSphereUpper.update(somePosition);
+		WorldManager.playerSphereLower.update(someOtherPosition);
 	}
 
 	public void update() {
