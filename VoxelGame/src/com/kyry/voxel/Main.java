@@ -25,6 +25,7 @@ public class Main extends Screen{
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
 		gameLoop.start(30);
+		
 	}
 
 	@Override
@@ -88,6 +89,7 @@ public class Main extends Screen{
 		glClearColor(0.5f, 0f, 0.75f, 1f);
 		
 		world.render();
+		
 	}
 	
 	@Override

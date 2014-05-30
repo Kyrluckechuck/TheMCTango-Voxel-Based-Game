@@ -87,7 +87,7 @@ public class Chunk {
 					for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 						tiles[x][y][z] = Tile.Grass.getId();
 						if (y == 14) {
-							tiles[x][y][z] = Tile.Sand.getId();
+							//tiles[x][y][z] = Tile.Sand.getId();
 						} else if ((x==0)&&(z==0)) {
 							tiles[x][y][z] = Tile.Air.getId();
 						} else if (y == 0) {
