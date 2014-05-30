@@ -27,7 +27,7 @@ public class MobManager implements GameObject {
 		mobs = new ArrayList<Mob>();
 		// player = new Player(new Camera(0, (Constants.viewDistance *
 		// Constants.CHUNKSIZE) + 2, 0, 5, 131, 0, 1, 90, -90, 1), 0);
-		player = new Player(new Camera(Constants.initX, Constants.initY, Constants.initZ, 5, 131,
+		player = new Player(new Camera(Constants.initPos.x, Constants.initPos.y, Constants.initPos.z, 5, 131,
 				0, 1, 90, -90, 1), 0);
 	}
 

@@ -66,23 +66,7 @@ public class Camera extends Entity {
 		// System.out.println(PhysicsWorld.checkCollision());
 	}
 
-	public void updateKeyboard(float delay, float speed) {
-		int x = (int) (Constants.PLAYER_SPEED
-				* Math.cos((double) (getPitch() / 180 * Math.PI)) * Math
-				.sin((double) (getYaw() / 180 * Math.PI)));
-		int y = 0;/*
-				 * (int) (Constants.PLAYER_SPEED *
-				 * Math.cos((double)(getYaw()/180 * Math.PI)) *
-				 * Math.sin((double)(getPitch()/180 * Math.PI)));
-				 */
-		int z = -1
-				* (int) (Constants.PLAYER_SPEED * Math
-						.cos((double) (getYaw() / 180 * Math.PI)));
-		/*
-		 * Vector3f vectorY = new Vector3f(0, 1, 0); Vector3f DOWN = new
-		 * Vector3f(0, -2, 0); Vector3f UP = new Vector3f(0, 2, 0);
-		 */
-		// PhysicsWorld.clearForcesOnPlayer();
+	public void updateKeyboard(float deltaTime, float speed) {
 		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_W);
 		boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_S);
 		boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_A);
@@ -90,47 +74,45 @@ public class Camera extends Entity {
 		boolean space = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
 		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 
+		float deltaDis = deltaTime * speed;
+
 		Vector3f somePosition = new Vector3f(camera.getX(), camera.getY(),
 				camera.getZ());
-		Vector3f someOtherPosition = new Vector3f(camera.getX(),
-				camera.getY() - playerHeight, camera.getZ());
+		Vector3f someOtherPosition = new Vector3f(camera.getX(), camera.getY()
+				- playerHeight, camera.getZ());
 		WorldManager.playerSphereUpper.update(somePosition);
 		WorldManager.playerSphereLower.update(someOtherPosition);
 
 		if (keyUp && keyRight && !keyLeft && !keyDown) {// NE
-			move(speed * delay * (float) Time.getDelta(), 0, -speed * delay
-					* (float) Time.getDelta());
+			move(deltaDis, 0, -deltaDis);
 		}
 		if (keyUp && keyLeft && !keyRight && !keyDown) {// NW
-			move(-speed * delay * (float) Time.getDelta(), 0, -speed * delay
-					* (float) Time.getDelta());
+			move(-deltaDis, 0, -deltaDis);
 		}
 		if (keyUp && !keyLeft && !keyRight && !keyDown) {// N
-			move(0, 0, -speed * delay * (float) Time.getDelta());
+			move(0, 0, -deltaDis);
 		}
 		if (keyDown && keyLeft && !keyRight && !keyUp) {// SW
-			move(-speed * delay * (float) Time.getDelta(), 0, speed * delay
-					* (float) Time.getDelta());
+			move(-deltaDis, 0, deltaDis);
 		}
 		if (keyDown && keyRight && !keyLeft && !keyUp) {// SE
-			move(speed * delay * (float) Time.getDelta(), 0, speed * delay
-					* (float) Time.getDelta());
+			move(deltaDis, 0, deltaDis);
 		}
 		if (keyDown && !keyUp && !keyLeft && !keyRight) {// S
-			move(0, 0, speed * delay * (float) Time.getDelta());
+			move(0, 0, deltaDis);
 		}
 		if (keyLeft && !keyRight && !keyUp && !keyDown) {// W
-			move(-speed * delay * (float) Time.getDelta(), 0, 0);
+			move(-deltaDis, 0, 0);
 		}
 		if (keyRight && !keyLeft && !keyUp && !keyDown) {// E
-			move(speed * delay * (float) Time.getDelta(), 0, 0);
+			move(deltaDis, 0, 0);
 		}
-		if (space && !shift) {// UP
-			Constants.jumpEnabled = false;
-			move(0, -100.0f, 0);
+		if (space && !shift) {// JUMP
+			// made into a method cause its more complex and dont want clutter
+			jump(deltaDis);
 		}
 		if (shift && !space) {// DOWN
-			move(0, 0.1f, 0);
+			move(0, deltaDis, 0);
 		}
 		if (!World.noClip)
 			gravity();
@@ -140,15 +122,38 @@ public class Camera extends Entity {
 		return new Vector3f(getX(), getY(), getZ());
 	}
 
+	private void jump(float deltaDis) {
+		if (Constants.jumpEnabled) {
+			// if player can jump, then freaking jump already
+			move(0, -deltaDis * Constants.jumpPower, 0);
+			Constants.jumpCounter = 0;
+		} else if (!Constants.jumpEnabled
+				&& Constants.jumpCounter < Constants.jumpFrames) {
+			move(0, -deltaDis * Constants.jumpPower, 0);
+			Constants.jumpCounter++;
+		}
+		if (!World.noClip) {
+			// only disable jump if not noclip
+			Constants.jumpEnabled = false;
+		}
+	}
+
 	public void move(float dX, float dY, float dZ) {
 		// Move Camera
 		float origX = getX();
 		float origY = getY();
 		float origZ = getZ();
 
-		Vector3f someOldPosition = new Vector3f(getX(), getY(), getZ());
-		// WorldManager.playerSphereUpper.update(someOldPosition);
+		Vector3f someOldPositionUpper = new Vector3f(getX(), getY(), getZ());
+		Vector3f someOldPositionLower = new Vector3f(getX(), getY()
+				- playerHeight, getZ());
+
 		if (World.noClip) {
+			// Constants.jumpEnabled = true;//not proper
+			noClipMove(dX, dY, dZ);
+		} else if (!World.noClip) {// move normally
+
+			// Move to next possible position
 			setZ((float) (getZ() + (dX
 					* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
 					* Math.cos(Math.toRadians(getYaw())))));
@@ -156,29 +161,14 @@ public class Camera extends Entity {
 			setX((float) (getX() - (dX
 					* (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ
 					* Math.sin(Math.toRadians(getYaw())))));
-			setY((float) (getY() + (dY
-					* (float) Math.sin(Math.toRadians(getPitch() - 90)) + dZ
-					* Math.sin(Math.toRadians(getPitch())))));
-			// Move Player
-			Vector3f somePosition = new Vector3f(getX(), getY(), getZ());
-			Vector3f someOtherPosition = new Vector3f(getX(), getY()-playerHeight, getZ());
-			WorldManager.playerSphereUpper.update(somePosition);
-			WorldManager.playerSphereLower.update(someOtherPosition);
-		} else if (!World.noClip) {
-			setZ((float) (getZ() + (dX
-					* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
-					* Math.cos(Math.toRadians(getYaw())))));
-
-			setX((float) (getX() - (dX
-					* (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ
-					* Math.sin(Math.toRadians(getYaw())))));
-			setY((float) (getY()));
-			// Move Player
-			Vector3f somePosition = new Vector3f(getX(), getY(), getZ());
-			Vector3f someOtherPosition = new Vector3f(getX(), getY() - playerHeight,
-					getZ());
-			WorldManager.playerSphereUpper.update(somePosition);
-			WorldManager.playerSphereLower.update(someOtherPosition);
+			setY((float) (getY() - dY));
+			// Move Player's Invisible Collision object
+			Vector3f somePositionUpper = new Vector3f(getX(), getY(), getZ());
+			Vector3f somePositionLower = new Vector3f(getX(), getY()
+					- playerHeight, getZ());
+			WorldManager.playerSphereUpper.update(somePositionUpper);
+			WorldManager.playerSphereLower.update(somePositionLower);
+			// Check if it collides
 			boolean moveAllowed = true;
 			for (int x = 0; x < Constants.BlocksLoaded; x++) {
 
@@ -194,28 +184,49 @@ public class Camera extends Entity {
 				if (!moveAllowed)
 					break;
 			}
-			// camera.setY(camera.getY() - 1f);
+			// if it does collide then revert to original position
 			if (!moveAllowed) {
 				setX(origX);
 				setY(origY);
 				setZ(origZ);
-				WorldManager.playerSphereUpper.update(someOldPosition);
-				WorldManager.playerSphereLower.update(new Vector3f(origX,
-						origY - playerHeight, origZ));
+				WorldManager.playerSphereUpper.update(someOldPositionUpper);
+				WorldManager.playerSphereLower.update(someOldPositionLower);
+				Constants.jumpEnabled = true;
 				System.out.println("Collision!  - STAHPED MOVING");
 			}
+		}// End check if no clip
+	}
 
-		}
+	private void noClipMove(float dX, float dY, float dZ) {
+		setZ((float) (getZ() + (dX
+				* (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ
+				* Math.cos(Math.toRadians(getYaw())))));
+
+		setX((float) (getX() - (dX
+				* (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ
+				* Math.sin(Math.toRadians(getYaw())))));
+		setY((float) (getY() + (dY
+				* (float) Math.sin(Math.toRadians(getPitch() - 90)) + dZ
+				* Math.sin(Math.toRadians(getPitch())))));
+		// Move Player
+		Vector3f somePositionUpper = new Vector3f(getX(), getY(), getZ());
+		Vector3f somePositionLower = new Vector3f(getX(),
+				getY() - playerHeight, getZ());
+		WorldManager.playerSphereUpper.update(somePositionUpper);
+		WorldManager.playerSphereLower.update(somePositionLower);
 	}
 
 	private void gravity() {
 		float origY = getY();
+		// change in the y direction,by changing the speed
+		float dY = (1 / Constants.FPS)
+				* (Constants.playerSpeed.y - Constants.gravity);
 
-		setY((float) (getY() - Constants.gravity));
+		setY((getY() + dY));
 		WorldManager.playerSphereUpper.update(new Vector3f(getX(), getY(),
 				getZ()));
-		WorldManager.playerSphereLower.update(new Vector3f(getX(), getY() - playerHeight,
-				getZ()));
+		WorldManager.playerSphereLower.update(new Vector3f(getX(), getY()
+				- playerHeight, getZ()));
 		boolean moveAllowed = true;
 		for (int x = 0; x < Constants.BlocksLoaded; x++) {
 			if ((CollisionLibrary.testCircleAABB(
@@ -230,22 +241,13 @@ public class Camera extends Entity {
 			if (!moveAllowed)
 				break;
 		}
-		// camera.setY(camera.getY() - 1f);
-		if (!moveAllowed) {
+		if (!moveAllowed) {// if not allowed revert to original
 			setY(origY);
 			WorldManager.playerSphereUpper.update(new Vector3f(getX(), getY(),
 					getZ()));
-			WorldManager.playerSphereLower.update(new Vector3f(getX(),
-					getY() - playerHeight, getZ()));
+			WorldManager.playerSphereLower.update(new Vector3f(getX(), getY()
+					- playerHeight, getZ()));
 			Constants.jumpEnabled = true;
-		}
-	}
-
-	public void applyPhysics(Vector3f playerPosition) {
-		{
-			setX(playerPosition.x);
-			setY(playerPosition.y);
-			setZ(playerPosition.z);
 		}
 	}
 
@@ -259,4 +261,26 @@ public class Camera extends Entity {
 		glPopAttrib();
 	}
 
+	public void applyPhysics() {
+		Vector3f diffPos = new Vector3f(getX() - Constants.playerPrevPos.x,
+				getY() - Constants.playerPrevPos.y, getZ()
+						- Constants.playerPrevPos.z);
+		diffPos.scale(Constants.FPS);// scale it. delta Pos / time
+		Constants.playerSpeed = diffPos;
+
+		// Current are now the previous value for the next iteration
+		Constants.playerPrevPos = new Vector3f(getX(), getY(), getZ());
+	}
+
+	public void castRay() {
+		int x = (int) (Constants.rayConstant
+				* Math.cos(Math.toRadians(getPitch())) * Math.sin(Math
+				.toRadians(getYaw())));
+
+		int z = (int) (Constants.rayConstant * Math.cos(Math
+				.toRadians(getYaw()) * Math.sin(Math.toRadians(getPitch()))));
+
+		int y = (int) (Constants.rayConstant * Math.cos(Math
+				.toRadians(getYaw())));
+	}
 }

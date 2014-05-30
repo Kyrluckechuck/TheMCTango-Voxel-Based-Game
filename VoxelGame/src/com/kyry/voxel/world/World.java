@@ -75,9 +75,9 @@ public class World extends Screen {
 					noClip = !noClip;
 				}
 			}
-			
+
 		}
-		
+
 	}
 
 	@Override
@@ -85,30 +85,31 @@ public class World extends Screen {
 		render3D();
 		logic();
 		worldRender();
-		//skyBoxRender();
+		// skyBoxRender();
 		renderSkyBox();
-		
+
 		glLoadIdentity();
 
 		if (renderText) {
 			render2D();
 			renderText();
 		}
-		
-	}
 
+	}
 
 	private void logic() {
 		worldManager.logic();
 	}
-	private void worldRender(){
+
+	private void worldRender() {
 		worldManager.render();
 	}
-/*	private void skyBoxRender() {
-		worldManager.skyBoxRender();
-		
-	}*/
 
+	/*
+	 * private void skyBoxRender() { worldManager.skyBoxRender();
+	 * 
+	 * }
+	 */
 
 	private void renderText() {
 		font.drawString(10, 15, "FPS: " + GameLoop.getFPS());
@@ -125,21 +126,21 @@ public class World extends Screen {
 				+ " Rotz: "
 				+ (int) worldManager.getMobManager().getPlayer().getRoll());
 		font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " ("
-				+ Constants.chunksFrustum + ")" + "Blocks: " + Constants.BlocksLoaded);
+				+ Constants.chunksFrustum + ")" + "Blocks: "
+				+ Constants.BlocksLoaded);
 
 		font.drawString(10, 115, "playerSphereUpper X: "
-				+ (int) WorldManager.playerSphereUpper.getX()
-				+ " Y: "
-				+ (int) WorldManager.playerSphereUpper.getY()
-				+ " Z: "
+				+ (int) WorldManager.playerSphereUpper.getX() + " Y: "
+				+ (int) WorldManager.playerSphereUpper.getY() + " Z: "
 				+ (int) WorldManager.playerSphereUpper.getZ());
-		
+
 		font.drawString(10, 140, "playerSphereLower X: "
-				+ (int) WorldManager.playerSphereLower.getX()
-				+ " Y: "
-				+ (int) WorldManager.playerSphereLower.getY()
-				+ " Z: "
+				+ (int) WorldManager.playerSphereLower.getX() + " Y: "
+				+ (int) WorldManager.playerSphereLower.getY() + " Z: "
 				+ (int) WorldManager.playerSphereLower.getZ());
+		font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x
+				+ " Y: " + Constants.playerSpeed.y + " Z: "
+				+ Constants.playerSpeed.z);
 
 		TextureImpl.unbind();
 
@@ -162,20 +163,21 @@ public class World extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose,
-				Constants.viewDistance);
+		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT,
+				Constants.viewClose, Constants.viewDistance);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
 	}
+
 	public void renderSkyBox() {
 		glCullFace(GL_BACK);
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose,
-				Constants.viewDistance);
+		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT,
+				Constants.viewClose, Constants.viewDistance);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);

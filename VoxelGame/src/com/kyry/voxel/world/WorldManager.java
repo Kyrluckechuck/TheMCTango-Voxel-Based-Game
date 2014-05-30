@@ -41,7 +41,6 @@ public class WorldManager {
 	MobManager mobManager;
 	public static Sphere playerSphereUpper = new Sphere(0.25f);;
 	public static Sphere playerSphereLower = new Sphere(0.25f);;
-	public static boolean[][][] legalBlocks = new boolean[Constants.CHUNKSIZE][Constants.CHUNKSIZE][Constants.CHUNKSIZE];
 	// PhysicsWorld physicsWorld;
 
 	public ArrayList<Chunk> loadedChunks;
@@ -150,16 +149,17 @@ public class WorldManager {
 
 		}
 		mobManager.render();
-/*		glBegin(GL_QUADS);
-		for (int x = 0; x < Constants.BlocksLoaded; x++) {
-
-			Shape.createCube(CollisionLibrary.BlockList.get(x).center.x,
-					CollisionLibrary.BlockList.get(x).center.y + .01f,
-					CollisionLibrary.BlockList.get(x).center.z,
-					Tile.getTile(Tile.Wireframe.getId()).getColor(), Tile
-							.getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
-
-		}*/
+		/*
+		 * glBegin(GL_QUADS); for (int x = 0; x < Constants.BlocksLoaded; x++) {
+		 * 
+		 * Shape.createCube(CollisionLibrary.BlockList.get(x).center.x,
+		 * CollisionLibrary.BlockList.get(x).center.y + .01f,
+		 * CollisionLibrary.BlockList.get(x).center.z,
+		 * Tile.getTile(Tile.Wireframe.getId()).getColor(), Tile
+		 * .getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
+		 * 
+		 * }
+		 */
 		glEnd();
 	}// end render
 
@@ -169,60 +169,11 @@ public class WorldManager {
 	}
 
 	public void logic() {
-		// Reset the model-view matrix.
 
-		// glLoadIdentity();
+		getMobManager().getPlayer().getCamera().castRay();
 		getMobManager().getPlayer().getCamera().applyTranslations();
-		/*
-		 * Vector3f playerPosition = getMobManager().getPlayer().getCamera()
-		 * .getPosition(); Transform transform = new Transform(new
-		 * Matrix4f(physicsWorld.DEFAULT_QUAT, playerPosition, 1.0f));
-		 * physicsWorld.playerBody.setWorldTransform(transform);
-		 * physicsWorld.step(1 / Constants.FPS); playerPosition =
-		 * physicsWorld.playerBody .getWorldTransform(new Transform()).origin;
-		 * getMobManager().getPlayer().getCamera().applyPhysics(playerPosition);
-		 */
+		getMobManager().getPlayer().getCamera().applyPhysics();
 
-		/*
-		 * // If the attraction between the green ball and the camera is enabled
-		 * // ... if (applyForce) { // Retrieve the controllable ball's
-		 * location. Transform controlBallTransform = new Transform();
-		 * controlBall.getMotionState()
-		 * .getWorldTransform(controlBallTransform); Vector3f
-		 * controlBallLocation = controlBallTransform.origin; Vector3f
-		 * cameraPosition = new Vector3f(camera.x(), camera.y(), camera.z()); //
-		 * Calculate the force that is applied to the controllable ball as //
-		 * following: // force = cameraPosition - controlBallLocation Vector3f
-		 * force = new Vector3f(); force.sub(cameraPosition,
-		 * controlBallLocation); // Wake the controllable ball if it is
-		 * sleeping. controlBall.activate(true); // Apply the force to the
-		 * controllable ball. controlBall.applyCentralForce(force); }
-		 */
-		/*
-		 * // If a new shape should be created ... if (createNewShape) { //
-		 * Create the collision shape (sphere with radius of 3 metres).
-		 * CollisionShape shape = new SphereShape(3); // Create the motion state
-		 * (x and z are the same as the camera's). DefaultMotionState
-		 * motionState = new DefaultMotionState( new Transform(new Matrix4f(new
-		 * Quat4f(0, 0, 0, 1), new Vector3f(camera.x(), 35, camera.z()),
-		 * 1.0f))); // Calculate the inertia (resistance to movement) using the
-		 * ball's // mass of 1 kilogram. Vector3f inertia = new Vector3f(0, 0,
-		 * 0); shape.calculateLocalInertia(1.0f, inertia);
-		 * RigidBodyConstructionInfo constructionInfo = new
-		 * RigidBodyConstructionInfo( 1, motionState, shape, inertia);
-		 * constructionInfo.restitution = 0.75f; RigidBody rigidBody = new
-		 * RigidBody(constructionInfo); balls.add(rigidBody);
-		 * dynamicsWorld.addRigidBody(rigidBody); createNewShape = false; } //
-		 * If the controllable ball's position and orientation should be reset
-		 * // ... if (resetControlBall) { // Set the position of the ball to (0,
-		 * 50, 0). controlBall.setCenterOfMassTransform(new Transform(new
-		 * Matrix4f( new Quat4f(0, 0, 0, 1), new Vector3f(0, 50, 0), 1.0f))); //
-		 * Reset the angular velocity (spinning movement) of the ball.
-		 * controlBall.setAngularVelocity(new Vector3f(0, 0, 0)); // Reset the
-		 * linear velocity (x,y,z movement) of the ball.
-		 * controlBall.setLinearVelocity(new Vector3f(0, 0, 0));
-		 * resetControlBall = false; }
-		 */
 	}
 
 	public void saveChunk(Chunk c) {

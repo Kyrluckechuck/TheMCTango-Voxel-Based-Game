@@ -75,11 +75,11 @@ public class Main extends Screen{
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			dispose();
 		}
-		if(gameLoop.getFPS() > 1){
-			Constants.FPS = gameLoop.getFPS();
-		}else {
-			Constants.FPS = 0.01f;
-		}
+//		if(gameLoop.getFPS() > 1){
+//			Constants.FPS = gameLoop.getFPS();
+//		}else {
+//			Constants.FPS = 0.01f;
+//		}
 		world.update();
 	}
 	
