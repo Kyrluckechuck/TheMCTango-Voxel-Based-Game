@@ -18,12 +18,6 @@ import javax.vecmath.Vector3f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.collision.shapes.SphereShape;
-import com.bulletphysics.dynamics.RigidBody;
-import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
-import com.bulletphysics.linearmath.DefaultMotionState;
-import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilites.Constants;
@@ -60,7 +54,6 @@ public class WorldManager {
 	}
 
 	private void init() {
-		// physicsWorld = new PhysicsWorld();
 		mobManager = new MobManager();
 		loadedChunks = new ArrayList<Chunk>();
 		activeChunks = new ArrayList<Chunk>();
@@ -159,8 +152,16 @@ public class WorldManager {
 		 * .getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
 		 * 
 		 * }
-		 */
+		glEnd();*/
+		glBegin(GL_QUADS);
+		Shape.createCube(mobManager.getPlayer().getX() + Constants.ray.x,
+				mobManager.getPlayer().getY() + Constants.ray.y,
+				mobManager.getPlayer().getZ() + Constants.ray.z,
+				Tile.getTile(Tile.Brick.getId()).getColor(),
+				Tile.getTile(Tile.Brick.getId()).getTexCoords(), 0.2f);
 		glEnd();
+		
+		
 	}// end render
 
 	public void skyBoxRender() {

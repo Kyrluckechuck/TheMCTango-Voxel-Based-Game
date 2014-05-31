@@ -47,11 +47,15 @@ public class Constants {
 	// Previous Position
 	public static Vector3f playerPrevPos = new Vector3f(initPos.x, initPos.y,
 			initPos.z);
+	//player's current position
+	public static Vector3f playerPos = new Vector3f(initPos.x, initPos.y,
+			initPos.z);
+	
 	// ray
 	public static Vector3f ray = new Vector3f(0f, 0f, 0f);
-	public static float rayConstant = 1f;
-
-	//public static final int initX = 0, initY = 15, initZ = 0;
+	public static float rayConstant = 5f;
+	public static int rayDistance = (int) viewDistance;
+	
 	public static int chunksLoaded = 0; // How many chunks have been loaded
 	public static int chunksFrustum = 0; // How many chunks are in the visible
 											// frustum
@@ -62,5 +66,6 @@ public class Constants {
 	public static float textSize = 0.35f; // The physical size of the text being
 											// rendered on screen
 	public static boolean jumpEnabled = true; // Default assume you can jump.
+
 
 }

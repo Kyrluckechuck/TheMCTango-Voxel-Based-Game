@@ -2,15 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="E:/GitHub/EndOfYearProj/VoxelGame/lib/jars/lwjgl.jar">
+	<classpathentry kind="lib" path="res"/>
+	<classpathentry kind="lib" path="lib/jars/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/jars/lwjgl.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="E:/GitHub/EndOfYearProj/VoxelGame/lib/natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="VoxelGame/lib/natives/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="E:/GitHub/EndOfYearProj/VoxelGame/lib/jars/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="res"/>
-	<classpathentry kind="lib" path="E:/GitHub/EndOfYearProj/VoxelGame/lib/jars/slick-util.jar"/>
-	<classpathentry kind="lib" path="E:/GitHub/EndOfYearProj/VoxelGame/lib/jars/jbullet.jar"/>
-	<classpathentry kind="lib" path="E:/GitHub/EndOfYearProj/VoxelGame/lib/jars/vecmath.jar"/>
+	<classpathentry kind="lib" path="lib/jars/slick-util.jar"/>
+	<classpathentry kind="lib" path="lib/jars/vecmath.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -11,6 +11,7 @@ import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.chunks.Chunk;
+import com.kyry.voxel.world.chunks.ChunkManager;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
 //import com.kyry.voxel.world.physics.PhysicsWorld;
@@ -191,7 +192,6 @@ public class Camera extends Entity {
 				setZ(origZ);
 				WorldManager.playerSphereUpper.update(someOldPositionUpper);
 				WorldManager.playerSphereLower.update(someOldPositionLower);
-				Constants.jumpEnabled = true;
 				System.out.println("Collision!  - STAHPED MOVING");
 			}
 		}// End check if no clip
@@ -273,14 +273,34 @@ public class Camera extends Entity {
 	}
 
 	public void castRay() {
-		int x = (int) (Constants.rayConstant
-				* Math.cos(Math.toRadians(getPitch())) * Math.sin(Math
-				.toRadians(getYaw())));
-
-		int z = (int) (Constants.rayConstant * Math.cos(Math
-				.toRadians(getYaw()) * Math.sin(Math.toRadians(getPitch()))));
-
-		int y = (int) (Constants.rayConstant * Math.cos(Math
-				.toRadians(getYaw())));
+		int x,y,z = 0;
+		defineRay();
+		//make it a unit vector
+		Constants.ray = (Vector3f) Constants.ray.scale((float) Math.pow(Constants.ray.length(), -1));
+		System.out.println(Constants.ray.x);
+		//Pick correct block
+		for (int i = 0; i < Constants.rayDistance; i++){
+			x = (int) (getX() + (Constants.ray.x * i));
+			y = (int) (getX() + (Constants.ray.y * i));
+			z = (int) (getX() + (Constants.ray.z * i));
+			if(ChunkManager.isCreated(x, y, z)){
+				
+			}
+		}
+		//pick correct face
 	}
+	public void defineRay() {
+		float x = Constants.rayConstant
+				* (float) (Math.cos(Math.toRadians(getPitch() )) * Math.sin(Math
+						.toRadians(getYaw() )));
+
+		float y = Constants.rayConstant
+				* (float) (Math.cos(Math.toRadians(getPitch() + 90)));
+
+		float z = Constants.rayConstant * (float)
+				(Math.cos(Math.toRadians(getYaw() ))
+				 * Math.sin(Math.toRadians(getPitch() - 90)));
+		Constants.ray = new Vector3f(x, y, z);
+	}
+	
 }
