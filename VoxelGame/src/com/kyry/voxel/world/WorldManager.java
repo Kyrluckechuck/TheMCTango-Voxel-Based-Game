@@ -166,7 +166,6 @@ public class WorldManager {
 
 	public void skyBoxRender() {
 		WorldRender.render();
-
 	}
 
 	public void logic() {
