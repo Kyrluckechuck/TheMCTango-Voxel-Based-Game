@@ -25,6 +25,7 @@ import com.kyry.voxel.utilites.Frustum;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.entities.mobs.MobManager;
+import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.Shader;
@@ -60,29 +61,32 @@ public class WorldManager {
 	}
 
 	private void createWorld() {
-		for (int x = 0; x < Constants.WORLDSIZE; x++) {
+/*		for (int x = 0; x < Constants.WORLDSIZE; x++) {
 			for (int y = 0; y < Constants.WORLDSIZE; y++) {
 				for (int z = 0; z < Constants.WORLDSIZE; z++) {
 					activeChunks.add(new Chunk(shader, 1, x
 							* Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, z
 							* Constants.CHUNKSIZE));
-					/*
-					 * activeChunks.add(new Chunk(shader, 1, 2*x
-					 * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, 2*z
-					 * Constants.CHUNKSIZE));
-					 */
+					
+//					 * activeChunks.add(new Chunk(shader, 1, 2*x
+//					 * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, 2*z
+//					 * Constants.CHUNKSIZE));
+					 
 					Constants.chunksLoaded++;
 				}
 			}
+		}*/
+		for (int x = (int) (Player.camera.getX() / Constants.CHUNKSIZE)-1; x < (Player.camera.getX() / Constants.CHUNKSIZE)+2; x++){
+			for (int y = (int) (Player.camera.getY() / Constants.CHUNKSIZE)-1; y < (Player.camera.getY() / Constants.CHUNKSIZE)+2; y++){
+				for (int z = (int) (Player.camera.getZ() / Constants.CHUNKSIZE)-1; z < (Player.camera.getZ() / Constants.CHUNKSIZE)+2; z++){
+					activeChunks.add(new Chunk(shader, 1, x, y, z));
+					System.out.println("Chunk ("+x+")("+y+")("+z+") added at X:"+x*Constants.CHUNKSIZE+" Y: "+y*Constants.CHUNKSIZE+" Z: "+z*Constants.CHUNKSIZE);
+					
+				}
+			}
 		}
-		// saveChunksTemp();
 	}
 
-	private void saveChunksTemp() {
-		for (int i = 0; i < activeChunks.size(); i++) {
-			saveChunk(activeChunks.get(i));
-		}
-	}
 
 	public void update() {
 		mobManager.update();

@@ -45,7 +45,7 @@ public class Chunk implements Serializable {
 	// public short[][][] blocks;
 	public ShaderProgram shader;
 
-	public int vcID, sizeX, sizeY, sizeZ, type;
+	public int vcID, sizeX, sizeY, sizeZ, worldX, worldY, worldZ, internX, internY, internZ, type;
 	public boolean isActive;
 
 	public Random rand;
@@ -65,17 +65,26 @@ public class Chunk implements Serializable {
 
 	public void initGL() {
 		rand = new Random(); // initialize random number generator
-
+	
 		sizeX = (int) pos.getX() + Constants.CHUNKSIZE;// TBH, idk..
 		sizeY = (int) pos.getY() + Constants.CHUNKSIZE;
 		sizeZ = (int) pos.getZ() + Constants.CHUNKSIZE;
+		
+		internX = (int) ( Player.camera.getX() -  pos.getX() * Constants.CHUNKSIZE); //Internal chunk coords
+		internY = (int) ( Player.camera.getY() -  pos.getY() * Constants.CHUNKSIZE);
+		internZ = (int) ( Player.camera.getZ() -  pos.getZ() * Constants.CHUNKSIZE);
+		
+		worldX = (int) pos.getX() * Constants.CHUNKSIZE; //World chunk coords
+		worldY = (int) pos.getY() * Constants.CHUNKSIZE;
+		worldZ = (int) pos.getZ() * Constants.CHUNKSIZE;
 
 		vcID = glGenLists(1); // Generate blank list for vcID
 
 		// blocks = new short[sizeX][sizeY][sizeZ];
 		// loadChunk(x,y,z);
 
-		loadChunk((int) pos.getX(), (int) pos.getY(), (int) pos.getZ());
+//		loadChunk((int) pos.getX(), (int) pos.getY(), (int) pos.getZ());
+//		loadChunk(0,0,0);
 		rebuild();
 	}
 
@@ -208,12 +217,13 @@ public class Chunk implements Serializable {
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
 			int sizeAll = Constants.CHUNKSIZE;
-			int loadChunkX = (int) (Player.camera.getX() / Constants.CHUNKSIZE);
-			int loadChunkY = (int) (Player.camera.getY() / Constants.CHUNKSIZE);
-			int loadChunkZ = (int) (Player.camera.getZ() / Constants.CHUNKSIZE);
+			int loadChunkX = (int) (Player.camera.getX() / Constants.CHUNKSIZE); //try pos.getX(); for interesting results
+			int loadChunkY = (int) (Player.camera.getY() / Constants.CHUNKSIZE); //try pos.getY(); for interesting results
+			int loadChunkZ = (int) (Player.camera.getZ() / Constants.CHUNKSIZE); //try pos.getZ(); for interesting results
+
 
 			for (int chunksLoaded = 0; chunksLoaded < 4; chunksLoaded++) {
-				short[][][] blocks = loadChunk(loadChunkX + chunksLoaded, loadChunkY, loadChunkZ);
+				short[][][] blocks = loadChunk(loadChunkX + chunksLoaded, loadChunkY + chunksLoaded, loadChunkZ + chunksLoaded);
 
 				try {
 					for (int x = 0; x < sizeAll; x++) {
@@ -222,7 +232,8 @@ public class Chunk implements Serializable {
 								if (blocks[x][y][z] != 0) {
 									// && !checkTileNotInView(loadChunkX, loadChunkY, loadChunkZ, x, y, z)
 									// ^^^Commented out stuff is broken? :O (AKA Needs to be updated to chunks)
-									Shape.createCube(x + loadChunkX * sizeAll, y + loadChunkY * sizeAll, z + loadChunkZ * sizeAll, Tile.getTile(blocks[x][y][z]).getColor(), Tile.getTile(blocks[x][y][z]).getTexCoords(), 1);
+									Shape.createCube(x + loadChunkX * sizeAll, y + loadChunkY * sizeAll, z + loadChunkZ * sizeAll,
+											Tile.getTile(blocks[x][y][z]).getColor(), Tile.getTile(blocks[x][y][z]).getTexCoords(), 1);
 								}
 							}
 						}
@@ -309,9 +320,9 @@ public class Chunk implements Serializable {
 
 	public short getBlockID(int x, int y, int z) {
 
-		int loadChunkX = (int) Player.camera.getX() / Constants.CHUNKSIZE;
-		int loadChunkY = (int) Player.camera.getY() / Constants.CHUNKSIZE;
-		int loadChunkZ = (int) Player.camera.getZ() / Constants.CHUNKSIZE;
+		int loadChunkX = (int) (Player.camera.getX() / Constants.CHUNKSIZE);
+		int loadChunkY = (int) (Player.camera.getY() / Constants.CHUNKSIZE);
+		int loadChunkZ = (int) (Player.camera.getZ() / Constants.CHUNKSIZE);
 
 		short[][][] blocks = loadChunk(loadChunkX, loadChunkY, loadChunkZ);
 
