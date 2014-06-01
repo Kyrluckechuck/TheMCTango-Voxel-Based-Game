@@ -11,12 +11,12 @@ import com.kyry.voxel.utilites.Constants;
 public class CollisionLibrary {
 	public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
 
-	public static void newBlock(float x, float y, float z) {
-		newBlock(x, y, z, 1);
+	public static void newBlock(int chunkX, int chunkY, int chunkZ, float x, float y, float z) {
+		newBlock (chunkX, chunkY, chunkZ,x, y, z, 1);
 	}
 
-	public static void newBlock(float x, float y, float z, float r) {
-		BlockList.add(new AABB(x, y, z, r));
+	public static void newBlock(int chunkX, int chunkY, int chunkZ, float x, float y, float z, float r) {
+		BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
 		Constants.BlocksLoaded++;
 	}
 

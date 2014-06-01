@@ -19,20 +19,25 @@ public class ChunkManager {
 		return result;
 	}
 	
-	public static void createChunk(int x, int y, int z){
-		String s = "" + x + "_" + y + "_"+ z;
-		createChunk(s);
+	public void readChunk(int x, int y, int z){
+		//String s = "" + x + "_" + y + "_"+ z;
+		checkChunk(x, y, z );
 	}
 	
-	public static void createChunk(String s){
-		if (isCreated(s)){
-			//cant make a chunck thats already made
-		}else if(!isCreated(s)){
-			ChunkMap.put(s, true);
+	public void checkChunk(int x, int y, int z){
+		if (isCreated(x, y, z)){
+			//can't make a chunk thats already made
+			//Load the chunk somehow
+			//short[][][] blocks = Chunk.loadChunk(x,y,z);
+		}else if(!isCreated(x, y, z)){
+			//Chunk.createChunk(x,y,z);
+			System.out.println("Should have been created");
+			ChunkMap.put(x + "_" + y + "_" + z, true);
+		 //Chunk.createChunk(s); //Create the chunk, then load the chunk somehow
 		}
 	}
 	
-	//GETTERS & SETTERS
+	//GETTERS & SETTERS ***To be honest, I don't think the chunks should be easily movable.. that means that every file would have to change according to each move, etc.. :S
 	public static Chunk getChunk(int x, int y, int z){
 		return null;
 		

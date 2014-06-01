@@ -25,7 +25,7 @@ public class World extends Screen {
 	private WorldManager worldManager;
 	private TrueTypeFont font;
 
-	public static boolean noClip = false;
+	public static boolean noClip = true;
 	private boolean renderText = true;
 
 	public World() {
@@ -72,6 +72,10 @@ public class World extends Screen {
 					renderText = !renderText;
 				}
 				if (Keyboard.isKeyDown(Keyboard.KEY_F4)) {
+					if (noClip)
+						Constants.PLAYER_SPEED -= 15f;
+					else
+						Constants.PLAYER_SPEED += 15f;
 					noClip = !noClip;
 				}
 			}
@@ -112,7 +116,7 @@ public class World extends Screen {
 	 */
 
 	private void renderText() {
-		font.drawString(10, 15, "FPS: " + GameLoop.getFPS());
+		font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       "+"noClip " + noClip);
 		font.drawString(10, 40, "Camera X: "
 				+ (int) worldManager.getMobManager().getPlayer().getX()
 				+ " Y: "

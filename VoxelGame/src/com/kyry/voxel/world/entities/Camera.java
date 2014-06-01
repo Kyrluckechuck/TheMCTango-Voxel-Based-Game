@@ -151,7 +151,7 @@ public class Camera extends Entity {
 
 		if (World.noClip) {
 			// Constants.jumpEnabled = true;//not proper
-			noClipMove(dX, dY, dZ);
+			noClipMove(dX*Constants.PLAYER_SPEED, dY*Constants.PLAYER_SPEED, dZ*Constants.PLAYER_SPEED);
 		} else if (!World.noClip) {// move normally
 
 			// Move to next possible position
@@ -262,9 +262,9 @@ public class Camera extends Entity {
 	}
 
 	public void applyPhysics() {
-		Vector3f diffPos = new Vector3f(getX() - Constants.playerPrevPos.x,
-				getY() - Constants.playerPrevPos.y, getZ()
-						- Constants.playerPrevPos.z);
+		Vector3f diffPos = new Vector3f((getX() - Constants.playerPrevPos.x),
+				(getY() - Constants.playerPrevPos.y), (getZ()
+						- Constants.playerPrevPos.z));
 		diffPos.scale(Constants.FPS);// scale it. delta Pos / time
 		Constants.playerSpeed = diffPos;
 
@@ -277,14 +277,17 @@ public class Camera extends Entity {
 		defineRay();
 		//make it a unit vector
 		Constants.ray = (Vector3f) Constants.ray.scale((float) Math.pow(Constants.ray.length(), -1));
-		System.out.println(Constants.ray.x);
+		//System.out.println(Constants.ray.x); //Just had to comment this out for my own debugging purposes
 		//Pick correct block
 		for (int i = 0; i < Constants.rayDistance; i++){
 			x = (int) (getX() + (Constants.ray.x * i));
 			y = (int) (getX() + (Constants.ray.y * i));
 			z = (int) (getX() + (Constants.ray.z * i));
 			if(ChunkManager.isCreated(x, y, z)){
-				
+				/***/
+				//short[][][] blocks = Chunk.loadChunk(x,y,z); //Delete this block if you want, I just tried to show you possible examples using what I've done
+				//Here you would  more specifically get the actual block they're looking at, not just the chunk (x,y,z should be chunk);
+				/***/
 			}
 		}
 		//pick correct face
