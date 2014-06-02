@@ -109,6 +109,16 @@ public class WorldManager {
 		// }
 		// ////////
 		Constants.chunksFrustum = 0;
+		int prevX = (int) (Constants.playerPrevPos.getX()/Constants.CHUNKSIZE);
+		int prevY = (int) (Constants.playerPrevPos.getY()/Constants.CHUNKSIZE);
+		int prevZ = (int) (Constants.playerPrevPos.getZ()/Constants.CHUNKSIZE);
+		int nowX = (int) (Constants.playerPos.getX()/Constants.CHUNKSIZE);
+		int nowY = (int) (Constants.playerPos.getY()/Constants.CHUNKSIZE);
+		int nowZ = (int) (Constants.playerPos.getZ()/Constants.CHUNKSIZE);
+		
+		if (!new Vector3f (prevX,prevY,prevZ).equals(new Vector3f(nowX,nowY,nowZ))){
+			createWorld();
+		}
 		Spritesheet.tiles.bind();
 		/*
 		 * GL11.glBegin(GL11.GL_QUADS); Vector3f playerPos=

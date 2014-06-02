@@ -65,16 +65,19 @@ public class Chunk implements Serializable {
 
 	public void initGL() {
 		rand = new Random(); // initialize random number generator
-	
+
 		sizeX = (int) pos.getX() + Constants.CHUNKSIZE;// TBH, idk..
 		sizeY = (int) pos.getY() + Constants.CHUNKSIZE;
 		sizeZ = (int) pos.getZ() + Constants.CHUNKSIZE;
-		
-		internX = (int) ( Player.camera.getX() -  pos.getX() * Constants.CHUNKSIZE); //Internal chunk coords
-		internY = (int) ( Player.camera.getY() -  pos.getY() * Constants.CHUNKSIZE);
-		internZ = (int) ( Player.camera.getZ() -  pos.getZ() * Constants.CHUNKSIZE);
-		
-		worldX = (int) pos.getX() * Constants.CHUNKSIZE; //World chunk coords
+
+		// internX = (int) ( Player.camera.getX() - pos.getX() *
+		// Constants.CHUNKSIZE); //Internal chunk coords
+		// internY = (int) ( Player.camera.getY() - pos.getY() *
+		// Constants.CHUNKSIZE);
+		// internZ = (int) ( Player.camera.getZ() - pos.getZ() *
+		// Constants.CHUNKSIZE);
+
+		worldX = (int) pos.getX() * Constants.CHUNKSIZE; // World chunk coords
 		worldY = (int) pos.getY() * Constants.CHUNKSIZE;
 		worldZ = (int) pos.getZ() * Constants.CHUNKSIZE;
 
@@ -83,8 +86,8 @@ public class Chunk implements Serializable {
 		// blocks = new short[sizeX][sizeY][sizeZ];
 		// loadChunk(x,y,z);
 
-//		loadChunk((int) pos.getX(), (int) pos.getY(), (int) pos.getZ());
-//		loadChunk(0,0,0);
+		// loadChunk((int) pos.getX(), (int) pos.getY(), (int) pos.getZ());
+		// loadChunk(0,0,0);
 		rebuild();
 	}
 
@@ -94,9 +97,12 @@ public class Chunk implements Serializable {
 	void createChunk(int chunkX, int chunkY, int chunkZ) {
 		int sizeAll = Constants.CHUNKSIZE;
 		short[][][] blocks = new short[sizeAll][sizeAll][sizeAll];
-		int internX = (int) Player.camera.getX() - chunkX * Constants.CHUNKSIZE;
-		int internY = (int) Player.camera.getY() - chunkX * Constants.CHUNKSIZE;
-		int internZ = (int) Player.camera.getZ() - chunkX * Constants.CHUNKSIZE;
+		// int internX = (int) Player.camera.getX() - chunkX *
+		// Constants.CHUNKSIZE ;
+		// int internY = (int) Player.camera.getY() - chunkX *
+		// Constants.CHUNKSIZE ;
+		// int internZ = (int) Player.camera.getZ() - chunkX *
+		// Constants.CHUNKSIZE ;
 		/*
 		 * if (type == World.AIRCHUNK) { for (int x = 0; x < sizeAll; x++) { for
 		 * (int y = 0; y < sizeAll; y++) { for (int z = 0; z < sizeAll; z++) {
@@ -188,7 +194,7 @@ public class Chunk implements Serializable {
 															// the chunk
 															// forcefully.
 			createChunk(chunkX, chunkY, chunkZ);
-			return (loadChunk(chunkX,chunkY,chunkZ));
+			return (loadChunk(chunkX, chunkY, chunkZ));
 
 		}
 	}
@@ -217,37 +223,56 @@ public class Chunk implements Serializable {
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
 			int sizeAll = Constants.CHUNKSIZE;
-			int loadChunkX = (int) (Player.camera.getX() / Constants.CHUNKSIZE); //try pos.getX(); for interesting results
-			int loadChunkY = (int) (Player.camera.getY() / Constants.CHUNKSIZE); //try pos.getY(); for interesting results
-			int loadChunkZ = (int) (Player.camera.getZ() / Constants.CHUNKSIZE); //try pos.getZ(); for interesting results
+			int loadChunkX = (int) (Player.camera.getX() / Constants.CHUNKSIZE); // try
+																					// pos.getX();
+																					// for
+																					// interesting
+																					// results
+			int loadChunkY = (int) (Player.camera.getY() / Constants.CHUNKSIZE); // try
+																					// pos.getY();
+																					// for
+																					// interesting
+																					// results
+			int loadChunkZ = (int) (Player.camera.getZ() / Constants.CHUNKSIZE); // try
+																					// pos.getZ();
+																					// for
+																					// interesting
+																					// results
 
+			for (int chunksLoadedX = -1; chunksLoadedX <= 1; chunksLoadedX++) {
+				for (int chunksLoadedY = -1; chunksLoadedY <= 1; chunksLoadedY++) {
+					for (int chunksLoadedZ = -1; chunksLoadedZ <= 1; chunksLoadedZ++) {
+						short[][][] blocks = loadChunk(loadChunkX + chunksLoadedX, loadChunkY + chunksLoadedY, loadChunkZ + chunksLoadedZ);
 
-			for (int chunksLoaded = 0; chunksLoaded < 4; chunksLoaded++) {
-				short[][][] blocks = loadChunk(loadChunkX + chunksLoaded, loadChunkY + chunksLoaded, loadChunkZ + chunksLoaded);
-
-				try {
-					for (int x = 0; x < sizeAll; x++) {
-						for (int y = 0; y < sizeAll; y++) {
-							for (int z = 0; z < sizeAll; z++) {
-								if (blocks[x][y][z] != 0) {
-									// && !checkTileNotInView(loadChunkX, loadChunkY, loadChunkZ, x, y, z)
-									// ^^^Commented out stuff is broken? :O (AKA Needs to be updated to chunks)
-									Shape.createCube(x + loadChunkX * sizeAll, y + loadChunkY * sizeAll, z + loadChunkZ * sizeAll,
-											Tile.getTile(blocks[x][y][z]).getColor(), Tile.getTile(blocks[x][y][z]).getTexCoords(), 1);
+						try {
+							for (int x = 0; x < sizeAll; x++) {
+								for (int y = 0; y < sizeAll; y++) {
+									for (int z = 0; z < sizeAll; z++) {
+										if (blocks[x][y][z] != 0) {
+											// &&
+											// !checkTileNotInView(loadChunkX,
+											// loadChunkY, loadChunkZ, x, y, z)
+											// ^^^Commented out stuff is broken?
+											// :O (AKA Needs to be updated to
+											// chunks)
+											Shape.createCube(x + loadChunkX * sizeAll, y + loadChunkY * sizeAll, z + loadChunkZ * sizeAll, Tile.getTile(blocks[x][y][z]).getColor(), Tile.getTile(blocks[x][y][z]).getTexCoords(), 1);
+										}
+									}
 								}
 							}
-						}
-					}
 
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-					System.out.println("Block [0][0][0] is: " + blocks[0][0][0]);
+						} catch (NullPointerException e) {
+							e.printStackTrace();
+							System.out.println("Block [0][0][0] is: " + blocks[0][0][0]);
+						}
+						// WorldRender.render();
+						// float offset = 15;
+						
+					}
 				}
-				// WorldRender.render();
-				// float offset = 15;
-				glEnd();
-				glEndList();
 			}
+			glEnd();
+			glEndList();
 		}
 	}
 

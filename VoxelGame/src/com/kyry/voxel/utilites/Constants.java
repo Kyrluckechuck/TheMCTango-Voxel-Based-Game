@@ -50,6 +50,12 @@ public class Constants {
 	//player's current position
 	public static Vector3f playerPos = new Vector3f(initPos.x, initPos.y,
 			initPos.z);
+	//player's current chunk position
+	public static Vector3f playerChunkPos = new Vector3f(initPos.x / CHUNKSIZE, initPos.y/CHUNKSIZE,
+			initPos.z/CHUNKSIZE);
+	//player's previous chunk position (last cycle)
+	public static Vector3f playerPrevChunkPos = new Vector3f(initPos.x / CHUNKSIZE, initPos.y/CHUNKSIZE,
+			initPos.z/CHUNKSIZE);
 	
 	// ray
 	public static Vector3f ray = new Vector3f(0f, 0f, 0f);
