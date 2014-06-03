@@ -1,23 +1,44 @@
 package com.kyry.voxel.world.physics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.world.chunks.ChunkManager;
 
 public class CollisionLibrary {
 	public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
+	public static HashMap<String, AABB> BlockMap = new HashMap<String, AABB>();
 
-	public static void newBlock(int chunkX, int chunkY, int chunkZ, float x, float y, float z) {
-		newBlock (chunkX, chunkY, chunkZ,x, y, z, 1);
+	public static void newBlock(float f, float g, float h, float x, float y, float z) {
+		newBlock (f, g, h, x, y, z, 1);
 	}
 
-	public static void newBlock(int chunkX, int chunkY, int chunkZ, float x, float y, float z, float r) {
-		BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
+	public static void newBlock(float chunkX, float chunkY, float chunkZ, float x, float y, float z, float r) {
+		String key = ChunkManager.key((int)(chunkX + x), (int)(chunkY + y), (int) (chunkZ + z));
+		//BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
+		BlockMap.put(key, new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
 		Constants.BlocksLoaded++;
+		
+	}
+	public static void removeBlock(int chunkX, int chunkY, int chunkZ, int x, int y, int z){
+		removeBlock((int)(chunkX + x), (int)(chunkY + y), (int) (chunkZ + z));
+	}
+	public static void removeBlock(int x, int y, int z){
+		String key = ChunkManager.key(x, y, z);
+		Iterator<Entry<String, AABB>> iterator = BlockMap.entrySet().iterator();
+		while (iterator.hasNext()){
+			Entry<String, AABB> entry = iterator.next();
+			if(key.equals(entry.getKey())){
+				iterator.remove();//remove the object
+			}
+		}
 	}
 
 	public static boolean testAABBAABB(final AABB box1, final AABB box2) {
