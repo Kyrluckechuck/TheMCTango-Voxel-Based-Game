@@ -2,6 +2,7 @@ package com.kyry.voxel.world.chunks;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,8 +39,8 @@ public class ChunkManager {
 	//Constructor
 	public ChunkManager(){
 		//mobManager = new MobManager();
-		Shader temp = new Shader("/shaders/chunk.vert", "/shaders/chunk.frag");
-		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
+		//Shader temp = new Shader("/shaders/chunk.vert", "/shaders/chunk.frag");
+		//shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	//Helper methods
 	public static String key(float x, float y, float z){//creates a key for the chunk
@@ -73,20 +74,36 @@ public class ChunkManager {
 	public static String filePath(float x, float y, float z){
 		return new String("E:\\Save\\" + (int) x + "_" + (int) y + "_" + (int) z + ".dat");
 	}
-	///////////////////////////////////
-	/*public static boolean isCreated(int x, int y, int z){
-		return isCreated(key(x, y, z));
+	
+	public static boolean isCreated(int x, int y, int z){
+		try {
+			FileInputStream saveFile;
+			saveFile = new FileInputStream(filePath(x, y, z));
+			ObjectInputStream restore = new ObjectInputStream(saveFile);
+			short[][][] test = (short[][][])  restore.readObject();
+			restore.close();
+			return true;
+		} catch (IOException | ClassNotFoundException e) {
+			//e.printStackTrace();
+			return false;
+		}
+		
+		
+		//return isCreated(key(x, y, z));
+		
 	}
-	public static boolean isCreated(String s){
+/*	public static boolean isCreated(String s){
 		boolean result = false;
 		try{
+			
 			result = chunkMap.get(s);
 		}
 		catch(Exception e){
 		}
 		return result;
-	}
-	
+	}*/
+///////////////////////////////////
+	/*
 	public void readChunk(int x, int y, int z){
 		//String s = "" + x + "_" + y + "_"+ z;
 		checkChunk(x, y, z );
@@ -105,7 +122,7 @@ public class ChunkManager {
 		}
 	}*/
 	//SAVE / LOAD
-	private static void saveChunk(float f, float g, float h, short[][][] blocks) {
+	private static void saveChunk(float f, float g, float h, short[][][] blocks) { //Save chunk to data file
 		int x = (int) f;
 		int y = (int) g;
 		int z = (int) h;
@@ -126,23 +143,40 @@ public class ChunkManager {
 
 	}
 
-	public static Chunk loadChunk(float x, float y, float z) {
-		try {
-			FileInputStream saveFile = new FileInputStream(filePath(x, y, z));
-			ObjectInputStream restore = new ObjectInputStream(saveFile);
-			Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(x,y,z), (short[][][]) restore.readObject());
-			restore.close();
-			activeChunks.put(key(x, y, z), chunk);
-			System.out.println("(" + x + "," + y + "," + z + ") Loaded Successfully.");
-			return null;
-		} catch (Exception e) {
-			// Take a second try through, creating the chunk forcefully.
+	public static Chunk loadChunkToMem(int x, int y, int z) { //Add chunk from file to memory chunk list
+		if (!isCreated(x,y,z)){
+			try {
+				FileInputStream saveFile = new FileInputStream(filePath(x, y, z));
+				ObjectInputStream restore = new ObjectInputStream(saveFile);
+				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(x,y,z), (short[][][]) restore.readObject());
+				restore.close();
+				loadedChunks.put(key(x, y, z), chunk);
+				System.out.println("(" + x + "," + y + "," + z + ") Loaded Successfully.");
+				return null;
+			} catch (Exception e) {
+				// Take a second try through, creating the chunk forcefully.
+				//createChunk(x, y, z);
+				//return (loadChunk(x, y, z));
+				return null;
+			}
+		}else{
 			createChunk(x, y, z);
-			//return (loadChunk(x, y, z));
-			return null;
+			return (loadChunkToMem(x, y, z));
 		}
 	}
-	public static void createChunk(float f, float g, float h) {
+	public static Chunk loadChunkToActive(int x, int y, int z) { //Add chunk from memory to active chunk list
+
+		activeChunks.put(key(x, y, z), loadedChunks.get(key(x,y,z)));
+		return null;
+
+	}
+	public static Chunk removeChunkFromActive(int x, int y, int z) { //Remove chunk from active chunk list
+		
+		activeChunks.remove(key(x, y, z));
+		return null;
+		
+	}
+	public static void createChunk(int f, int g, int h) {
 		int sizeAll = Constants.CHUNKSIZE;
 		short[][][] blocks = new short[sizeAll][sizeAll][sizeAll];
 		// int internX = (int) Player.camera.getX() - chunkX *
@@ -210,9 +244,10 @@ public class ChunkManager {
 		 */
 		ChunkManager.saveChunk(f, g, h, blocks);
 		/////
-		Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(f,g,h), blocks);
-		activeChunks.put(key(f,g,h), chunk);
-		System.out.println("(" + f + "," + g + "," + h + ") Loaded Successfully.");
+		//Seems redundant and unneeded. The createChunk method will not always be called in one instance of the game, loadChunk will be
+		//Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(f,g,h), blocks);
+		//activeChunks.put(key(f,g,h), chunk);
+		System.out.println("(" + f + "," + g + "," + h + ") Created Successfully.");
 	}
 	//
 	//GETTERS & SETTERS ***To be honest, I don't think the chunks should be easily movable.. that means that every file would have to change according to each move, etc.. :S
@@ -224,7 +259,7 @@ public class ChunkManager {
 		
 	}*/
 	public void update(){
-		//Basically will czech if chunk is in the "bufferzone" if not then load, chunk, if not then delete
+		//Basically will check if chunk is in the "bufferzone" if not then load, chunk, if not then delete
 		//DELETE
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()){
@@ -241,23 +276,23 @@ public class ChunkManager {
 		//ADD
 		//BLOCK RELATIVE
 		Vector3f pos = blockToChunk(Player.camera.getPos());
-		for (int x = (int) (pos.x-Constants.WORLDSIZE); x <= (int)(pos.x + Constants.WORLDSIZE); x++) {
-			for (int y = (int) (pos.y - Constants.WORLDSIZE); y <= (int)(pos.y + Constants.WORLDSIZE); y++) {
-				for (int z = (int) (pos.z - Constants.WORLDSIZE); z <= (int)(pos.z + Constants.WORLDSIZE); z++) {
+		for (int x = (int) (pos.x-Constants.WORLDRADIUS); x <= (int)(pos.x + Constants.WORLDRADIUS); x++) {
+			for (int y = (int) (pos.y - Constants.WORLDRADIUS); y <= (int)(pos.y + Constants.WORLDRADIUS); y++) {
+				for (int z = (int) (pos.z - Constants.WORLDRADIUS); z <= (int)(pos.z + Constants.WORLDRADIUS); z++) {
 					String key = key(x, y, z);
-					if(activeChunks.containsKey(key)){
+					if(loadedChunks.containsKey(key)){
 						//leaveHimAlone!
 					}else{
-						loadChunk(x, y, z);
+						loadChunkToMem(x, y, z);
 					}
 				}//end for z
 			}//end for y
 		}//end for x
 		
-	}
-	//remove vhunk
-	private void removeChunk(String key) {
-		//activeChunks.remove(key);//removes chunk//causes ERROR!
+	}//End Update()
+	
+	private void removeChunk(String key) {//remove chunk from.. current set and Collision zone?
+		activeChunks.remove(key);//removes chunk//causes ERROR!
 		//remove the collision blocks
 		for (int x = 0; x < Constants.CHUNKSIZE; x++) {
 			for (int y = 0; y < Constants.CHUNKSIZE; y++) {
@@ -274,9 +309,9 @@ public class ChunkManager {
 		int z = keyZ(key);
 		//chunk relative position of player
 		Vector3f playerPos = blockToChunk(Player.camera.getX(), Player.camera.getX(), Player.camera.getX());
-		if(x <= (playerPos.x + Constants.WORLDSIZE) && x >= (playerPos.x - Constants.WORLDSIZE)){
-			if(y <= (playerPos.y + Constants.WORLDSIZE) && y >= (playerPos.y - Constants.WORLDSIZE)){
-				if(z <= (playerPos.z + Constants.WORLDSIZE) && z >= (playerPos.z- Constants.WORLDSIZE)){
+		if(x <= (playerPos.x + Constants.WORLDRADIUS) && x >= (playerPos.x - Constants.WORLDRADIUS)){
+			if(y <= (playerPos.y + Constants.WORLDRADIUS) && y >= (playerPos.y - Constants.WORLDRADIUS)){
+				if(z <= (playerPos.z + Constants.WORLDRADIUS) && z >= (playerPos.z- Constants.WORLDRADIUS)){
 					result = true;
 				}
 			}

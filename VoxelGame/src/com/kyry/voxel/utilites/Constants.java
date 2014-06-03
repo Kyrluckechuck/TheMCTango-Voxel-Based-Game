@@ -18,7 +18,7 @@ public class Constants {
 	public static float viewDistance = 50f; // The view distance (how far)
 	public static float viewClose = 0.01f; // How closely it renders (helps the
 											// text not get chopped off)
-	public static int WORLDSIZE = 2; // How many chunks in the world
+	public static int WORLDRADIUS = 2; // How many chunks in the world
 	public static int CHUNKSIZE = 16; // How many blocks^3 a chunk is
 	public static float playerHeight = 0.8f; // How many blocks^3 a chunk is
 	public static final int TextureSize = 16; // The pixel size of a texture
@@ -39,7 +39,7 @@ public class Constants {
 	public static float jumpFrames = 1;
 	public static float jumpCounter = 0;
 	// initial position of the player
-	public static final Vector3f initPos = new Vector3f(4f, 19f, 4f);
+	public static final Vector3f initPos = new Vector3f(4f, 14f, 4f);
 	// store the speed of the player
 	public static Vector3f playerSpeed = new Vector3f(0f, 0f, 0f);
 	// the acceleration of players motion

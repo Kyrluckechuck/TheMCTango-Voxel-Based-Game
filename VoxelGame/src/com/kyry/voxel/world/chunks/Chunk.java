@@ -52,8 +52,8 @@ public class Chunk implements Serializable {
 	public Random rand;
 	private short[][][] tiles;
 
-	public Chunk(ShaderProgram shader, int type, float x, float y, float z) {
-		this(shader, type, new Vector3f(x, y, z), ChunkManager.loadChunk(x, y, z).tiles);
+	public Chunk(ShaderProgram shader, int type, int x, int y, int z) {
+		this(shader, type, new Vector3f(x, y, z), ChunkManager.loadChunkToMem(x, y, z).tiles);
 	}
 
 	public Chunk(ShaderProgram shader, int type, Vector3f pos, short[][][] loadedTiles) {
@@ -124,7 +124,7 @@ public class Chunk implements Serializable {
 		if (type != World.AIRCHUNK) {
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
-			int sizeAll = Constants.CHUNKSIZE;
+			//int sizeAll = Constants.CHUNKSIZE;
 			/*Vector3f loadChunkVector = ChunkManager.blockToChunk(
 					Player.camera.getX(), Player.camera.getY(),
 					Player.camera.getZ());*/
@@ -166,6 +166,7 @@ public class Chunk implements Serializable {
 			}*/
 			glEnd();
 			glEndList();
+			
 		}
 	}
 	private boolean checkTileNotInView(int x, int y, int z) {

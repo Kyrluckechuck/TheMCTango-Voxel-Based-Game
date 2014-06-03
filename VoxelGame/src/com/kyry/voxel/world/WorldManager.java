@@ -57,10 +57,11 @@ public class WorldManager {
 
 	private void createWorld() {
 		Vector3f pos = Player.camera.getPos();
-		for (int x = (int) (pos.x - Constants.WORLDSIZE); x < pos.x + Constants.WORLDSIZE; x++) {
-			for (int y = (int) (pos.y - Constants.WORLDSIZE); y < pos.y +Constants.WORLDSIZE; y++) {
-				for (int z = (int) (pos.z - Constants.WORLDSIZE); z < pos.z + Constants.WORLDSIZE; z++) {
-					chunkManager.loadChunk(x, y, z);
+		for (int x = (int) (pos.getX() - Constants.WORLDRADIUS); x < pos.getX() + Constants.WORLDRADIUS; x++) {
+			for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y < pos.getY() +Constants.WORLDRADIUS; y++) {
+				for (int z = (int) (pos.getZ() - Constants.WORLDRADIUS); z < pos.getZ() + Constants.WORLDRADIUS; z++) {
+					chunkManager.loadChunkToMem(x, y, z);
+					chunkManager.loadedChunks.put(ChunkManager.key(x, y, z), chunkManager.activeChunks.get(ChunkManager.key(x,y,z)));
 					//activeChunks.add(new Chunk(shader, 1, x, y, z));					
 //					 * activeChunks.add(new Chunk(shader, 1, 2*x
 //					 * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, 2*z
