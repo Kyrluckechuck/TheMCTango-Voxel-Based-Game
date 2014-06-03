@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Map.Entry;
 
@@ -71,11 +72,21 @@ public class ChunkManager {
 		}
 		return i;
 	}
-	public static String filePath(float x, float y, float z){
-		return new String("E:\\Save\\" + (int) x + "_" + (int) y + "_" + (int) z + ".dat");
+	public static String filePath(int x, int y, int z){
+		return new String("E:\\Save\\" + x + "_" + y + "_" + z + ".dat");
 	}
 	
 	public static boolean isCreated(int x, int y, int z){
+		File f = new File(filePath(x,y,z));
+		if(f.exists() && !f.isDirectory()) { 
+			return true;
+			}
+		else 
+			return false;
+		//return isCreated(key(x, y, z));
+		
+	}
+/*	public static boolean isCreated(int x, int y, int z){
 		try {
 			FileInputStream saveFile;
 			saveFile = new FileInputStream(filePath(x, y, z));
@@ -92,7 +103,7 @@ public class ChunkManager {
 		//return isCreated(key(x, y, z));
 		
 	}
-/*	public static boolean isCreated(String s){
+*//*	public static boolean isCreated(String s){
 		boolean result = false;
 		try{
 			
@@ -144,7 +155,7 @@ public class ChunkManager {
 	}
 
 	public static Chunk loadChunkToMem(int x, int y, int z) { //Add chunk from file to memory chunk list
-		if (!isCreated(x,y,z)){
+		if (isCreated(x,y,z)){
 			try {
 				FileInputStream saveFile = new FileInputStream(filePath(x, y, z));
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
@@ -152,7 +163,7 @@ public class ChunkManager {
 				restore.close();
 				loadedChunks.put(key(x, y, z), chunk);
 				System.out.println("(" + x + "," + y + "," + z + ") Loaded Successfully.");
-				return null;
+				return chunk;
 			} catch (Exception e) {
 				// Take a second try through, creating the chunk forcefully.
 				//createChunk(x, y, z);
@@ -280,10 +291,11 @@ public class ChunkManager {
 			for (int y = (int) (pos.y - Constants.WORLDRADIUS); y <= (int)(pos.y + Constants.WORLDRADIUS); y++) {
 				for (int z = (int) (pos.z - Constants.WORLDRADIUS); z <= (int)(pos.z + Constants.WORLDRADIUS); z++) {
 					String key = key(x, y, z);
-					if(loadedChunks.containsKey(key)){
-						//leaveHimAlone!
+					if(activeChunks.containsKey(key)){
+						//leaveHimAlone! (no buffer needed)
 					}else{
-						loadChunkToMem(x, y, z);
+						activeChunks.put(key, loadedChunks.get(key)); //Add the chunk to loaded buffer
+						//loadChunkToMem(x, y, z); 
 					}
 				}//end for z
 			}//end for y
@@ -292,7 +304,7 @@ public class ChunkManager {
 	}//End Update()
 	
 	private void removeChunk(String key) {//remove chunk from.. current set and Collision zone?
-		activeChunks.remove(key);//removes chunk//causes ERROR!
+		//activeChunks.remove(key);//removes chunk//causes ERROR!
 		//remove the collision blocks
 		for (int x = 0; x < Constants.CHUNKSIZE; x++) {
 			for (int y = 0; y < Constants.CHUNKSIZE; y++) {
@@ -320,6 +332,7 @@ public class ChunkManager {
 	}
 	public void render() {
 		//String key = ChunkManager.key(x, y, z);
+ 
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()){
 			Entry<String, Chunk> entry = iterator.next();
