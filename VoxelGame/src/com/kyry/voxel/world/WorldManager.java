@@ -60,7 +60,7 @@ public class WorldManager {
 		for (int x = (int) (pos.x - Constants.WORLDSIZE); x < pos.x + Constants.WORLDSIZE; x++) {
 			for (int y = (int) (pos.y - Constants.WORLDSIZE); y < pos.y +Constants.WORLDSIZE; y++) {
 				for (int z = (int) (pos.z - Constants.WORLDSIZE); z < pos.z + Constants.WORLDSIZE; z++) {
-					chunkManager.createChunk(x, y, z);
+					chunkManager.loadChunk(x, y, z);
 					//activeChunks.add(new Chunk(shader, 1, x, y, z));					
 //					 * activeChunks.add(new Chunk(shader, 1, 2*x
 //					 * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, 2*z
@@ -82,13 +82,6 @@ public class WorldManager {
 
 
 	public void update() {
-		try {
-			System.out.println("1");
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		mobManager.update();
 		chunkManager.update();
 	}

@@ -13,7 +13,7 @@ import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.chunks.ChunkManager;
 
 public class CollisionLibrary {
-	public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
+	//public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
 	public static HashMap<String, AABB> BlockMap = new HashMap<String, AABB>();
 
 	public static void newBlock(float f, float g, float h, float x, float y, float z) {

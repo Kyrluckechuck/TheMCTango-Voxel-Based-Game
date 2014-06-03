@@ -1,5 +1,8 @@
 package com.kyry.voxel.world.entities;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -171,19 +174,19 @@ public class Camera extends Entity {
 			WorldManager.playerSphereLower.update(somePositionLower);
 			// Check if it collides
 			boolean moveAllowed = true;
-			for (int x = 0; x < Constants.BlocksLoaded; x++) {
-
-				if ((CollisionLibrary.testCircleAABB(
+			Iterator<Entry<String, AABB>> iterator = CollisionLibrary.BlockMap.entrySet().iterator();
+			while (iterator.hasNext()){
+					Entry<String, AABB> entry = iterator.next();
+					if ((CollisionLibrary.testCircleAABB(
 						WorldManager.playerSphereUpper,
-						CollisionLibrary.BlockList.get(x)))
+						entry.getValue()))
 						|| (CollisionLibrary.testCircleAABB(
 								WorldManager.playerSphereLower,
-								CollisionLibrary.BlockList.get(x)))) {
+								entry.getValue()))) {
 					moveAllowed = false;
+					break;
 					// System.out.println(x);
 				}
-				if (!moveAllowed)
-					break;
 			}
 			// if it does collide then revert to original position
 			if (!moveAllowed) {
@@ -228,18 +231,19 @@ public class Camera extends Entity {
 		WorldManager.playerSphereLower.update(new Vector3f(getX(), getY()
 				- playerHeight, getZ()));
 		boolean moveAllowed = true;
-		for (int x = 0; x < Constants.BlocksLoaded; x++) {
+		Iterator<Entry<String, AABB>> iterator = CollisionLibrary.BlockMap.entrySet().iterator();
+		while (iterator.hasNext()){
+				Entry<String, AABB> entry = iterator.next();
 			if ((CollisionLibrary.testCircleAABB(
 					WorldManager.playerSphereUpper,
-					CollisionLibrary.BlockList.get(x)))
+					entry.getValue()))
 					|| (CollisionLibrary.testCircleAABB(
 							WorldManager.playerSphereLower,
-							CollisionLibrary.BlockList.get(x)))) {
+							entry.getValue()))) {
 				moveAllowed = false;
-				// System.out.println(x);
-			}
-			if (!moveAllowed)
 				break;
+				// System.out.println(x);
+			}	
 		}
 		if (!moveAllowed) {// if not allowed revert to original
 			setY(origY);
@@ -283,12 +287,8 @@ public class Camera extends Entity {
 			x = (int) (getX() + (Constants.ray.x * i));
 			y = (int) (getX() + (Constants.ray.y * i));
 			z = (int) (getX() + (Constants.ray.z * i));
-			if(ChunkManager.isCreated(x, y, z)){
-				/***/
-				//short[][][] blocks = Chunk.loadChunk(x,y,z); //Delete this block if you want, I just tried to show you possible examples using what I've done
-				//Here you would  more specifically get the actual block they're looking at, not just the chunk (x,y,z should be chunk);
-				/***/
-			}
+			/*if(ChunkManager.isCreated(x, y, z)){
+			}*/
 		}
 		//pick correct face
 	}

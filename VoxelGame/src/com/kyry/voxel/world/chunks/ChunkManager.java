@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.Map.Entry;
 
@@ -41,8 +42,8 @@ public class ChunkManager {
 		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	//Helper methods
-	public static String key(int x, int y, int z){//creates a key for the chunk
-		return new String (x + "_" + y + "_" + z);
+	public static String key(float x, float y, float z){//creates a key for the chunk
+		return new String ((int)x + "_" + (int)y + "_" + (int)z);
 	}
 	public static int keyX(String s){
 		return Integer.parseInt(s.split("_")[0]);
@@ -54,8 +55,8 @@ public class ChunkManager {
 		return Integer.parseInt(s.split("_")[2]);
 	}
 	
-	public static boolean isCreated(int x, int y, int z){
-		return isCreated(key(x, y, z));
+	public static Vector3f blockToChunk(Vector3f v) {
+		return new Vector3f(blockToChunk1f(v.x),blockToChunk1f(v.y),blockToChunk1f(v.z));
 	}
 	public static Vector3f blockToChunk(float x, float y, float z) {
 		return new Vector3f(blockToChunk1f(x),blockToChunk1f(y),blockToChunk1f(z));
@@ -73,6 +74,9 @@ public class ChunkManager {
 		return new String("E:\\Save\\" + (int) x + "_" + (int) y + "_" + (int) z + ".dat");
 	}
 	///////////////////////////////////
+	/*public static boolean isCreated(int x, int y, int z){
+		return isCreated(key(x, y, z));
+	}
 	public static boolean isCreated(String s){
 		boolean result = false;
 		try{
@@ -99,8 +103,8 @@ public class ChunkManager {
 			chunkMap.put(key(x,y,z), true);
 		 //Chunk.createChunk(s); //Create the chunk, then load the chunk somehow
 		}
-	}
-	//SAVE LOAD
+	}*/
+	//SAVE / LOAD
 	private static void saveChunk(float f, float g, float h, short[][][] blocks) {
 		int x = (int) f;
 		int y = (int) g;
@@ -122,19 +126,20 @@ public class ChunkManager {
 
 	}
 
-	public static Chunk loadChunk(float f, float g, float h) {
+	public static Chunk loadChunk(float x, float y, float z) {
 		try {
-			FileInputStream saveFile = new FileInputStream(filePath(f, g, h));
+			FileInputStream saveFile = new FileInputStream(filePath(x, y, z));
 			ObjectInputStream restore = new ObjectInputStream(saveFile);
-			Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(f,g,h), (short[][][]) restore.readObject());
+			Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(x,y,z), (short[][][]) restore.readObject());
 			restore.close();
-			
-			System.out.println("(" + f + "," + g + "," + h + ") Loaded Successfully.");
-			return chunk;
+			activeChunks.put(key(x, y, z), chunk);
+			System.out.println("(" + x + "," + y + "," + z + ") Loaded Successfully.");
+			return null;
 		} catch (Exception e) {
 			// Take a second try through, creating the chunk forcefully.
-			createChunk(f, g, h);
-			return (loadChunk(f, g, h));
+			createChunk(x, y, z);
+			//return (loadChunk(x, y, z));
+			return null;
 		}
 	}
 	public static void createChunk(float f, float g, float h) {
@@ -204,6 +209,10 @@ public class ChunkManager {
 		 * (0)(0)(0)=0; (0)(0)(1)=6; ... (15)(15)(15)=3; .. (x)(y)(z)=blockId;
 		 */
 		ChunkManager.saveChunk(f, g, h, blocks);
+		/////
+		Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(f,g,h), blocks);
+		activeChunks.put(key(f,g,h), chunk);
+		System.out.println("(" + f + "," + g + "," + h + ") Loaded Successfully.");
 	}
 	//
 	//GETTERS & SETTERS ***To be honest, I don't think the chunks should be easily movable.. that means that every file would have to change according to each move, etc.. :S
@@ -226,10 +235,12 @@ public class ChunkManager {
 			else{
 				//removes chunk
 				removeChunk(key);
+				iterator.remove();
 			}
 		}//end while for iterator
 		//ADD
-		Vector3f pos = Player.camera.getPos();
+		//BLOCK RELATIVE
+		Vector3f pos = blockToChunk(Player.camera.getPos());
 		for (int x = (int) (pos.x-Constants.WORLDSIZE); x <= (int)(pos.x + Constants.WORLDSIZE); x++) {
 			for (int y = (int) (pos.y - Constants.WORLDSIZE); y <= (int)(pos.y + Constants.WORLDSIZE); y++) {
 				for (int z = (int) (pos.z - Constants.WORLDSIZE); z <= (int)(pos.z + Constants.WORLDSIZE); z++) {
@@ -246,7 +257,7 @@ public class ChunkManager {
 	}
 	//remove vhunk
 	private void removeChunk(String key) {
-		activeChunks.remove(key);//removes chunk
+		//activeChunks.remove(key);//removes chunk//causes ERROR!
 		//remove the collision blocks
 		for (int x = 0; x < Constants.CHUNKSIZE; x++) {
 			for (int y = 0; y < Constants.CHUNKSIZE; y++) {

@@ -72,9 +72,9 @@ public class Chunk implements Serializable {
 	public void initGL() {
 		rand = new Random(); // initialize random number generator
 
-		sizeX = (int) pos.getX() + Constants.CHUNKSIZE;// TBH, idk..
-		sizeY = (int) pos.getY() + Constants.CHUNKSIZE;
-		sizeZ = (int) pos.getZ() + Constants.CHUNKSIZE;
+		sizeX = Constants.CHUNKSIZE;// TBH, idk -> LOL I do
+		sizeY = Constants.CHUNKSIZE;
+		sizeZ = Constants.CHUNKSIZE;
 
 		// internX = (int) ( Player.camera.getX() - pos.getX() *
 		// Constants.CHUNKSIZE); //Internal chunk coords
@@ -129,14 +129,14 @@ public class Chunk implements Serializable {
 					Player.camera.getX(), Player.camera.getY(),
 					Player.camera.getZ());*/
 			
-			for (int x = (int) pos.getX(); x < sizeX; x++) {
-				for (int y = (int) pos.getY(); y < sizeY; y++) {
-					for (int z = (int) pos.getZ(); z < sizeZ; z++) {
+			for (int x = 0; x < sizeX; x++) {
+				for (int y = 0; y < sizeY; y++) {
+					for (int z = 0; z < sizeZ; z++) {
 						if (tiles[x][y][z] != 0 && !checkTileNotInView(x, y, z)) {
 							Shape.createCube(
-									x,
-									y,
-									z,
+									(int) worldX + x,
+									(int) worldY + y,
+									(int) worldZ + z,
 									Tile.getTile(tiles[x][y][z]).getColor(),
 									Tile.getTile(tiles[x][y][z]).getTexCoords(),
 									1);
@@ -178,7 +178,7 @@ public class Chunk implements Serializable {
 		} else {
 			facesHidden[0] = false;
 		}
-		if (x < sizeX - 1) {
+		if (x < (sizeX - 1)) {
 			if (tiles[x + 1][y][z] != 0)
 				facesHidden[1] = true;
 			else
@@ -187,7 +187,7 @@ public class Chunk implements Serializable {
 			facesHidden[1] = false;
 		}
 
-		if (y > pos.getY()) {
+		if (y > (pos.getY())) {
 			if (tiles[x][y - 1][z] != 0)
 				facesHidden[2] = true;
 			else
@@ -195,7 +195,7 @@ public class Chunk implements Serializable {
 		} else {
 			facesHidden[2] = false;
 		}
-		if (y < sizeY - 1) {
+		if (y < (sizeY - 1)) {
 			if (tiles[x][y + 1][z] != 0)
 				facesHidden[3] = true;
 			else
@@ -212,7 +212,7 @@ public class Chunk implements Serializable {
 		} else {
 			facesHidden[4] = false;
 		}
-		if (z < sizeZ - 1) {
+		if (z < (sizeZ - 1)) {
 			if (tiles[x][y][z + 1] != 0)
 				facesHidden[5] = true;
 			else

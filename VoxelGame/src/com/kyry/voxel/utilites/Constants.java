@@ -39,7 +39,7 @@ public class Constants {
 	public static float jumpFrames = 1;
 	public static float jumpCounter = 0;
 	// initial position of the player
-	public static final Vector3f initPos = new Vector3f(-1f, 0f, -1f);
+	public static final Vector3f initPos = new Vector3f(4f, 19f, 4f);
 	// store the speed of the player
 	public static Vector3f playerSpeed = new Vector3f(0f, 0f, 0f);
 	// the acceleration of players motion
