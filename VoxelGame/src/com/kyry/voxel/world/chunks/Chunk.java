@@ -132,7 +132,7 @@ public class Chunk implements Serializable {
 			for (int x = 0; x < sizeX; x++) {
 				for (int y = 0; y < sizeY; y++) {
 					for (int z = 0; z < sizeZ; z++) {
-						if (tiles[x][y][z] != 0 && !checkTileNotInView(x, y, z)) {
+						if (tiles[x][y][z] != 0 ) {//&& !checkTileNotInView(x, y, z)
 							Shape.createCube(
 									(int) worldX + x,
 									(int) worldY + y,
