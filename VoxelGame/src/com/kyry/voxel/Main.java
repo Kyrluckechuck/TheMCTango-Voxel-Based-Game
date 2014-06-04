@@ -86,7 +86,8 @@ public class Main extends Screen{
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.5f, 0f, 0.75f, 1f);
+		//background
+		//		glClearColor(0.5f, 0f, 0.75f, 1f);
 		
 		world.render();
 		

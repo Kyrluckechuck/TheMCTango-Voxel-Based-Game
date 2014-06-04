@@ -48,6 +48,12 @@ public class ChunkManager {
 	public static String key(float x, float z){//creates a key for the chunk
 		return new String ((int)x + "_" + (int)z);
 	}
+	public static String key(float x, float y, float z){//creates a key for the chunk
+		return new String ((int)x + "_" + y + "_" + (int)z);
+	}
+	public static String key(Vector2f vec){//creates a key for the chunk
+		return new String ((int)vec.getX() + "_" + vec.getY());
+	}
 	public static int keyX(String s){
 		return Integer.parseInt(s.split("_")[0]);
 	}
@@ -65,6 +71,9 @@ public class ChunkManager {
 	public static Vector2f blockToChunk(float x, float z) {
 		return new Vector2f(blockToChunk1f(x),blockToChunk1f(z));
 //		return new Vector2f(blockToChunk1f(x),blockToChunk1f(y),blockToChunk1f(z));
+	}
+	public static Vector3f blockToChunk(float x, float y, float z) {
+		return new Vector3f(blockToChunk1f(x),blockToChunk1f(y),blockToChunk1f(z));
 	}
 	public static int blockToChunk1f(float f){
 		int i = (int) f;
@@ -169,9 +178,8 @@ public class ChunkManager {
 				return chunk;
 			} catch (Exception e) {
 				// Take a second try through, creating the chunk forcefully.
-				//createChunk(x, y, z);
-				//return (loadChunk(x, y, z));
-				return null;
+				createChunk(x, z);
+				return (loadChunkToMem(x, z));
 			}
 		}else{
 			createChunk(x, z);
@@ -336,32 +344,32 @@ public class ChunkManager {
 	}
 	public void render() {
 		//String key = ChunkManager.key(x, y, z);
-//		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-//		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-//		}
-//		
+		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		}
+		
 		
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()){
 			Entry<String, Chunk> entry = iterator.next();
-//			if (Frustum.getFrustum().cubeInFrustum(
-//					entry.getValue().getPos().getX(),
-//					0,//entry.getValue().getPos().getY(),
-//					entry.getValue().getPos().getY(),
-//					entry.getValue().getPos().getX() + Constants.CHUNKSIZE,
-//					0,//entry.getValue().getPos().getY() + Constants.CHUNKSIZE,
-//					entry.getValue().getPos().getY() + Constants.CHUNKSIZE)) {
-//				if (Math.abs(entry.getValue().getCenter().getX()
-//						- (int) Player.camera.getX()) < 64
-////						&& Math.abs(entry.getValue().getCenter().getZ()
-////								- Player.camera.getZ()) < 64
-//						&& Math.abs(entry.getValue().getCenter().getY()
-//								- Player.camera.getY()) < 32) {
-//					Constants.chunksFrustum++;
+			if (Frustum.getFrustum().cubeFullyInFrustum(
+					entry.getValue().getPos().getX(),
+					0,//entry.getValue().getPos().getY(),
+					entry.getValue().getPos().getY(),
+					entry.getValue().getPos().getX() + Constants.CHUNKSIZE,
+					0,//entry.getValue().getPos().getY() + Constants.CHUNKSIZE,
+					entry.getValue().getPos().getY() + Constants.CHUNKSIZE)) {
+				if (Math.abs(entry.getValue().getCenter().getX()
+						- (int) Player.camera.getX()) < 64
+//						&& Math.abs(entry.getValue().getCenter().getZ()
+//								- Player.camera.getZ()) < 64
+						&& Math.abs(entry.getValue().getCenter().getY()
+								- Player.camera.getY()) < 32) {
+					Constants.chunksFrustum++;
 					entry.getValue().render();
 
 				}
-//			}
-//		}//end while for iterator
+			}
+		}//end while for iterator
 	}//end render
 }

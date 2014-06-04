@@ -41,33 +41,32 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Chunk implements Serializable {
 
-	public Vector2f pos;
+	public Vector3f pos;
 	// public short[][][] chunks;
 	// public short[][][] blocks;
 	public ShaderProgram shader;
 
-	public int vcID, sizeX, sizeY, sizeZ, worldX, worldZ, internX,
-			internY, internZ, type; // worldY,
+	public int vcID, sizeX, sizeY, sizeZ, worldX, worldZ, internX, internY, internZ, type; // worldY,
 	public boolean isActive;
 
 	public Random rand;
-	private short[][][] tiles;
+	private short[][][] blocks;
 
 	public Chunk(ShaderProgram shader, int type, int x, int z) {
-		this(shader, type, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).tiles);
+		this(shader, type, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
 	}
 
-	public Chunk(ShaderProgram shader, int type, Vector2f pos, short[][][] loadedTiles) {
-		this.pos = pos;
+	public Chunk(ShaderProgram shader, int type, Vector2f grr, short[][][] loadedTiles) {
+		this.pos = new Vector3f(grr.getX(), 0, grr.getY());
 		this.shader = shader;
 		this.type = type;
-		this.tiles = loadedTiles;//loads tiles
+		this.blocks = loadedTiles;// loads blocks
 		initGL();
 		init();
 	}
-	
-	public void set(){
-		
+
+	public void set() {
+
 	}
 
 	public void initGL() {
@@ -85,7 +84,7 @@ public class Chunk implements Serializable {
 		// Constants.CHUNKSIZE);
 
 		worldX = (int) pos.getX() * Constants.CHUNKSIZE; // World chunk coords
-		//worldY = 0;//(int) pos.getY() * Constants.CHUNKSIZE;
+		// worldY = 0;//(int) pos.getY() * Constants.CHUNKSIZE;
 		worldZ = (int) pos.getY() * Constants.CHUNKSIZE;
 
 		vcID = glGenLists(1); // Generate blank list for vcID
@@ -125,73 +124,84 @@ public class Chunk implements Serializable {
 		if (type != World.AIRCHUNK) {
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
-			//int sizeAll = Constants.CHUNKSIZE;
-			/*Vector3f loadChunkVector = ChunkManager.blockToChunk(
-					Player.camera.getX(), Player.camera.getY(),
-					Player.camera.getZ());*/
-			
+			// int sizeAll = Constants.CHUNKSIZE;
+			/*
+			 * Vector3f loadChunkVector = ChunkManager.blockToChunk(
+			 * Player.camera.getX(), Player.camera.getY(),
+			 * Player.camera.getZ());
+			 */
+
 			for (int x = 0; x < sizeX; x++) {
 				for (int y = 0; y < sizeY; y++) {
 					for (int z = 0; z < sizeZ; z++) {
-						if (tiles[x][y][z] != 0 ) { //&& !checkTileNotInView(x, y, z)
-							Shape.createCube(
-									(int) worldX + x,
-									(int) y,
-									(int) worldZ + z,
-									Block.getTile(tiles[x][y][z]).getColor(),
-									Block.getTile(tiles[x][y][z]).getTexCoords(),
-									1);
+						if ((blocks[x][y][z] != 0 && !checkTileNotInView(x,y, z))) { 
+							Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z, Block.getTile(blocks[x][y][z]).getColor(), Block.getTile(blocks[x][y][z]).getTexCoords(), 1);
 						}
 					}
 				}
 			}
-			/*for (int chunksLoadedX = -1; chunksLoadedX <= 1; chunksLoadedX++) {
-				for (int chunksLoadedY = -1; chunksLoadedY <= 1; chunksLoadedY++) {
-					for (int chunksLoadedZ = -1; chunksLoadedZ <= 1; chunksLoadedZ++) {
-						short[][][] blocks = ChunkManager.loadChunk(
-								loadChunkVector.x + chunksLoadedX,
-								loadChunkVector.y + chunksLoadedY,
-								loadChunkVector.z + chunksLoadedZ);
-						Shape.createCube(x + loadChunkVector.x * sizeAll, y
-								+ loadChunkVector.y * sizeAll, z
-								+ loadChunkVector.z * sizeAll,
-								Block.getTile(blocks[x][y][z]).getColor(), Block
-										.getTile(blocks[x][y][z])
-										.getTexCoords(), 1);
-
-						// WorldRender.render();
-						// float offset = 15;
-
-					}
-				}
-			}*/
+			/*
+			 * for (int chunksLoadedX = -1; chunksLoadedX <= 1; chunksLoadedX++)
+			 * { for (int chunksLoadedY = -1; chunksLoadedY <= 1;
+			 * chunksLoadedY++) { for (int chunksLoadedZ = -1; chunksLoadedZ <=
+			 * 1; chunksLoadedZ++) { short[][][] blocks =
+			 * ChunkManager.loadChunk( loadChunkVector.x + chunksLoadedX,
+			 * loadChunkVector.y + chunksLoadedY, loadChunkVector.z +
+			 * chunksLoadedZ); Shape.createCube(x + loadChunkVector.x * sizeAll,
+			 * y + loadChunkVector.y * sizeAll, z + loadChunkVector.z * sizeAll,
+			 * Block.getTile(blocks[x][y][z]).getColor(), Block
+			 * .getTile(blocks[x][y][z]) .getTexCoords(), 1);
+			 * 
+			 * // WorldRender.render(); // float offset = 15;
+			 * 
+			 * } } }
+			 */
 			glEnd();
 			glEndList();
-			
-			
+
 		}
 	}
-/*	private boolean checkTileNotInView(int x, int y, int z) {
+
+	private boolean checkTileNotInView(int x, int y, int z) {
 		boolean facesHidden[] = new boolean[6];
 		if (x > pos.getX()) {
-			if (tiles[x - 1][y][z] != 0)
-				facesHidden[0] = true;
-			else
-				facesHidden[0] = false;
+			if ((x - 1) < 0) {
+				Chunk grr = ChunkManager.activeChunks.get(ChunkManager.key(ChunkManager.blockToChunk((x - 1), z)));
+				if (grr.blocks[15][y][z] != 0)
+					facesHidden[0] = true;
+				else
+					facesHidden[0] = false;
+			} else {
+
+				if (blocks[x - 1][y][z] != 0)
+					facesHidden[0] = true;
+				else
+					facesHidden[0] = false;
+			}
 		} else {
 			facesHidden[0] = false;
 		}
+
 		if (x < (sizeX - 1)) {
-			if (tiles[x + 1][y][z] != 0)
-				facesHidden[1] = true;
-			else
-				facesHidden[1] = false;
+			if ((x + 1) > Constants.CHUNKSIZE) {
+				Chunk grr = ChunkManager.activeChunks.get(ChunkManager.key(ChunkManager.blockToChunk((x + 1), z)));
+				if (grr.blocks[0][y][z] != 0)
+					facesHidden[0] = true;
+				else
+					facesHidden[0] = false;
+			} else {
+				if (blocks[x + 1][y][z] != 0)
+					facesHidden[1] = true;
+				else
+					facesHidden[1] = false;
+			}
 		} else {
 			facesHidden[1] = false;
+
 		}
 
 		if (y > (pos.getY())) {
-			if (tiles[x][y - 1][z] != 0)
+			if (blocks[x][y - 1][z] != 0)
 				facesHidden[2] = true;
 			else
 				facesHidden[2] = false;
@@ -199,7 +209,7 @@ public class Chunk implements Serializable {
 			facesHidden[2] = false;
 		}
 		if (y < (sizeY - 1)) {
-			if (tiles[x][y + 1][z] != 0)
+			if (blocks[x][y + 1][z] != 0)
 				facesHidden[3] = true;
 			else
 				facesHidden[3] = false;
@@ -208,24 +218,41 @@ public class Chunk implements Serializable {
 		}
 
 		if (z > pos.getZ()) {
-			if (tiles[x][y][z - 1] != 0)
-				facesHidden[4] = true;
-			else
-				facesHidden[4] = false;
+			if ((z - 1) < 0) {
+				Chunk grr = ChunkManager.activeChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x, (z - 1))));
+				if (grr.blocks[15][y][z] != 0)
+					facesHidden[0] = true;
+				else
+					facesHidden[0] = false;
+			} else {
+				if (blocks[x][y][z - 1] != 0)
+					facesHidden[4] = true;
+				else
+					facesHidden[4] = false;
+			}
 		} else {
 			facesHidden[4] = false;
+
 		}
 		if (z < (sizeZ - 1)) {
-			if (tiles[x][y][z + 1] != 0)
-				facesHidden[5] = true;
-			else
-				facesHidden[5] = false;
+			if ((z + 1) > Constants.CHUNKSIZE) {
+				Chunk grr = ChunkManager.activeChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x, (z + 1))));
+				if (grr.blocks[0][y][z] != 0)
+					facesHidden[0] = true;
+				else
+					facesHidden[0] = false;
+			} else {
+				if (blocks[x][y][z + 1] != 0)
+					facesHidden[5] = true;
+				else
+					facesHidden[5] = false;
+			}
 		} else {
 			facesHidden[5] = false;
 		}
-		return facesHidden[0] && facesHidden[1] && facesHidden[2]
-				&& facesHidden[3] && facesHidden[4] && facesHidden[5];
-	}*/
+		return facesHidden[0] && facesHidden[1] && facesHidden[2] && facesHidden[3] && facesHidden[4] && facesHidden[5];
+	}
+
 	public void dispose() {
 		shader.dispose();
 		glDeleteLists(vcID, 1);
@@ -235,30 +262,28 @@ public class Chunk implements Serializable {
 		return isActive;
 	}
 
-	/*public short getBlockID(int x, int y, int z) {
-
-		int loadChunkX = (int) (Player.camera.getX() / Constants.CHUNKSIZE);
-		int loadChunkY = (int) (Player.camera.getY() / Constants.CHUNKSIZE);
-		int loadChunkZ = (int) (Player.camera.getZ() / Constants.CHUNKSIZE);
-
-		if (x < pos.getX() || x > pos.getX() + Constants.CHUNKSIZE
-				|| y < pos.getY() || y > pos.getY() + Constants.CHUNKSIZE
-				|| z < pos.getZ() || z > pos.getZ() + Constants.CHUNKSIZE)
-			return 1;
-		return blocks[x][y][z];
-	}*/
+	/*
+	 * public short getBlockID(int x, int y, int z) {
+	 * 
+	 * int loadChunkX = (int) (Player.camera.getX() / Constants.CHUNKSIZE); int
+	 * loadChunkY = (int) (Player.camera.getY() / Constants.CHUNKSIZE); int
+	 * loadChunkZ = (int) (Player.camera.getZ() / Constants.CHUNKSIZE);
+	 * 
+	 * if (x < pos.getX() || x > pos.getX() + Constants.CHUNKSIZE || y <
+	 * pos.getY() || y > pos.getY() + Constants.CHUNKSIZE || z < pos.getZ() || z
+	 * > pos.getZ() + Constants.CHUNKSIZE) return 1; return blocks[x][y][z]; }
+	 */
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 
 	public Vector2f getCenter() {
-		return new Vector2f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getY()
-				- (Constants.CHUNKSIZE / 2));
+		return new Vector2f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getZ() - (Constants.CHUNKSIZE / 2));
 	}
 
 	public Vector2f getPos() {
-		return pos;
+		return new Vector2f(pos.getX(), pos.getZ());
 	}
 
 	public int getType() {
