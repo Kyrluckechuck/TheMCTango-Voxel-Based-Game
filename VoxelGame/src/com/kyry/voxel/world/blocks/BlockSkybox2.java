@@ -1,14 +1,14 @@
-package com.kyry.voxel.world.tiles;
+package com.kyry.voxel.world.blocks;
 
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class TileSkybox3 extends Tile{
+public class BlockSkybox2 extends Block{
 
 	@Override
 	public short getId() {
-		return 225;
+		return 224;
 	}
 
 	@Override

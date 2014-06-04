@@ -21,10 +21,10 @@ import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Frustum;
 import com.kyry.voxel.world.World;
+import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.mobs.MobManager;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
-import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 
@@ -203,38 +203,38 @@ public class ChunkManager {
 		/*
 		 * if (type == World.AIRCHUNK) { for (int x = 0; x < sizeAll; x++) { for
 		 * (int y = 0; y < sizeAll; y++) { for (int z = 0; z < sizeAll; z++) {
-		 * blocks[x][y][z] = Tile.Air.getId(); } } } } if (type ==
+		 * blocks[x][y][z] = Block.Air.getId(); } } } } if (type ==
 		 * World.MIXEDCHUNK) {
 		 */
 		for (int x = 0; x < sizeAll; x++) {
 			for (int y = 0; y < worldHeight; y++) {
 				for (int z = 0; z < sizeAll; z++) {
-					blocks[x][y][z] = Tile.Grass.getId();
+					blocks[x][y][z] = Block.Grass.getId();
 					if (y == 14) {
-						// blocks[x][y][z] = Tile.Sand.getId();
+						// blocks[x][y][z] = Block.Sand.getId();
 					} else if ((x == 0) && (z == 0)) {
-						blocks[x][y][z] = Tile.Air.getId();
+						blocks[x][y][z] = Block.Air.getId();
 					} else if (y == 0) {
-						blocks[x][y][z] = Tile.Brick.getId();
+						blocks[x][y][z] = Block.Brick.getId();
 					} else if (y > 14) {
-						blocks[x][y][z] = Tile.Air.getId();
-					} else if (blocks[x][y][z] == Tile.CrackedStone.getId() && (rand.nextInt(7) == 0)) {
-						blocks[x][y][z] = Tile.CrackedStone.getId();
+						blocks[x][y][z] = Block.Air.getId();
+					} else if (blocks[x][y][z] == Block.CrackedStone.getId() && (rand.nextInt(7) == 0)) {
+						blocks[x][y][z] = Block.CrackedStone.getId();
 					} else if (rand.nextInt(2) == 0) {
 						if (rand.nextBoolean())
-							blocks[x][y][z] = Tile.Air.getId();
+							blocks[x][y][z] = Block.Air.getId();
 					} else
-						blocks[x][y][z] = Tile.CrackedStone.getId();
+						blocks[x][y][z] = Block.CrackedStone.getId();
 
 					/*
 					 * if (rand.nextInt(5) == 0) if (rand.nextBoolean())
-					 * blocks[x][y][z] = Tile.CrackedStone.getId(); if
+					 * blocks[x][y][z] = Block.CrackedStone.getId(); if
 					 * (rand.nextInt(9) == 0) if (rand.nextBoolean())
-					 * blocks[x][y][z] = Tile.Brick.getId(); else
-					 * blocks[x][y][z] = Tile.Glass.getId();
+					 * blocks[x][y][z] = Block.Brick.getId(); else
+					 * blocks[x][y][z] = Block.Glass.getId();
 					 */
 					try {
-						if (blocks[x][y][z] != Tile.Air.getId()) {
+						if (blocks[x][y][z] != Block.Air.getId()) {
 							// PhysicsWorld.newBlock(x, y, z);
 							// CollisionLibrary.newBlock(x,y,z);
 							CollisionLibrary.newBlock(f, 0, h, x, y, z);

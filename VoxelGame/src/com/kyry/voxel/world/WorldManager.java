@@ -21,12 +21,12 @@ import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Frustum;
 import com.kyry.voxel.utilites.Spritesheet;
+import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.chunks.ChunkManager;
 import com.kyry.voxel.world.entities.mobs.MobManager;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
-import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 
@@ -113,8 +113,8 @@ public class WorldManager {
 		 * Shape.createCube(CollisionLibrary.BlockList.get(x).center.x,
 		 * CollisionLibrary.BlockList.get(x).center.y + .01f,
 		 * CollisionLibrary.BlockList.get(x).center.z,
-		 * Tile.getTile(Tile.Wireframe.getId()).getColor(), Tile
-		 * .getTile(Tile.Wireframe.getId()).getTexCoords(), 1f);
+		 * Block.getTile(Block.Wireframe.getId()).getColor(), Block
+		 * .getTile(Block.Wireframe.getId()).getTexCoords(), 1f);
 		 * 
 		 * }
 		glEnd();*/
@@ -124,8 +124,8 @@ public class WorldManager {
 		Shape.createCube(mobManager.getPlayer().getX() + Constants.ray.x,
 				mobManager.getPlayer().getY() + Constants.ray.y,
 				mobManager.getPlayer().getZ() + Constants.ray.z,
-				Tile.getTile(Tile.Brick.getId()).getColor(),
-				Tile.getTile(Tile.Brick.getId()).getTexCoords(), 0.2f);
+				Block.getTile(Block.Brick.getId()).getColor(),
+				Block.getTile(Block.Brick.getId()).getTexCoords(), 0.2f);
 		glEnd();*/
 		
 		

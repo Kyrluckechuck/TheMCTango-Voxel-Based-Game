@@ -9,7 +9,7 @@ import com.kyry.voxel.world.physics.CollisionLibrary;
 public class CollisionTest {
 	   public static void main(String[] args) {
 	      Sphere sphere = new Sphere(5);
-	      AABB box = new AABB(0,0,0,10,1,5, 1);
+	      AABB box = new AABB(0,0,10,1,5, 1);
 	      Vector3f somePosition = new Vector3f();
 	      somePosition.x = 10;
 	      somePosition.y = 5;

@@ -1,19 +1,19 @@
-package com.kyry.voxel.world.tiles;
+package com.kyry.voxel.world.blocks;
 
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class TileCrackedStone extends Tile{
+public class BlockGlass extends Block{
 
 	@Override
 	public short getId() {
-		return 3;
+		return 7;
 	}
 
 	@Override
 	public Color4f getColor() {
-		return Color4f.GRAY;
+		return Color4f.DEFAULT;
 	}
 
 	@Override
@@ -21,7 +21,8 @@ public class TileCrackedStone extends Tile{
 		float actualSize = Constants.TextureSize;
 		float size = Spritesheet.tiles.uniformSize();
 		int height = (int) (getId() / (float)actualSize);
-		return new float[] { (getId()-(size*height) -1) * size, height * size };
+		return new float[] { (getId()-(size*height)) * size, height * size };
 	}
-
+	
+	
 }

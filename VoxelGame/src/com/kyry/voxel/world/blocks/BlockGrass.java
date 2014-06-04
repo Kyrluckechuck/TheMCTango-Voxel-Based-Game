@@ -1,9 +1,9 @@
-package com.kyry.voxel.world.tiles;
+package com.kyry.voxel.world.blocks;
 
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class TileGrass extends Tile {
+public class BlockGrass extends Block {
 
 	/* 
 	 * Texture coords for multi-textured tiles

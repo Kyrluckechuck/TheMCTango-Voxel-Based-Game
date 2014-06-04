@@ -30,10 +30,10 @@ import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.WorldRender;
+import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
 //import com.kyry.voxel.world.physics.PhysicsWorld;
-import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.ShaderProgram;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -138,8 +138,8 @@ public class Chunk implements Serializable {
 									(int) worldX + x,
 									(int) y,
 									(int) worldZ + z,
-									Tile.getTile(tiles[x][y][z]).getColor(),
-									Tile.getTile(tiles[x][y][z]).getTexCoords(),
+									Block.getTile(tiles[x][y][z]).getColor(),
+									Block.getTile(tiles[x][y][z]).getTexCoords(),
 									1);
 						}
 					}
@@ -155,7 +155,7 @@ public class Chunk implements Serializable {
 						Shape.createCube(x + loadChunkVector.x * sizeAll, y
 								+ loadChunkVector.y * sizeAll, z
 								+ loadChunkVector.z * sizeAll,
-								Tile.getTile(blocks[x][y][z]).getColor(), Tile
+								Block.getTile(blocks[x][y][z]).getColor(), Block
 										.getTile(blocks[x][y][z])
 										.getTexCoords(), 1);
 
@@ -167,6 +167,7 @@ public class Chunk implements Serializable {
 			}*/
 			glEnd();
 			glEndList();
+			
 			
 		}
 	}

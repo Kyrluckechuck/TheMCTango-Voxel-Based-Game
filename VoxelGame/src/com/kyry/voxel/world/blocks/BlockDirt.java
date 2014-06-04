@@ -1,14 +1,14 @@
-package com.kyry.voxel.world.tiles;
+package com.kyry.voxel.world.blocks;
 
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class TileWireframe extends Tile{
+public class BlockDirt extends Block{
 
 	@Override
 	public short getId() {
-		return 8;
+		return 4;
 	}
 
 	@Override
@@ -23,6 +23,4 @@ public class TileWireframe extends Tile{
 		int height = (int) (getId() / (float)actualSize);
 		return new float[] { (getId()-(size*height)) * size, height * size };
 	}
-	
-	
 }

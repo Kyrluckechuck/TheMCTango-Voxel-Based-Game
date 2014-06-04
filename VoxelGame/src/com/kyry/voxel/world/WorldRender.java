@@ -8,9 +8,9 @@ import org.lwjgl.opengl.GL11;
 
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
-import com.kyry.voxel.world.tiles.Tile;
 
 public class WorldRender {
 
@@ -20,24 +20,24 @@ public class WorldRender {
 		float playerY = Player.camera.getY();
 		float playerZ = Player.camera.getZ();
 		// float offset = 10f;
-		Shape.createSkybox(playerX - 10, playerY - 10, playerZ - 10, Tile
-				.getTile(Tile.Skybox1.getId()).getColor(),
-				Tile.getTile(Tile.Skybox1.getId()).getTexCoords(), Tile
-						.getTile(Tile.Skybox2.getId()).getTexCoords(), Tile
-						.getTile(Tile.Skybox3.getId()).getTexCoords(), Tile
-						.getTile(Tile.Skybox4.getId()).getTexCoords(), Tile
-						.getTile(Tile.Skybox5.getId()).getTexCoords(), Tile
-						.getTile(Tile.Skybox6.getId()).getTexCoords(), 40);
+		Shape.createSkybox(playerX - 10, playerY - 10, playerZ - 10, Block
+				.getTile(Block.Skybox1.getId()).getColor(),
+				Block.getTile(Block.Skybox1.getId()).getTexCoords(), Block
+						.getTile(Block.Skybox2.getId()).getTexCoords(), Block
+						.getTile(Block.Skybox3.getId()).getTexCoords(), Block
+						.getTile(Block.Skybox4.getId()).getTexCoords(), Block
+						.getTile(Block.Skybox5.getId()).getTexCoords(), Block
+						.getTile(Block.Skybox6.getId()).getTexCoords(), 40);
 		/*
-		 * Shape.createSkybox(playerX - 10, playerY - 10, playerZ - 10, Tile
-		 * .getTile(Tile.Brick.getId()).getColor(),
-		 * Tile.getTile(Tile.Brick.getId()).getTexCoords(), 20);
+		 * Shape.createSkybox(playerX - 10, playerY - 10, playerZ - 10, Block
+		 * .getTile(Block.Brick.getId()).getColor(),
+		 * Block.getTile(Block.Brick.getId()).getTexCoords(), 20);
 		 */
 
 		/*
 		 * // Front Face // GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Skybox1.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
+		 * Block.Skybox1.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+		 * Block.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
 		 * GL11.glTexCoord2f(1f, 0.0f); GL11.glVertex3f(-playerX - offset,
 		 * -playerY - offset, -playerZ - offset); GL11.glTexCoord2f(1f, 1f);
 		 * GL11.glVertex3f(-playerX - offset, -playerY + offset, -playerZ -
@@ -47,8 +47,8 @@ public class WorldRender {
 		 * -playerY - offset, -playerZ - offset); GL11.glEnd();
 		 * 
 		 * // Back Face // GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Skybox6.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
+		 * Block.Skybox6.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+		 * Block.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
 		 * GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f(-playerX - offset,
 		 * -playerY - offset, -playerZ + offset); GL11.glTexCoord2f(1f, 0.0f);
 		 * GL11.glVertex3f(-playerX + offset, -playerY - offset, -playerZ +
@@ -58,8 +58,8 @@ public class WorldRender {
 		 * -playerY + offset, -playerZ + offset); GL11.glEnd();
 		 * 
 		 * // Top Face // GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Skybox5.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
+		 * Block.Skybox5.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+		 * Block.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
 		 * GL11.glTexCoord2f(1f, 1f); GL11.glVertex3f(-playerX - offset,
 		 * -playerY - offset, -playerZ - offset); GL11.glTexCoord2f(0.0f, 1f);
 		 * GL11.glVertex3f(-playerX + offset, -playerY - offset, -playerZ -
@@ -69,8 +69,8 @@ public class WorldRender {
 		 * + offset); GL11.glEnd();
 		 * 
 		 * // Bottom Face // GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Skybox3.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
+		 * Block.Skybox3.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+		 * Block.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
 		 * GL11.glTexCoord2f(1f, 0f); GL11.glVertex3f(-playerX - offset,
 		 * -playerY + offset, -playerZ - offset); GL11.glTexCoord2f(1f, 1f);
 		 * GL11.glVertex3f(-playerX - offset, -playerY + offset, -playerZ +
@@ -80,8 +80,8 @@ public class WorldRender {
 		 * offset); GL11.glEnd();
 		 * 
 		 * // Right face // GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Skybox4.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
+		 * Block.Skybox4.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+		 * Block.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
 		 * GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f(-playerX - offset,
 		 * -playerY - offset, -playerZ - offset); GL11.glTexCoord2f(1f, 0.0f);
 		 * GL11.glVertex3f(-playerX - offset, -playerY - offset, -playerZ +
@@ -91,8 +91,8 @@ public class WorldRender {
 		 * -playerY + offset, -playerZ - offset); GL11.glEnd();
 		 * 
 		 * // Left Face // GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Skybox2.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-		 * Tile.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
+		 * Block.Skybox2.getId()); GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+		 * Block.Brick.getId()); GL11.glBegin(GL11.GL_QUADS);
 		 * GL11.glTexCoord2f(1f, 0.0f); GL11.glVertex3f(-playerX + offset,
 		 * -playerY - offset, -playerZ - offset); GL11.glTexCoord2f(1f, 1f);
 		 * GL11.glVertex3f(-playerX + offset, -playerY + offset, -playerZ -

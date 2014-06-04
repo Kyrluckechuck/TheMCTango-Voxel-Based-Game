@@ -16,7 +16,7 @@ import com.nishu.utils.Screen;
 //import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
-import com.kyry.voxel.world.tiles.Tile;
+import com.kyry.voxel.world.blocks.Block;
 
 public class World extends Screen {
 
@@ -37,7 +37,7 @@ public class World extends Screen {
 	public void init() {
 
 		Spritesheet.tiles.bind();
-		Tile.createTileMap();
+		Block.createTileMap();
 
 		Font tempFont = new Font("Arial", Font.PLAIN, 16);
 		font = new TrueTypeFont(tempFont, true);

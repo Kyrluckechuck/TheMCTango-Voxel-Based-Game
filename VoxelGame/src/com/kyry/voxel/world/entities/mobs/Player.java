@@ -6,9 +6,9 @@ import org.lwjgl.opengl.GL11;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.world.WorldManager;
+import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.Camera;
 //import com.kyry.voxel.world.physics.PhysicsWorld;
-import com.kyry.voxel.world.tiles.Tile;
 
 public class Player extends Mob {
 
@@ -29,8 +29,8 @@ public class Player extends Mob {
 //		GL11.glBegin(GL11.GL_QUADS);
 //		Vector3f playerPos= PhysicsWorld.playerBody.getWorldTransform(PhysicsWorld.DEFAULT_TRANSFORM).origin;
 //		Shape.createCube(playerPos.x, playerPos.y, playerPos.z,
-//				Tile.getTile(Tile.Void.getId()).getColor(),
-//				Tile.getTile(Tile.Void.getId()).getTexCoords(), 0.01f);
+//				Block.getTile(Block.Void.getId()).getColor(),
+//				Block.getTile(Block.Void.getId()).getTexCoords(), 0.01f);
 //		GL11.glEnd();
 		//System.out.println("HEYY!");
 	}

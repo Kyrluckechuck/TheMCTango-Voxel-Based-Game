@@ -1,8 +1,8 @@
-package com.kyry.voxel.world.tiles;
+package com.kyry.voxel.world.blocks;
 
 import com.nishu.utils.Color4f;
 
-public class TileAir extends Tile{
+public class BlockAir extends Block{
 
 	@Override
 	public short getId() {

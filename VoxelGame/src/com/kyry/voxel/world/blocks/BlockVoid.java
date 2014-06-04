@@ -1,9 +1,9 @@
-package com.kyry.voxel.world.tiles;
+package com.kyry.voxel.world.blocks;
 
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class TileVoid extends Tile {
+public class BlockVoid extends Block {
 
 	@Override
 	public short getId() {

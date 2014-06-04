@@ -1,14 +1,14 @@
-package com.kyry.voxel.world.tiles;
+package com.kyry.voxel.world.blocks;
 
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class TileSkybox1 extends Tile {
+public class BlockSkybox5 extends Block{
 
 	@Override
 	public short getId() {
-		return 209;
+		return 227;
 	}
 
 	@Override
@@ -28,7 +28,5 @@ public class TileSkybox1 extends Tile {
 			return new float[] { (getId() - (actualSize * height)) * size,
 					(height + 1) * size };
 		}
-		// Height is (+1) to account for the fact it's actually 1 larger than
-		// the column.
 	}
 }

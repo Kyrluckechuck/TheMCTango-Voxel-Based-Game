@@ -1,14 +1,14 @@
-package com.kyry.voxel.world.tiles;
+package com.kyry.voxel.world.blocks;
 
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class TileDirt extends Tile{
+public class BlockSand extends Block{
 
 	@Override
 	public short getId() {
-		return 4;
+		return 5;
 	}
 
 	@Override
