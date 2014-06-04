@@ -36,27 +36,28 @@ import com.kyry.voxel.world.physics.CollisionLibrary;
 import com.kyry.voxel.world.tiles.Tile;
 import com.nishu.utils.ShaderProgram;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Chunk implements Serializable {
 
-	public Vector3f pos;
+	public Vector2f pos;
 	// public short[][][] chunks;
 	// public short[][][] blocks;
 	public ShaderProgram shader;
 
-	public int vcID, sizeX, sizeY, sizeZ, worldX, worldY, worldZ, internX,
-			internY, internZ, type;
+	public int vcID, sizeX, sizeY, sizeZ, worldX, worldZ, internX,
+			internY, internZ, type; // worldY,
 	public boolean isActive;
 
 	public Random rand;
 	private short[][][] tiles;
 
-	public Chunk(ShaderProgram shader, int type, int x, int y, int z) {
-		this(shader, type, new Vector3f(x, y, z), ChunkManager.loadChunkToMem(x, y, z).tiles);
+	public Chunk(ShaderProgram shader, int type, int x, int z) {
+		this(shader, type, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).tiles);
 	}
 
-	public Chunk(ShaderProgram shader, int type, Vector3f pos, short[][][] loadedTiles) {
+	public Chunk(ShaderProgram shader, int type, Vector2f pos, short[][][] loadedTiles) {
 		this.pos = pos;
 		this.shader = shader;
 		this.type = type;
@@ -73,7 +74,7 @@ public class Chunk implements Serializable {
 		rand = new Random(); // initialize random number generator
 
 		sizeX = Constants.CHUNKSIZE;// TBH, idk -> LOL I do
-		sizeY = Constants.CHUNKSIZE;
+		sizeY = Constants.WORLDHEIGHT;
 		sizeZ = Constants.CHUNKSIZE;
 
 		// internX = (int) ( Player.camera.getX() - pos.getX() *
@@ -84,8 +85,8 @@ public class Chunk implements Serializable {
 		// Constants.CHUNKSIZE);
 
 		worldX = (int) pos.getX() * Constants.CHUNKSIZE; // World chunk coords
-		worldY = (int) pos.getY() * Constants.CHUNKSIZE;
-		worldZ = (int) pos.getZ() * Constants.CHUNKSIZE;
+		//worldY = 0;//(int) pos.getY() * Constants.CHUNKSIZE;
+		worldZ = (int) pos.getY() * Constants.CHUNKSIZE;
 
 		vcID = glGenLists(1); // Generate blank list for vcID
 
@@ -132,10 +133,10 @@ public class Chunk implements Serializable {
 			for (int x = 0; x < sizeX; x++) {
 				for (int y = 0; y < sizeY; y++) {
 					for (int z = 0; z < sizeZ; z++) {
-						if (tiles[x][y][z] != 0 ) {//&& !checkTileNotInView(x, y, z)
+						if (tiles[x][y][z] != 0 ) { //&& !checkTileNotInView(x, y, z)
 							Shape.createCube(
 									(int) worldX + x,
-									(int) worldY + y,
+									(int) y,
 									(int) worldZ + z,
 									Tile.getTile(tiles[x][y][z]).getColor(),
 									Tile.getTile(tiles[x][y][z]).getTexCoords(),
@@ -169,7 +170,7 @@ public class Chunk implements Serializable {
 			
 		}
 	}
-	private boolean checkTileNotInView(int x, int y, int z) {
+/*	private boolean checkTileNotInView(int x, int y, int z) {
 		boolean facesHidden[] = new boolean[6];
 		if (x > pos.getX()) {
 			if (tiles[x - 1][y][z] != 0)
@@ -223,7 +224,7 @@ public class Chunk implements Serializable {
 		}
 		return facesHidden[0] && facesHidden[1] && facesHidden[2]
 				&& facesHidden[3] && facesHidden[4] && facesHidden[5];
-	}
+	}*/
 	public void dispose() {
 		shader.dispose();
 		glDeleteLists(vcID, 1);
@@ -250,13 +251,12 @@ public class Chunk implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public Vector3f getCenter() {
-		return new Vector3f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getY()
-				- (Constants.CHUNKSIZE / 2), pos.getZ()
+	public Vector2f getCenter() {
+		return new Vector2f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getY()
 				- (Constants.CHUNKSIZE / 2));
 	}
 
-	public Vector3f getPos() {
+	public Vector2f getPos() {
 		return pos;
 	}
 

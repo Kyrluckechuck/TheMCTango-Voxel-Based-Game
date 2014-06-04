@@ -1,18 +1,19 @@
 package com.kyry.voxel.geometry;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class AABB {
 	public Vector3f center;
 	public float r[];
 
-	public AABB(final Vector3f posChunk, final Vector3f pos, final float size) {
-		this(posChunk.x, posChunk.y, posChunk.z, pos.x, pos.y, pos.z, size);
+	public AABB(final Vector2f posChunk, final Vector3f posPlayer, final float size) {
+		this(posChunk.getX(), posChunk.getY(), posPlayer.x, posPlayer.y, posPlayer.z, size);
 	}
 
-	public AABB(final float chunkX, final float chunkY, final float chunkZ,
+	public AABB(final float chunkX, final float chunkZ,
 			final float x, final float y, final float z, final float size) {
-		this(chunkX + x, chunkY + y, chunkZ + z, size);
+		this(chunkX + x, y, chunkZ + z, size);
 	}
 	public AABB(final float x, final float y, final float z, final float size) {
 		center = new Vector3f(x + (size * .5f), y

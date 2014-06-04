@@ -20,6 +20,7 @@ public class Constants {
 											// text not get chopped off)
 	public static int WORLDRADIUS = 2; // How many chunks in the world
 	public static int CHUNKSIZE = 16; // How many blocks^3 a chunk is
+	public static int WORLDHEIGHT = 32; // How many blocks^3 a chunk is
 	public static float playerHeight = 0.8f; // How many blocks^3 a chunk is
 	public static final int TextureSize = 16; // The pixel size of a texture
 												// (the entire file is 256x256

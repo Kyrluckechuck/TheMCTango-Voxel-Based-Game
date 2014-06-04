@@ -16,22 +16,22 @@ public class CollisionLibrary {
 	//public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
 	public static HashMap<String, AABB> BlockMap = new HashMap<String, AABB>();
 
-	public static void newBlock(float f, float g, float h, float x, float y, float z) {
-		newBlock (f, g, h, x, y, z, 1);
+	public static void newBlock(float f, float h, float x, float y, float z) {
+		newBlock (f, h, x, y, z, 1);
 	}
 
-	public static void newBlock(float chunkX, float chunkY, float chunkZ, float x, float y, float z, float r) {
-		String key = ChunkManager.key((int)(chunkX + x), (int)(chunkY + y), (int) (chunkZ + z));
+	public static void newBlock(float chunkX, float chunkZ, float x, float y, float z, float r) {
+		String key = ChunkManager.key((int)(chunkX + x), (int) (chunkZ + z));
 		//BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
-		BlockMap.put(key, new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
+		BlockMap.put(key, new AABB(chunkX, chunkZ, x, y, z, r));
 		Constants.BlocksLoaded++;
 		
 	}
-	public static void removeBlock(int chunkX, int chunkY, int chunkZ, int x, int y, int z){
-		removeBlock((int)(chunkX + x), (int)(chunkY + y), (int) (chunkZ + z));
+	public static void removeBlock(int chunkX, int chunkZ, int x, int y, int z){
+		removeBlock((int)(chunkX + x), y,  (int) (chunkZ + z));
 	}
 	public static void removeBlock(int x, int y, int z){
-		String key = ChunkManager.key(x, y, z);
+		String key = ChunkManager.key(x, z);
 		Iterator<Entry<String, AABB>> iterator = BlockMap.entrySet().iterator();
 		while (iterator.hasNext()){
 			Entry<String, AABB> entry = iterator.next();

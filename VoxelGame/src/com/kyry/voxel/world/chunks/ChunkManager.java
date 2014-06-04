@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Map.Entry;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
@@ -44,24 +45,26 @@ public class ChunkManager {
 		//shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 	//Helper methods
-	public static String key(float x, float y, float z){//creates a key for the chunk
-		return new String ((int)x + "_" + (int)y + "_" + (int)z);
+	public static String key(float x, float z){//creates a key for the chunk
+		return new String ((int)x + "_" + (int)z);
 	}
 	public static int keyX(String s){
 		return Integer.parseInt(s.split("_")[0]);
 	}
-	public static int keyY(String s){
+	public static int keyZ(String s){
 		return Integer.parseInt(s.split("_")[1]);
 	}
-	public static int keyZ(String s){
-		return Integer.parseInt(s.split("_")[2]);
-	}
+//	public static int keyZ(String s){
+//		return Integer.parseInt(s.split("_")[2]);
+//	}
 	
-	public static Vector3f blockToChunk(Vector3f v) {
-		return new Vector3f(blockToChunk1f(v.x),blockToChunk1f(v.y),blockToChunk1f(v.z));
+	public static Vector2f blockToChunk(Vector3f v) {
+		return new Vector2f(blockToChunk1f(v.getX()),blockToChunk1f(v.getZ()));
+//		return new Vector3f(blockToChunk1f(v.x),blockToChunk1f(v.y),blockToChunk1f(v.z));
 	}
-	public static Vector3f blockToChunk(float x, float y, float z) {
-		return new Vector3f(blockToChunk1f(x),blockToChunk1f(y),blockToChunk1f(z));
+	public static Vector2f blockToChunk(float x, float z) {
+		return new Vector2f(blockToChunk1f(x),blockToChunk1f(z));
+//		return new Vector2f(blockToChunk1f(x),blockToChunk1f(y),blockToChunk1f(z));
 	}
 	public static int blockToChunk1f(float f){
 		int i = (int) f;
@@ -72,12 +75,12 @@ public class ChunkManager {
 		}
 		return i;
 	}
-	public static String filePath(int x, int y, int z){
-		return new String("E:\\Save\\" + x + "_" + y + "_" + z + ".dat");
+	public static String filePath(int x, int z){
+		return new String("E:\\Save\\" + x + "_" + z + ".dat");
 	}
 	
-	public static boolean isCreated(int x, int y, int z){
-		File f = new File(filePath(x,y,z));
+	public static boolean isCreated(int x, int z){
+		File f = new File(filePath(x,z));
 		if(f.exists() && !f.isDirectory()) { 
 			return true;
 			}
@@ -133,36 +136,36 @@ public class ChunkManager {
 		}
 	}*/
 	//SAVE / LOAD
-	private static void saveChunk(float f, float g, float h, short[][][] blocks) { //Save chunk to data file
+	private static void saveChunk(float f, float h, short[][][] blocks) { //Save chunk to data file
 		int x = (int) f;
-		int y = (int) g;
+		//int y = (int) g;
 		int z = (int) h;
 		try {
-			File dir = new File(filePath(x, y, z));
+			File dir = new File(filePath(x, z));
 			dir.getParentFile().mkdir();
-			FileOutputStream saveFile = new FileOutputStream(filePath(x, y, z));
+			FileOutputStream saveFile = new FileOutputStream(filePath(x, z));
 			ObjectOutputStream save = new ObjectOutputStream(saveFile);
 			save.writeObject(blocks);
 			save.flush();
 			save.close();
-			System.out.println("(" + x + "," + y + "," + z + ") Saved Successfully.");
+			System.out.println("(" + x + "," + z + ") Saved Successfully.");
 
 		} catch (IOException e) {
-			System.out.println("Failed to save  (" + x + "," + y + "," + z + ")");
+			System.out.println("Failed to save  (" + x + "," + z + ")");
 			e.printStackTrace();
 		}
 
 	}
 
-	public static Chunk loadChunkToMem(int x, int y, int z) { //Add chunk from file to memory chunk list
-		if (isCreated(x,y,z)){
+	public static Chunk loadChunkToMem(int x, int z) { //Add chunk from file to memory chunk list
+		if (isCreated(x,z)){
 			try {
-				FileInputStream saveFile = new FileInputStream(filePath(x, y, z));
+				FileInputStream saveFile = new FileInputStream(filePath(x, z));
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
-				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(x,y,z), (short[][][]) restore.readObject());
+				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector2f(x,z), (short[][][]) restore.readObject());
 				restore.close();
-				loadedChunks.put(key(x, y, z), chunk);
-				System.out.println("(" + x + "," + y + "," + z + ") Loaded Successfully.");
+				loadedChunks.put(key(x, z), chunk);
+				System.out.println("(" + x + "," + z + ") Loaded Successfully.");
 				return chunk;
 			} catch (Exception e) {
 				// Take a second try through, creating the chunk forcefully.
@@ -171,25 +174,26 @@ public class ChunkManager {
 				return null;
 			}
 		}else{
-			createChunk(x, y, z);
-			return (loadChunkToMem(x, y, z));
+			createChunk(x, z);
+			return (loadChunkToMem(x, z));
 		}
 	}
-	public static Chunk loadChunkToActive(int x, int y, int z) { //Add chunk from memory to active chunk list
+	public static Chunk loadChunkToActive(int x, int z) { //Add chunk from memory to active chunk list
 
-		activeChunks.put(key(x, y, z), loadedChunks.get(key(x,y,z)));
+		activeChunks.put(key(x, z), loadedChunks.get(key(x,z)));
 		return null;
 
 	}
-	public static Chunk removeChunkFromActive(int x, int y, int z) { //Remove chunk from active chunk list
+	public static Chunk removeChunkFromActive(int x, int z) { //Remove chunk from active chunk list
 		
-		activeChunks.remove(key(x, y, z));
+		activeChunks.remove(key(x, z));
 		return null;
 		
 	}
-	public static void createChunk(int f, int g, int h) {
+	public static void createChunk(int f,  int h) {
 		int sizeAll = Constants.CHUNKSIZE;
-		short[][][] blocks = new short[sizeAll][sizeAll][sizeAll];
+		int worldHeight = Constants.WORLDHEIGHT;
+		short[][][] blocks = new short[sizeAll][worldHeight][sizeAll];
 		// int internX = (int) Player.camera.getX() - chunkX *
 		// Constants.CHUNKSIZE ;
 		// int internY = (int) Player.camera.getY() - chunkX *
@@ -203,7 +207,7 @@ public class ChunkManager {
 		 * World.MIXEDCHUNK) {
 		 */
 		for (int x = 0; x < sizeAll; x++) {
-			for (int y = 0; y < sizeAll; y++) {
+			for (int y = 0; y < worldHeight; y++) {
 				for (int z = 0; z < sizeAll; z++) {
 					blocks[x][y][z] = Tile.Grass.getId();
 					if (y == 14) {
@@ -233,7 +237,7 @@ public class ChunkManager {
 						if (blocks[x][y][z] != Tile.Air.getId()) {
 							// PhysicsWorld.newBlock(x, y, z);
 							// CollisionLibrary.newBlock(x,y,z);
-							CollisionLibrary.newBlock(f, g, h, x, y, z);
+							CollisionLibrary.newBlock(f, 0, h, x, y, z);
 							/*
 							 * Vector3f somePosition = new Vector3f(x,y,z);
 							 * CollisionLibrary
@@ -242,7 +246,7 @@ public class ChunkManager {
 							 */
 						}
 					} catch (NullPointerException e) {
-						System.out.println("Block error in chunk (" + f + "," + g + "," + h + ")" + " at X: " + x + " Y: " + y + " Z: " + z);
+						System.out.println("Block error in chunk (" + f + "," + h + ")" + " at X: " + x + " Y: " + y + " Z: " + z);
 					}
 				}
 			}
@@ -253,12 +257,12 @@ public class ChunkManager {
 		 * "("+x+")"+"("+y+")"+"("+z+")"+"=" + blocks[x][y][z].getId()"Like so:
 		 * (0)(0)(0)=0; (0)(0)(1)=6; ... (15)(15)(15)=3; .. (x)(y)(z)=blockId;
 		 */
-		ChunkManager.saveChunk(f, g, h, blocks);
+		ChunkManager.saveChunk(f, h, blocks);
 		/////
 		//Seems redundant and unneeded. The createChunk method will not always be called in one instance of the game, loadChunk will be
 		//Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector3f(f,g,h), blocks);
 		//activeChunks.put(key(f,g,h), chunk);
-		System.out.println("(" + f + "," + g + "," + h + ") Created Successfully.");
+		System.out.println("(" + f + "," + h + ") Created Successfully.");
 	}
 	//
 	//GETTERS & SETTERS ***To be honest, I don't think the chunks should be easily movable.. that means that every file would have to change according to each move, etc.. :S
@@ -286,11 +290,11 @@ public class ChunkManager {
 		}//end while for iterator
 		//ADD
 		//BLOCK RELATIVE
-		Vector3f pos = blockToChunk(Player.camera.getPos());
-		for (int x = (int) (pos.x-Constants.WORLDRADIUS); x <= (int)(pos.x + Constants.WORLDRADIUS); x++) {
-			for (int y = (int) (pos.y - Constants.WORLDRADIUS); y <= (int)(pos.y + Constants.WORLDRADIUS); y++) {
-				for (int z = (int) (pos.z - Constants.WORLDRADIUS); z <= (int)(pos.z + Constants.WORLDRADIUS); z++) {
-					String key = key(x, y, z);
+		Vector2f pos = blockToChunk(Player.camera.getPos());
+		for (int x = (int) (pos.getX()-Constants.WORLDRADIUS); x <= (int)(pos.getX() + Constants.WORLDRADIUS); x++) {
+			//for (int y = (int) (pos.y - Constants.WORLDRADIUS); y <= (int)(pos.y + Constants.WORLDRADIUS); y++) {
+				for (int z = (int) (pos.getY() - Constants.WORLDRADIUS); z <= (int)(pos.getY() + Constants.WORLDRADIUS); z++) {
+					String key = key(x, z);
 					if(activeChunks.containsKey(key)){
 						//leaveHimAlone! (no buffer needed)
 					}else{
@@ -298,7 +302,7 @@ public class ChunkManager {
 						//loadChunkToMem(x, y, z); 
 					}
 				}//end for z
-			}//end for y
+			//}//end for y
 		}//end for x
 		
 	}//End Update()
@@ -307,9 +311,9 @@ public class ChunkManager {
 		//activeChunks.remove(key);//removes chunk//causes ERROR!
 		//remove the collision blocks
 		for (int x = 0; x < Constants.CHUNKSIZE; x++) {
-			for (int y = 0; y < Constants.CHUNKSIZE; y++) {
+			for (int y = 0; y < Constants.WORLDHEIGHT; y++) {
 				for (int z = 0; z < Constants.CHUNKSIZE; z++) {
-					CollisionLibrary.removeBlock(keyX(key), keyY(key), keyZ(key), x, y, z);
+					CollisionLibrary.removeBlock(keyX(key), keyZ(key), x, y, z);
 				}//end for z
 			}//end for y
 		}//end for x
@@ -317,43 +321,47 @@ public class ChunkManager {
 	private boolean isInZone(String key) {
 		boolean result = false;
 		int x = keyX(key);
-		int y = keyY(key);
+		//int y = keyY(key); 
 		int z = keyZ(key);
 		//chunk relative position of player
-		Vector3f playerPos = blockToChunk(Player.camera.getX(), Player.camera.getX(), Player.camera.getX());
-		if(x <= (playerPos.x + Constants.WORLDRADIUS) && x >= (playerPos.x - Constants.WORLDRADIUS)){
-			if(y <= (playerPos.y + Constants.WORLDRADIUS) && y >= (playerPos.y - Constants.WORLDRADIUS)){
-				if(z <= (playerPos.z + Constants.WORLDRADIUS) && z >= (playerPos.z- Constants.WORLDRADIUS)){
+		Vector2f playerPos = blockToChunk(Player.camera.getX(),  Player.camera.getZ()); //Player.camera.getY(),
+		if(x <= (playerPos.getX() + Constants.WORLDRADIUS) && x >= (playerPos.getX() - Constants.WORLDRADIUS)){
+			//if(y <= (playerPos.getY() + Constants.WORLDRADIUS) && y >= (playerPos.getY() - Constants.WORLDRADIUS)){
+				if(z <= (playerPos.getY() + Constants.WORLDRADIUS) && z >= (playerPos.getY()- Constants.WORLDRADIUS)){
 					result = true;
 				}
-			}
+			//}
 		}
 		return result;
 	}
 	public void render() {
 		//String key = ChunkManager.key(x, y, z);
- 
+//		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+//		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+//		}
+//		
+		
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()){
 			Entry<String, Chunk> entry = iterator.next();
-			if (Frustum.getFrustum().cubeInFrustum(
-					entry.getValue().getPos().getX(),
-					entry.getValue().getPos().getY(),
-					entry.getValue().getPos().getZ(),
-					entry.getValue().getPos().getX() + Constants.CHUNKSIZE,
-					entry.getValue().getPos().getY() + Constants.CHUNKSIZE,
-					entry.getValue().getPos().getZ() + Constants.CHUNKSIZE)) {
-				if (Math.abs(entry.getValue().getCenter().getX()
-						- (int) Player.camera.getX()) < 64
-						&& Math.abs(entry.getValue().getCenter().getZ()
-								- Player.camera.getZ()) < 64
-						&& Math.abs(entry.getValue().getCenter().getY()
-								- Player.camera.getY()) < 32) {
-					Constants.chunksFrustum++;
+//			if (Frustum.getFrustum().cubeInFrustum(
+//					entry.getValue().getPos().getX(),
+//					0,//entry.getValue().getPos().getY(),
+//					entry.getValue().getPos().getY(),
+//					entry.getValue().getPos().getX() + Constants.CHUNKSIZE,
+//					0,//entry.getValue().getPos().getY() + Constants.CHUNKSIZE,
+//					entry.getValue().getPos().getY() + Constants.CHUNKSIZE)) {
+//				if (Math.abs(entry.getValue().getCenter().getX()
+//						- (int) Player.camera.getX()) < 64
+////						&& Math.abs(entry.getValue().getCenter().getZ()
+////								- Player.camera.getZ()) < 64
+//						&& Math.abs(entry.getValue().getCenter().getY()
+//								- Player.camera.getY()) < 32) {
+//					Constants.chunksFrustum++;
 					entry.getValue().render();
 
 				}
-			}
-		}//end while for iterator
+//			}
+//		}//end while for iterator
 	}//end render
 }

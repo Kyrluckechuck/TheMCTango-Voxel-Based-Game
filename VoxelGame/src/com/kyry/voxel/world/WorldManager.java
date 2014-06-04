@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.Shape;
@@ -56,13 +57,14 @@ public class WorldManager {
 	}
 
 	private void createWorld() {
-		Vector3f pos = Player.camera.getPos();
-		pos = ChunkManager.blockToChunk(pos);
-		for (int x = (int) (pos.getX() - Constants.WORLDRADIUS); x <= pos.getX() + Constants.WORLDRADIUS; x++) {
-			for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y <= pos.getY() +Constants.WORLDRADIUS; y++) {
-				for (int z = (int) (pos.getZ() - Constants.WORLDRADIUS); z <= pos.getZ() + Constants.WORLDRADIUS; z++) {
-					chunkManager.loadChunkToMem(x, y, z);
-					chunkManager.activeChunks.put(ChunkManager.key(x, y, z), chunkManager.loadedChunks.get(ChunkManager.key(x,y,z)));
+		Vector3f pos3f = Player.camera.getPos();
+		Vector2f pos2f = ChunkManager.blockToChunk(pos3f);
+		int y = 0;
+		for (int x = (int) (pos2f.getX() - Constants.WORLDRADIUS); x <= pos2f.getX() + Constants.WORLDRADIUS; x++) {
+			//for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y <= pos.getY() +Constants.WORLDRADIUS; y++) {
+				for (int z = (int) (pos2f.getY() - Constants.WORLDRADIUS); z <= pos2f.getY() + Constants.WORLDRADIUS; z++) {
+					chunkManager.loadChunkToMem(x, z);
+					chunkManager.activeChunks.put(ChunkManager.key(x, z), chunkManager.loadedChunks.get(ChunkManager.key(x,z)));
 					
 					//activeChunks.add(new Chunk(shader, 1, x, y, z));					
 //					 * activeChunks.add(new Chunk(shader, 1, 2*x
@@ -70,7 +72,7 @@ public class WorldManager {
 //					 * Constants.CHUNKSIZE));
 					Constants.chunksLoaded++;					
 				}
-			}
+			//}
 		}
 		/*for (int x = (int) (Player.camera.getX() / Constants.CHUNKSIZE)-1; x < (Player.camera.getX() / Constants.CHUNKSIZE)+2; x++){
 			for (int y = (int) (Player.camera.getY() / Constants.CHUNKSIZE)-1; y < (Player.camera.getY() / Constants.CHUNKSIZE)+2; y++){
