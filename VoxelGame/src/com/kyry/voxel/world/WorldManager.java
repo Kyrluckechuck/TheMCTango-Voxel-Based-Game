@@ -41,7 +41,7 @@ public class WorldManager {
 	//public ArrayList<Chunk> activeChunks;
 
 	private ShaderProgram shader;
-	private ChunkManager chunkManager;
+	public static ChunkManager chunkManager;
 
 	public WorldManager() {
 		//initGL();
@@ -63,14 +63,15 @@ public class WorldManager {
 		for (int x = (int) (pos2f.getX() - Constants.WORLDRADIUS); x <= pos2f.getX() + Constants.WORLDRADIUS; x++) {
 			//for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y <= pos.getY() +Constants.WORLDRADIUS; y++) {
 				for (int z = (int) (pos2f.getY() - Constants.WORLDRADIUS); z <= pos2f.getY() + Constants.WORLDRADIUS; z++) {
-					chunkManager.loadChunkToMem(x, z);
-					chunkManager.activeChunks.put(ChunkManager.key(x, z), chunkManager.loadedChunks.get(ChunkManager.key(x,z)));
+					chunkManager.loadChunkToActive(x, z);
+					Constants.chunksActive++;
+					//chunkManager.activeChunks.put(ChunkManager.key(x, z), chunkManager.loadedChunks.get(ChunkManager.key(x,z)));
 					
 					//activeChunks.add(new Chunk(shader, 1, x, y, z));					
 //					 * activeChunks.add(new Chunk(shader, 1, 2*x
 //					 * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, 2*z
 //					 * Constants.CHUNKSIZE));
-					Constants.chunksLoaded++;					
+//					Constants.chunksLoaded++;					
 				}
 			//}
 		}
