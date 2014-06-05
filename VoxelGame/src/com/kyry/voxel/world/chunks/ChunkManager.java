@@ -32,9 +32,7 @@ public class ChunkManager {
 	
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
-	public static HashMap<String, Boolean> activeChunksRender = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> loadedChunks = new HashMap<String, Chunk>();
-	public static HashMap<String, Boolean> loadedChunksRender = new HashMap<String, Boolean>();
 	public static Random rand = rand = new Random();
 	//public static MobManager mobManager;
 	
@@ -175,19 +173,13 @@ public class ChunkManager {
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
 				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector2f(x,z), (short[][][]) restore.readObject());
 				restore.close();
-				loadedChunksRender.put(key(x, z), false);
 				loadedChunks.put(key(x, z), chunk);
-				
 				System.out.println("(" + x + "," + z + ") Loaded Successfully.");
 				return chunk;
 			} catch (Exception e) {
 				// Take a second try through, creating the chunk forcefully.
-				e.printStackTrace();
-				System.out.println("Failed to load");
-//				createChunk(x, z);
-//				return (loadChunkToMem(x, z));
-				
-				return null;
+				createChunk(x, z);
+				return (loadChunkToMem(x, z));
 			}
 		}else{
 			createChunk(x, z);
@@ -195,15 +187,13 @@ public class ChunkManager {
 		}
 	}
 	public static Chunk loadChunkToActive(int x, int z) { //Add chunk from memory to active chunk list
-		loadedChunksRender.remove(key(x, z));
-		activeChunksRender.put(key(x, z), true);
+
 		activeChunks.put(key(x, z), loadedChunks.get(key(x,z)));
 		return null;
 
 	}
 	public static Chunk removeChunkFromActive(int x, int z) { //Remove chunk from active chunk list
-		activeChunksRender.remove(key(x, z));
-		loadedChunksRender.put(key(x, z), false);
+		
 		activeChunks.remove(key(x, z));
 		return null;
 		
@@ -316,8 +306,6 @@ public class ChunkManager {
 					if(activeChunks.containsKey(key)){
 						//leaveHimAlone! (no buffer needed)
 					}else{
-						loadedChunksRender.remove(key(x, z));
-						activeChunksRender.put(key(x, z), true);
 						activeChunks.put(key, loadedChunks.get(key)); //Add the chunk to loaded buffer
 						//loadChunkToMem(x, y, z); 
 					}
@@ -356,9 +344,9 @@ public class ChunkManager {
 	}
 	public void render() {
 		//String key = ChunkManager.key(x, y, z);
-//		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-//		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-//		}
+		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		}
 		
 		
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
