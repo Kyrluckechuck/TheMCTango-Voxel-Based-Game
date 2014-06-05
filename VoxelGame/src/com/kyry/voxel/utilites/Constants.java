@@ -64,6 +64,7 @@ public class Constants {
 	public static int rayDistance = (int) viewDistance;
 	
 	public static int chunksLoaded = 0; // How many chunks have been loaded
+	public static int chunksActive = 0; // How many chunks have been loaded
 	public static int chunksFrustum = 0; // How many chunks are in the visible
 											// frustum
 	public static int BlocksLoaded = -1; // Number of blocks loaded, default to
