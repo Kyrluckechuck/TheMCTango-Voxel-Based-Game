@@ -41,7 +41,7 @@ public class WorldManager {
 	//public ArrayList<Chunk> activeChunks;
 
 	private ShaderProgram shader;
-	public static ChunkManager chunkManager;
+	private ChunkManager chunkManager;
 
 	public WorldManager() {
 		//initGL();
@@ -64,8 +64,6 @@ public class WorldManager {
 			//for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y <= pos.getY() +Constants.WORLDRADIUS; y++) {
 				for (int z = (int) (pos2f.getY() - Constants.WORLDRADIUS); z <= pos2f.getY() + Constants.WORLDRADIUS; z++) {
 					chunkManager.loadChunkToMem(x, z);
-					chunkManager.loadedChunksRender.remove(ChunkManager.key(x, z));
-					chunkManager.activeChunksRender.put(ChunkManager.key(x, z), true);
 					chunkManager.activeChunks.put(ChunkManager.key(x, z), chunkManager.loadedChunks.get(ChunkManager.key(x,z)));
 					
 					//activeChunks.add(new Chunk(shader, 1, x, y, z));					
@@ -74,18 +72,6 @@ public class WorldManager {
 //					 * Constants.CHUNKSIZE));
 					Constants.chunksLoaded++;					
 				}
-			//}
-		}
-		for (int x = (int) (pos2f.getX() - Constants.WORLDRADIUS); x <= pos2f.getX() + Constants.WORLDRADIUS; x++) {
-			//for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y <= pos.getY() +Constants.WORLDRADIUS; y++) {
-			for (int z = (int) (pos2f.getY() - Constants.WORLDRADIUS); z <= pos2f.getY() + Constants.WORLDRADIUS; z++) {
-				chunkManager.activeChunks.get(ChunkManager.key(x, z)).init();
-				//activeChunks.add(new Chunk(shader, 1, x, y, z));					
-//					 * activeChunks.add(new Chunk(shader, 1, 2*x
-//					 * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, 2*z
-//					 * Constants.CHUNKSIZE));
-				Constants.chunksLoaded++;					
-			}
 			//}
 		}
 		/*for (int x = (int) (Player.camera.getX() / Constants.CHUNKSIZE)-1; x < (Player.camera.getX() / Constants.CHUNKSIZE)+2; x++){
