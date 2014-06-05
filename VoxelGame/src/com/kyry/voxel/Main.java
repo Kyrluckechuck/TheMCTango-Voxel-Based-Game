@@ -22,6 +22,7 @@ public class Main extends Screen{
 	private World world;
 	
 	public Main(){
+		Thread.currentThread().setPriority((int)(Thread.MAX_PRIORITY*0.99));
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
 		gameLoop.start(30);
@@ -49,7 +50,7 @@ public class Main extends Screen{
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		
-		GL11.glEnable(GL11.GL_FOG);
+/*		GL11.glEnable(GL11.GL_FOG);
 
         {
             FloatBuffer fogColours = BufferUtils.createFloatBuffer(
@@ -63,7 +64,7 @@ public class Main extends Screen{
             GL11.glFogf(GL11.GL_FOG_START, Constants.fogNear);
             GL11.glFogf(GL11.GL_FOG_END, Constants.fogFar);
             GL11.glFogf(GL11.GL_FOG_DENSITY, 0.005f);
-        }
+        }*/
 	}
 	
 	private void initCamera(){

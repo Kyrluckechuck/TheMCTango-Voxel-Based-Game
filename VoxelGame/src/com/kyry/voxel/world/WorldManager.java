@@ -63,7 +63,7 @@ public class WorldManager {
 		for (int x = (int) (pos2f.getX() - Constants.WORLDRADIUS); x <= pos2f.getX() + Constants.WORLDRADIUS; x++) {
 			//for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y <= pos.getY() +Constants.WORLDRADIUS; y++) {
 				for (int z = (int) (pos2f.getY() - Constants.WORLDRADIUS); z <= pos2f.getY() + Constants.WORLDRADIUS; z++) {
-					chunkManager.loadChunkToActive(x, z);
+					ChunkManager.loadChunkToActive(x, z);
 					Constants.chunksActive++;
 					//chunkManager.activeChunks.put(ChunkManager.key(x, z), chunkManager.loadedChunks.get(ChunkManager.key(x,z)));
 					

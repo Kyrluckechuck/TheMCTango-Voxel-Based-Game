@@ -366,7 +366,9 @@ public class ChunkManager {
 				if (activeChunks.containsKey(key)) {
 					// leaveHimAlone! (no buffer needed)
 				} else {
-					activeChunks.put(key, loadedChunks.get(key)); // Add the
+					loadChunkToActive(x,z);
+					
+//					activeChunks.put(key, loadedChunks.get(key)); // Add the
 																	// chunk to
 																	// loaded
 																	// buffer

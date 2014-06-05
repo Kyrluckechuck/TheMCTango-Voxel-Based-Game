@@ -204,9 +204,9 @@ public class Chunk implements Serializable {
 
 				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
-					facesHidden[0] = true;
+					facesHidden[1] = true;
 				else*/
-					facesHidden[0] = false;
+					facesHidden[1] = false;
 			} else {
 				if (blocks[x + 1][y][z] != 0)
 					facesHidden[1] = true;
@@ -243,9 +243,9 @@ public class Chunk implements Serializable {
 
 				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[15][y][z] != 0)
-					facesHidden[0] = true;
+					facesHidden[4] = true;
 				else*/
-					facesHidden[0] = false;
+					facesHidden[4] = false;
 			} else {
 				if (blocks[x][y][z - 1] != 0)
 					facesHidden[4] = true;
@@ -264,9 +264,9 @@ public class Chunk implements Serializable {
 
 				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
-					facesHidden[0] = true;
+					facesHidden[5] = true;
 				else*/
-					facesHidden[0] = false;
+					facesHidden[5] = false;
 			} else {
 				if (blocks[x][y][z + 1] != 0)
 					facesHidden[5] = true;
