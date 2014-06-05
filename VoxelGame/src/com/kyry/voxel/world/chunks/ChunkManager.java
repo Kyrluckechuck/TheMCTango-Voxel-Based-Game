@@ -53,11 +53,11 @@ public class ChunkManager {
 
 	public static String key(float x, float y, float z) {// creates a key for
 															// the chunk
-		return new String((int) x + "_" + y + "_" + (int) z);
+		return new String((int) x + "_" + (int) y + "_" + (int) z);
 	}
 
 	public static String key(Vector2f vec) {// creates a key for the chunk
-		return new String((int) vec.getX() + "_" + vec.getY());
+		return new String((int) vec.getX() + "_" + (int) vec.getY());
 	}
 
 	public static int keyX(String s) {
@@ -95,7 +95,7 @@ public class ChunkManager {
 		} else if (i >= 0) {
 			i = (int) (i / 16);
 		}
-		return i;
+		return (int) i;
 	}
 
 	public static String filePath(int x, int z) {
