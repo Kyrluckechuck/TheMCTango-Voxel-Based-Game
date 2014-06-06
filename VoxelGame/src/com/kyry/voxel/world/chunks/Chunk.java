@@ -174,16 +174,23 @@ public class Chunk implements Serializable {
 
 	private boolean checkTileNotInView(int x, int y, int z) {
 		boolean facesHidden[] = new boolean[6];
+/*		for(int q = 0; q < 6; q++){
+			if (y==14){
+				facesHidden[q] = false;
+			} else {
+				facesHidden[q] = true;
+			}
+		}*/
 		if (x > pos.getX()) {
 			if ((x - 1) < 0) {
-/*				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x - 1));
+				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x - 1));
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[15][y][z] != 0)
 					facesHidden[0] = true;
-				else*/
+				else
 					facesHidden[0] = false;
 			} else {
 
@@ -198,14 +205,14 @@ public class Chunk implements Serializable {
 
 		if (x < (sizeX - 1)) {
 			if ((x + 1) > Constants.CHUNKSIZE) {
-/*				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x + 1));
+				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x + 1));
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
 					facesHidden[1] = true;
-				else*/
+				else
 					facesHidden[1] = false;
 			} else {
 				if (blocks[x + 1][y][z] != 0)
@@ -237,14 +244,14 @@ public class Chunk implements Serializable {
 
 		if (z > pos.getZ()) {
 			if ((z - 1) < 0) {
-/*				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
+				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + (z - 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[15][y][z] != 0)
 					facesHidden[4] = true;
-				else*/
+				else
 					facesHidden[4] = false;
 			} else {
 				if (blocks[x][y][z - 1] != 0)
@@ -258,14 +265,14 @@ public class Chunk implements Serializable {
 		}
 		if (z < (sizeZ - 1)) {
 			if ((z + 1) > Constants.CHUNKSIZE) {
-/*				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
+				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + (z + 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
 					facesHidden[5] = true;
-				else*/
+				else
 					facesHidden[5] = false;
 			} else {
 				if (blocks[x][y][z + 1] != 0)

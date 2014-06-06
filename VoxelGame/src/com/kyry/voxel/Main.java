@@ -25,7 +25,7 @@ public class Main extends Screen{
 		Thread.currentThread().setPriority((int)(Thread.MAX_PRIORITY*0.99));
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
-		gameLoop.start(30);
+		gameLoop.start((int)Constants.FPS);
 		
 	}
 
