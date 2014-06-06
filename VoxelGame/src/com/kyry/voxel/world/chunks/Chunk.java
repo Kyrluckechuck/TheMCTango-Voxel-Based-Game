@@ -187,7 +187,7 @@ public class Chunk implements Serializable {
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
+//				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[15][y][z] != 0)
 					facesHidden[0] = true;
 				else
@@ -209,7 +209,7 @@ public class Chunk implements Serializable {
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
+//				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
 					facesHidden[1] = true;
 				else
@@ -248,7 +248,7 @@ public class Chunk implements Serializable {
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + (z - 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
+//				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[15][y][z] != 0)
 					facesHidden[4] = true;
 				else
@@ -269,7 +269,7 @@ public class Chunk implements Serializable {
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + (z + 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
+//				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
 					facesHidden[5] = true;
 				else
