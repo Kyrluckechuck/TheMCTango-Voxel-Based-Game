@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -18,6 +19,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
+import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilites.Constants;
 import com.kyry.voxel.utilites.Frustum;
 import com.kyry.voxel.world.World;
@@ -60,6 +62,10 @@ public class ChunkManager {
 		return new String((int) vec.getX() + "_" + (int) vec.getY());
 	}
 
+	public static String key(Vector3f vec) {// creates a key for the chunk
+		return new String((int) vec.getX() + "_" + (int) vec.getY() + "_" + (int) vec.getZ());
+	}
+
 	public static int keyX(String s) {
 		return Integer.parseInt(s.split("_")[0]);
 	}
@@ -68,9 +74,9 @@ public class ChunkManager {
 		return Integer.parseInt(s.split("_")[1]);
 	}
 
-	 public static int keyZ(String s){
-	 return Integer.parseInt(s.split("_")[2]);
-	 }
+	public static int keyZ(String s) {
+		return Integer.parseInt(s.split("_")[2]);
+	}
 
 	public static Vector2f blockToChunk(Vector3f v) {
 		return new Vector2f(blockToChunk1f(v.getX()), blockToChunk1f(v.getZ()));
@@ -91,7 +97,7 @@ public class ChunkManager {
 	public static int blockToChunk1f(float f) {
 		int i = (int) f;
 		if (i < 0) {
-			i = ((int) ((i+1)  / 16)) - 1;
+			i = ((int) ((i + 1) / 16)) - 1;
 		} else if (i >= 0) {
 			i = (int) (i / 16);
 		}
@@ -180,7 +186,7 @@ public class ChunkManager {
 				loadedChunks.put(key(x, z), chunk);
 				Constants.chunksLoaded++;
 				System.out.println("(" + x + "," + z + ") Loaded Successfully.");
-				
+
 				return chunk;
 			} catch (Exception e) {
 				// Take a second try through, creating the chunk forcefully.
@@ -193,6 +199,52 @@ public class ChunkManager {
 		}
 	}
 
+	public static void loadChunkToPhys(int x, int z) { // Add chunk from file to
+		// memory chunk list
+		String key = key(x, z);
+		System.out.println("Chunk (" + x + ", " + z + ") added to PhysWorld");
+		ArrayList<String> temp = activeChunks.get(key).getChunk();
+		int i, o, u;
+		for (int q = 0; q < temp.size(); q++) {
+
+			i = ChunkManager.keyX(temp.get(q));
+			o = ChunkManager.keyY(temp.get(q));
+			u = ChunkManager.keyZ(temp.get(q));
+
+			CollisionLibrary.newBlock(x, z, i, o, u);
+			Constants.PhysBlocksLoaded++;
+			// This basically adds ONLY the blocks that were rendered to the
+			// physics environment
+		}
+
+	}
+
+	public static void removeChunkFromPhys(int x, int z) { // Add chunk from
+															// file to
+		// memory chunk list
+		String key = key(x, z);
+		System.out.println("Chunk (" + x + ", " + z + ") removed from PhysWorld");
+		 for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+		 System.out.println("Key = " + entry.getKey() + ", Value = " +
+		 entry.getValue());
+		 }
+		 System.out.println(key);
+		ArrayList<String> temp = activeChunks.get(key).getChunk();
+		int i, o, u;
+		for (int q = 0; q < temp.size(); q++) {
+
+			i = ChunkManager.keyX(temp.get(q));
+			o = ChunkManager.keyY(temp.get(q));
+			u = ChunkManager.keyZ(temp.get(q));
+
+			CollisionLibrary.removeBlock(x, z, i, o, u);
+			Constants.PhysBlocksLoaded--;
+			// This basically removes ONLY the blocks that had been rendered to
+			// the physics environment
+		}
+		
+	}
+
 	public static void loadChunkToActive(int x, int z) { // Add chunk from
 															// memory to active
 															// chunk list
@@ -200,12 +252,12 @@ public class ChunkManager {
 			if (!isCreated(x, z)) {
 				createChunk(x, z);
 				loadChunkToMem(x, z);
-				
+
 			} else {
 				loadChunkToMem(x, z);
 			}
 		}
-		
+
 		if (!loadedChunks.containsKey(key(x - 1, z))) {
 			if (!isCreated(x - 1, z)) {
 				createChunk(x - 1, z);
@@ -239,16 +291,29 @@ public class ChunkManager {
 			}
 		}
 		activeChunks.put(key(x, z), loadedChunks.get(key(x, z)));
-		activeChunks.get(key(x,z)).load();
+		Constants.chunksActive++;
+		activeChunks.get(key(x, z)).load();
+		loadChunkToPhys(x, z);
 
 	}
 
-	public static Chunk removeChunkFromActive(int x, int z) { // Remove chunk
-																// from active
-																// chunk list
+	public void removeChunkFromActive(String s) { // Remove chunk
+		// from active
+		// chunk list
+		int x = ChunkManager.keyX(s);
+		int z = ChunkManager.keyY(s);
 
+		removeChunkFromActive(x, z);
+
+	}
+
+	public void removeChunkFromActive(int x, int z) { // Remove chunk
+														// from active
+														// chunk list
+		removeChunkFromPhys(x, z);
 		activeChunks.remove(key(x, z));
-		return null;
+		Constants.chunksActive--;
+
 
 	}
 
@@ -274,17 +339,21 @@ public class ChunkManager {
 					blocks[x][y][z] = Block.Grass.getId();
 					if (y == 14) {
 						// blocks[x][y][z] = Block.Sand.getId();
-					} else if ((x == 0) && (z == 0)) {
-						blocks[x][y][z] = Block.Air.getId();
+						// } else if ((x == 0) && (z == 0)) {
+						// blocks[x][y][z] = Block.Air.getId();
 					} else if (y == 0) {
 						blocks[x][y][z] = Block.Brick.getId();
+
 					} else if (y > 14) {
 						blocks[x][y][z] = Block.Air.getId();
+					} else if (x == 0 || x == Constants.CHUNKSIZE - 1 || z == 0 || z == Constants.CHUNKSIZE - 1) {
+						blocks[x][y][z] = Block.Sand.getId();
+
 					} else if (blocks[x][y][z] == Block.CrackedStone.getId() && (rand.nextInt(7) == 0)) {
 						blocks[x][y][z] = Block.CrackedStone.getId();
-					} else if (rand.nextInt(2) == 0) {
-						if (rand.nextBoolean())
-							blocks[x][y][z] = Block.Air.getId();
+						// } else if (rand.nextInt(2) == 0) {
+						// if (rand.nextBoolean())
+						// blocks[x][y][z] = Block.Air.getId();
 					} else
 						blocks[x][y][z] = Block.CrackedStone.getId();
 
@@ -295,21 +364,7 @@ public class ChunkManager {
 					 * blocks[x][y][z] = Block.Brick.getId(); else
 					 * blocks[x][y][z] = Block.Glass.getId();
 					 */
-					try {
-						if (blocks[x][y][z] != Block.Air.getId()) {
-							// PhysicsWorld.newBlock(x, y, z);
-							// CollisionLibrary.newBlock(x,y,z);
-							CollisionLibrary.newBlock(f, 0, h, x, y, z);
-							/*
-							 * Vector3f somePosition = new Vector3f(x,y,z);
-							 * CollisionLibrary
-							 * .BlockList.get(Constants.BlocksLoaded
-							 * ).update(somePosition);
-							 */
-						}
-					} catch (NullPointerException e) {
-						System.out.println("Block error in chunk (" + f + "," + h + ")" + " at X: " + x + " Y: " + y + " Z: " + z);
-					}
+
 				}
 			}
 			// }
@@ -333,89 +388,67 @@ public class ChunkManager {
 	// GETTERS & SETTERS ***To be honest, I don't think the chunks should be
 	// easily movable.. that means that every file would have to change
 	// according to each move, etc.. :S
-	/*
-	 * public static Chunk getChunk(int x, int y, int z){ return null;
-	 * 
-	 * } public static void setChunk(int x, int y, int z){
-	 * 
-	 * }
-	 */
+
 	public void update() {
 		// Basically will check if chunk is in the "bufferzone" if not then
 		// load, chunk, if not then delete
 		// DELETE
-		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
+
+/*		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Chunk> entry = iterator.next();
 			String key = entry.getKey();
-			if (isInZone(key)) {
-			} else {
-				// removes chunk
-				removeChunk(key);
-				iterator.remove();
-			}
-		}// end while for iterator
-			// ADD
-			// BLOCK RELATIVE
-		Vector2f pos = blockToChunk(Player.camera.getPos());
-		for (int x = (int) (pos.getX() - Constants.WORLDRADIUS); x <= (int) (pos.getX() + Constants.WORLDRADIUS); x++) {
-			// for (int y = (int) (pos.y - Constants.WORLDRADIUS); y <=
-			// (int)(pos.y + Constants.WORLDRADIUS); y++) {
-			for (int z = (int) (pos.getY() - Constants.WORLDRADIUS); z <= (int) (pos.getY() + Constants.WORLDRADIUS); z++) {
+			if (!isInZone(key)) { // removes chunk
+				removeChunkFromActive(key);
+				// iterator.remove(); 
+				}
+			}// end while for iterator
+*/		
+		// ADD
+		// BLOCK RELATIVE
+		Vector2f blockPos = blockToChunk(Player.camera.getPos());
+		for (int x = (int) (blockPos.getX() - Constants.WORLDRADIUS); x <= (int) (blockPos.getX() + Constants.WORLDRADIUS); x++) {
+			for (int z = (int) (blockPos.getY() - Constants.WORLDRADIUS); z <= (int) (blockPos.getY() + Constants.WORLDRADIUS); z++) {
 				String key = key(x, z);
-				if (activeChunks.containsKey(key)) {
-					// leaveHimAlone! (no buffer needed)
-				} else {
-					loadChunkToActive(x,z);
-					
-//					activeChunks.put(key, loadedChunks.get(key)); // Add the
-																	// chunk to
-																	// loaded
-																	// buffer
-					// loadChunkToMem(x, y, z);
+				if (!activeChunks.containsKey(key)) {
+					loadChunkToActive(x, z);
+					// Chunk to loaded buffer
 				}
 			}// end for z
-				// }//end for y
 		}// end for x
 
 	}// End Update()
 
-	private void removeChunk(String key) {// remove chunk from.. current set and
-											// Collision zone?
-		// activeChunks.remove(key);//removes chunk//causes ERROR!
-		// remove the collision blocks
-		for (int x = 0; x < Constants.CHUNKSIZE; x++) {
-			for (int y = 0; y < Constants.WORLDHEIGHT; y++) {
-				for (int z = 0; z < Constants.CHUNKSIZE; z++) {
-					CollisionLibrary.removeBlock(keyX(key), keyZ(key), x, y, z);
-				}// end for z
-			}// end for y
-		}// end for x
-	}
+	/*
+	 * private void removeChunk(String key) {// remove chunk from.. current set
+	 * and // Collision zone? // activeChunks.remove(key);//removes
+	 * chunk//causes ERROR! // remove the collision blocks for (int x = 0; x <
+	 * Constants.CHUNKSIZE; x++) { for (int y = 0; y < Constants.WORLDHEIGHT;
+	 * y++) { for (int z = 0; z < Constants.CHUNKSIZE; z++) {
+	 * CollisionLibrary.removeBlock(keyX(key), keyY(key), x, y, z); }// end for
+	 * z }// end for y }// end for x }
+	 */
 
-	private boolean isInZone(String key) {
+	private boolean isInZone(String key) { //Vector2f key, so z-coord is actually keyY()
 		boolean result = false;
 		int x = keyX(key);
-		// int y = keyY(key);
 		int z = keyY(key);
 		// chunk relative position of player
-		Vector2f playerPos = blockToChunk(Player.camera.getX(), Player.camera.getZ()); // Player.camera.getY(),
+		Vector2f playerPos = blockToChunk(Player.camera.getX(), Player.camera.getZ());
 		if (x <= (playerPos.getX() + Constants.WORLDRADIUS) && x >= (playerPos.getX() - Constants.WORLDRADIUS)) {
-			// if(y <= (playerPos.getY() + Constants.WORLDRADIUS) && y >=
-			// (playerPos.getY() - Constants.WORLDRADIUS)){
 			if (z <= (playerPos.getY() + Constants.WORLDRADIUS) && z >= (playerPos.getY() - Constants.WORLDRADIUS)) {
 				result = true;
 			}
-			// }
 		}
 		return result;
 	}
 
 	public void render() {
 		// String key = ChunkManager.key(x, y, z);
-//		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-//			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-//		}
+		// for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+		// System.out.println("Key = " + entry.getKey() + ", Value = " +
+		// entry.getValue());
+		// }
 
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()) {

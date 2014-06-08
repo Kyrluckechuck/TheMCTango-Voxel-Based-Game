@@ -131,7 +131,7 @@ public class World extends Screen {
 				+ (int) worldManager.getMobManager().getPlayer().getRoll());
 		font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " ("
 				+ Constants.chunksFrustum + ")" + "Blocks: "
-				+ Constants.BlocksLoaded);
+				+ Constants.PhysBlocksLoaded);
 
 		font.drawString(10, 115, "playerSphereUpper X: "
 				+ (int) WorldManager.playerSphereUpper.getX() + " Y: "

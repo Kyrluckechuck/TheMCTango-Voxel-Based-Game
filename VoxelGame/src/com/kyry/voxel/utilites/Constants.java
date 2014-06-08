@@ -18,7 +18,7 @@ public class Constants {
 	public static float viewDistance = 50f; // The view distance (how far)
 	public static float viewClose = 0.01f; // How closely it renders (helps the
 											// text not get chopped off)
-	public static int WORLDRADIUS = 2; // How far over the chunks are being rendered *fix
+	public static int WORLDRADIUS = 1; // How far over the chunks are being rendered *fix
 	public static int CHUNKSIZE = 16; // How many blocks wide+long a chunk is so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
 	public static int WORLDHEIGHT = 32; // The World Height (aka chunk height) so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
 	public static float playerHeight = 0.8f; // Players height (distance between center's of two playerSphere's
@@ -69,9 +69,12 @@ public class Constants {
 	public static int chunksActive = 0;  // How many chunks are active
 	public static int chunksFrustum = 0; // How many chunks are in the visible
 											// frustum
-	public static int BlocksLoaded = -1; // Number of blocks loaded, default to
+	public static int PhysBlocksLoaded = -1; // Number of collision blocks loaded, default to
 											// -1 so that when the first one is
 											// made, it becomes '0'
+	public static int RenderBlocksLoaded = -1; // Number of rendered blocks loaded, default to
+	// -1 so that when the first one is
+	// made, it becomes '0'
 
 	public static float textSize = 0.35f; // The physical size of the text being
 											// rendered on screen

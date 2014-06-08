@@ -109,7 +109,7 @@ public class WorldManager {
 		chunkManager.render();
 		mobManager.render();
 		/*
-		 * glBegin(GL_QUADS); for (int x = 0; x < Constants.BlocksLoaded; x++) {
+		 * glBegin(GL_QUADS); for (int x = 0; x < Constants.PhysBlocksLoaded; x++) {
 		 * 
 		 * Shape.createCube(CollisionLibrary.BlockList.get(x).center.x,
 		 * CollisionLibrary.BlockList.get(x).center.y + .01f,

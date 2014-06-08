@@ -167,7 +167,9 @@ public class Camera extends Entity {
 			for (int x = (int) playerPos.getX() - 1; x <= (int) playerPos.getX() + 1; x++) {
 				for (int y = (int) playerPos.getY() - 1; y <= (int) playerPos.getY() + 1; y++) {
 					for (int z = (int) playerPos.getZ() - 1; z <= (int) playerPos.getZ() + 1; z++) {
-						AABB grr = CollisionLibrary.BlockMap.get(ChunkManager.key(x, y, z));
+						String key = ChunkManager.key(ChunkManager.blockToChunk(x, y, z));
+						AABB grr = CollisionLibrary.BlockMap.get(key);
+//						System.out.println(grr);
 						if ((CollisionLibrary.testCircleAABB(WorldManager.playerSphereUpper, grr)) || (CollisionLibrary.testCircleAABB(WorldManager.playerSphereLower, grr))) {
 							moveAllowed = false;
 							break;

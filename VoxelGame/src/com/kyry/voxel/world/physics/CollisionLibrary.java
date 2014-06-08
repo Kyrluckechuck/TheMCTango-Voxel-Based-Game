@@ -21,24 +21,25 @@ public class CollisionLibrary {
 	}
 
 	public static void newBlock(float chunkX, float chunkZ, float x, float y, float z, float r) {
-		String key = ChunkManager.key((int)(chunkX + x), (int) (chunkZ + z));
+		String key = ChunkManager.key((int)(chunkX + x),(int) y, (int) (chunkZ + z));
 		//BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
 		BlockMap.put(key, new AABB(chunkX, chunkZ, x, y, z, r));
-		Constants.BlocksLoaded++;
+		Constants.PhysBlocksLoaded++;
 		
 	}
 	public static void removeBlock(int chunkX, int chunkZ, int x, int y, int z){
 		removeBlock((int)(chunkX + x), y,  (int) (chunkZ + z));
 	}
 	public static void removeBlock(int x, int y, int z){
-		String key = ChunkManager.key(x, z);
-		Iterator<Entry<String, AABB>> iterator = BlockMap.entrySet().iterator();
+		String key = ChunkManager.key(x,y, z);
+/*		Iterator<Entry<String, AABB>> iterator = BlockMap.entrySet().iterator();
 		while (iterator.hasNext()){
 			Entry<String, AABB> entry = iterator.next();
 			if(key.equals(entry.getKey())){
 				iterator.remove();//remove the object
 			}
-		}
+		}*/
+		BlockMap.remove(key);
 	}
 
 	public static boolean testAABBAABB(final AABB box1, final AABB box2) {
