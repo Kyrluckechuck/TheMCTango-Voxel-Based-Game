@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -52,6 +54,10 @@ public class Chunk implements Serializable {
 
 	public Random rand;
 	private short[][][] blocks;
+	// boolean[][][] temp = new
+	// boolean[Constants.CHUNKSIZE][Constants.WORLDHEIGHT][Constants.CHUNKSIZE];
+	// public ArrayList<Vector3f> temp = new ArrayList<Vector3f>();
+	public ArrayList<String> temp = new ArrayList<String>();
 
 	public Chunk(ShaderProgram shader, int type, int x, int z) {
 		this(shader, type, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
@@ -132,6 +138,31 @@ public class Chunk implements Serializable {
 
 	public void rebuild() {
 		if (type != World.AIRCHUNK) {
+			for (int x = 0; x < sizeX; x++) {
+				for (int y = 0; y < sizeY; y++) {
+					for (int z = 0; z < sizeZ; z++) {
+						// if ((blocks[x][y][z] = 0)) { //RIGHT HERE IS WHERE THAT CHECK AROUND AIR
+						// if ((blocks[x-1][y][z] = 0)) {
+						// if ((blocks[x+1][y][z] = 0)) {
+						// if ((blocks[x+1][y-1][z] = 0)) {
+						// etc
+						if ((blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
+							temp.add(ChunkManager.key(x, y, z));
+							// temp[x][y][z] = true;
+						}
+						// else{
+						// temp[x][y][z] = false;
+						// }
+					}
+				}
+			}
+			/*
+			 * for (int x = 0; x < sizeX; x++) { for (int y = 0; y < sizeY; y++)
+			 * { for (int z = 0; z < sizeZ; z++) { if ((blocks[x][y][z] != 0 &&
+			 * !checkTileNotInView(x, y, z))) {
+			 * temp.add(ChunkManager.key(x,y,z)); // temp[x][y][z] = true; } //
+			 * else{ // temp[x][y][z] = false; // } } } }
+			 */System.out.println("Total chunk coords being done: " + temp.size());
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
 			// int sizeAll = Constants.CHUNKSIZE;
@@ -141,31 +172,21 @@ public class Chunk implements Serializable {
 			 * Player.camera.getZ());
 			 */
 
-			for (int x = 0; x < sizeX; x++) {
-				for (int y = 0; y < sizeY; y++) {
-					for (int z = 0; z < sizeZ; z++) {
-						if ((blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
-							Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z, Block.getTile(blocks[x][y][z]).getColor(), Block.getTile(blocks[x][y][z]).getTexCoords(), 1);
-						}
-					}
-				}
-			}
 			/*
-			 * for (int chunksLoadedX = -1; chunksLoadedX <= 1; chunksLoadedX++)
-			 * { for (int chunksLoadedY = -1; chunksLoadedY <= 1;
-			 * chunksLoadedY++) { for (int chunksLoadedZ = -1; chunksLoadedZ <=
-			 * 1; chunksLoadedZ++) { short[][][] blocks =
-			 * ChunkManager.loadChunk( loadChunkVector.x + chunksLoadedX,
-			 * loadChunkVector.y + chunksLoadedY, loadChunkVector.z +
-			 * chunksLoadedZ); Shape.createCube(x + loadChunkVector.x * sizeAll,
-			 * y + loadChunkVector.y * sizeAll, z + loadChunkVector.z * sizeAll,
-			 * Block.getTile(blocks[x][y][z]).getColor(), Block
-			 * .getTile(blocks[x][y][z]) .getTexCoords(), 1);
-			 * 
-			 * // WorldRender.render(); // float offset = 15;
-			 * 
-			 * } } }
+			 * for (int x = 0; x < sizeX; x++) { for (int y = 0; y < sizeY; y++)
+			 * { for (int z = 0; z < sizeZ; z++) { if ((temp[x][y][z])) {
+			 * Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z,
+			 * Block.getTile(blocks[x][y][z]).getColor(),
+			 * Block.getTile(blocks[x][y][z]).getTexCoords(), 1); } } } }
 			 */
+			for (int q = 0; q < temp.size(); q++) {
+
+				int x = ChunkManager.keyX(temp.get(q));
+				int y = ChunkManager.keyY(temp.get(q));
+				int z = ChunkManager.keyZ(temp.get(q));
+
+				Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z, Block.getTile(blocks[x][y][z]).getColor(), Block.getTile(blocks[x][y][z]).getTexCoords(), 1);
+			}
 			glEnd();
 			glEndList();
 
@@ -174,20 +195,18 @@ public class Chunk implements Serializable {
 
 	private boolean checkTileNotInView(int x, int y, int z) {
 		boolean facesHidden[] = new boolean[6];
-/*		for(int q = 0; q < 6; q++){
-			if (y==14){
-				facesHidden[q] = false;
-			} else {
-				facesHidden[q] = true;
-			}
-		}*/
+		/*
+		 * for(int q = 0; q < 6; q++){ if (y==14){ facesHidden[q] = false; }
+		 * else { facesHidden[q] = true; } }
+		 */
 		if (x > pos.getX()) {
 			if ((x - 1) < 0) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x - 1));
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-//				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
+				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
+				// z1)) + " " + grr);
 				if (grr.blocks[15][y][z] != 0)
 					facesHidden[0] = true;
 				else
@@ -209,7 +228,8 @@ public class Chunk implements Serializable {
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-//				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
+				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
+				// z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
 					facesHidden[1] = true;
 				else
@@ -248,7 +268,8 @@ public class Chunk implements Serializable {
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + (z - 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-//				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
+				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
+				// z1)) + " " + grr);
 				if (grr.blocks[15][y][z] != 0)
 					facesHidden[4] = true;
 				else
@@ -269,7 +290,8 @@ public class Chunk implements Serializable {
 				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + (z + 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-//				System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)) + " " + grr);
+				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
+				// z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
 					facesHidden[5] = true;
 				else

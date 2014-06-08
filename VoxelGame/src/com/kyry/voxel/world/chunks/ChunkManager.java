@@ -64,13 +64,13 @@ public class ChunkManager {
 		return Integer.parseInt(s.split("_")[0]);
 	}
 
-	public static int keyZ(String s) {
+	public static int keyY(String s) {
 		return Integer.parseInt(s.split("_")[1]);
 	}
 
-	// public static int keyZ(String s){
-	// return Integer.parseInt(s.split("_")[2]);
-	// }
+	 public static int keyZ(String s){
+	 return Integer.parseInt(s.split("_")[2]);
+	 }
 
 	public static Vector2f blockToChunk(Vector3f v) {
 		return new Vector2f(blockToChunk1f(v.getX()), blockToChunk1f(v.getZ()));
@@ -99,7 +99,7 @@ public class ChunkManager {
 	}
 
 	public static String filePath(int x, int z) {
-		return new String("E:\\Save\\" + x + "_" + z + ".dat");
+		return new String("C:\\Save\\" + x + "_" + z + ".dat");
 	}
 
 	public static boolean isCreated(int x, int z) {
@@ -397,7 +397,7 @@ public class ChunkManager {
 		boolean result = false;
 		int x = keyX(key);
 		// int y = keyY(key);
-		int z = keyZ(key);
+		int z = keyY(key);
 		// chunk relative position of player
 		Vector2f playerPos = blockToChunk(Player.camera.getX(), Player.camera.getZ()); // Player.camera.getY(),
 		if (x <= (playerPos.getX() + Constants.WORLDRADIUS) && x >= (playerPos.getX() - Constants.WORLDRADIUS)) {

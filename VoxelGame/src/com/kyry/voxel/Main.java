@@ -101,7 +101,7 @@ public class Main extends Screen{
 	
 	public static void main(String[] args){
 		Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "Voxels", true);
-		Display.setVSyncEnabled(true);
+		Display.setVSyncEnabled(false);
 		new Main();
 	}
 }
