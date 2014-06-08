@@ -8,37 +8,51 @@ import java.util.Map.Entry;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
+import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.chunks.ChunkManager;
 
 public class CollisionLibrary {
-	//public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
+	// public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
 	public static HashMap<String, AABB> BlockMap = new HashMap<String, AABB>();
 
 	public static void newBlock(float f, float h, float x, float y, float z) {
-		newBlock (f, h, x, y, z, 1);
+		newBlock(f, h, x, y, z, 1);
 	}
 
 	public static void newBlock(float chunkX, float chunkZ, float x, float y, float z, float r) {
-		String key = ChunkManager.key((int)(chunkX + x),(int) y, (int) (chunkZ + z));
-		//BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
+		String key = ChunkManager.key((int) (chunkX*Constants.CHUNKSIZE + x), (int) y, (int) (chunkZ*Constants.CHUNKSIZE + z));
+		// BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
 		BlockMap.put(key, new AABB(chunkX, chunkZ, x, y, z, r));
 		Constants.PhysBlocksLoaded++;
-		
+
 	}
-	public static void removeBlock(int chunkX, int chunkZ, int x, int y, int z){
-		removeBlock((int)(chunkX + x), y,  (int) (chunkZ + z));
+
+	public static boolean hasBlock(float chunkX, float chunkZ, float x, float y, float z) {
+		String key = ChunkManager.key((int) (chunkX*Constants.CHUNKSIZE + x), (int) y, (int) (chunkZ*Constants.CHUNKSIZE + z));
+		// BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
+		if (BlockMap.containsKey(key)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-	public static void removeBlock(int x, int y, int z){
-		String key = ChunkManager.key(x,y, z);
-/*		Iterator<Entry<String, AABB>> iterator = BlockMap.entrySet().iterator();
-		while (iterator.hasNext()){
-			Entry<String, AABB> entry = iterator.next();
-			if(key.equals(entry.getKey())){
-				iterator.remove();//remove the object
-			}
-		}*/
+
+	public static void removeBlock(int chunkX, int chunkZ, int x, int y, int z) {
+		removeBlock((int) (chunkX*Constants.CHUNKSIZE + x), y, (int) (chunkZ*Constants.CHUNKSIZE + z));
+	}
+
+	private static void removeBlock(int x, int y, int z) {
+		String key = ChunkManager.key(x, y, z);
+		/*
+		 * Iterator<Entry<String, AABB>> iterator =
+		 * BlockMap.entrySet().iterator(); while (iterator.hasNext()){
+		 * Entry<String, AABB> entry = iterator.next();
+		 * if(key.equals(entry.getKey())){ iterator.remove();//remove the object
+		 * } }
+		 */
 		BlockMap.remove(key);
 	}
 
@@ -55,8 +69,7 @@ public class CollisionLibrary {
 	public static boolean testCircleCircle(final Sphere c1, final Sphere c2) {
 		Vector3f dest = new Vector3f(0, 0, 0);
 		Vector3f.sub(c1.center, c2.center, dest);
-		final float distSQ = dest.x * dest.x + dest.y * dest.y + dest.z
-				* dest.z;
+		final float distSQ = dest.x * dest.x + dest.y * dest.y + dest.z * dest.z;
 		// final float distSQ = c1.center.distSQ(c2.center);
 		final float radiusSum = c1.radius + c2.radius;
 

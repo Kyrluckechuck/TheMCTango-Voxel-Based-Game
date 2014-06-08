@@ -186,6 +186,7 @@ public class Chunk implements Serializable {
 				int z = ChunkManager.keyZ(temp.get(q));
 
 				Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z, Block.getTile(blocks[x][y][z]).getColor(), Block.getTile(blocks[x][y][z]).getTexCoords(), 1);
+				Constants.RenderBlocksLoaded++;
 			}
 			glEnd();
 			glEndList();

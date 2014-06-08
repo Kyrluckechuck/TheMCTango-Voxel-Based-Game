@@ -202,7 +202,7 @@ public class ChunkManager {
 	public static void loadChunkToPhys(int x, int z) { // Add chunk from file to
 		// memory chunk list
 		String key = key(x, z);
-		System.out.println("Chunk (" + x + ", " + z + ") added to PhysWorld");
+
 		ArrayList<String> temp = activeChunks.get(key).getChunk();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
@@ -210,12 +210,14 @@ public class ChunkManager {
 			i = ChunkManager.keyX(temp.get(q));
 			o = ChunkManager.keyY(temp.get(q));
 			u = ChunkManager.keyZ(temp.get(q));
-
-			CollisionLibrary.newBlock(x, z, i, o, u);
-			Constants.PhysBlocksLoaded++;
+			if (!CollisionLibrary.hasBlock(x, z, i, o, u)) {
+				CollisionLibrary.newBlock(x, z, i, o, u);
+				Constants.PhysBlocksLoaded++;
+			}
 			// This basically adds ONLY the blocks that were rendered to the
 			// physics environment
 		}
+		System.out.println("Chunk (" + x + ", " + z + ") added to PhysWorld");
 
 	}
 
@@ -224,11 +226,10 @@ public class ChunkManager {
 		// memory chunk list
 		String key = key(x, z);
 		System.out.println("Chunk (" + x + ", " + z + ") removed from PhysWorld");
-		 for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-		 System.out.println("Key = " + entry.getKey() + ", Value = " +
-		 entry.getValue());
-		 }
-		 System.out.println(key);
+		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		}
+		System.out.println(key);
 		ArrayList<String> temp = activeChunks.get(key).getChunk();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
@@ -242,7 +243,7 @@ public class ChunkManager {
 			// This basically removes ONLY the blocks that had been rendered to
 			// the physics environment
 		}
-		
+
 	}
 
 	public static void loadChunkToActive(int x, int z) { // Add chunk from
@@ -313,7 +314,6 @@ public class ChunkManager {
 		removeChunkFromPhys(x, z);
 		activeChunks.remove(key(x, z));
 		Constants.chunksActive--;
-
 
 	}
 
@@ -394,16 +394,14 @@ public class ChunkManager {
 		// load, chunk, if not then delete
 		// DELETE
 
-/*		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<String, Chunk> entry = iterator.next();
-			String key = entry.getKey();
-			if (!isInZone(key)) { // removes chunk
-				removeChunkFromActive(key);
-				// iterator.remove(); 
-				}
-			}// end while for iterator
-*/		
+		/*
+		 * Iterator<Entry<String, Chunk>> iterator =
+		 * activeChunks.entrySet().iterator(); while (iterator.hasNext()) {
+		 * Entry<String, Chunk> entry = iterator.next(); String key =
+		 * entry.getKey(); if (!isInZone(key)) { // removes chunk
+		 * removeChunkFromActive(key); // iterator.remove(); } }// end while for
+		 * iterator
+		 */
 		// ADD
 		// BLOCK RELATIVE
 		Vector2f blockPos = blockToChunk(Player.camera.getPos());
@@ -429,7 +427,8 @@ public class ChunkManager {
 	 * z }// end for y }// end for x }
 	 */
 
-	private boolean isInZone(String key) { //Vector2f key, so z-coord is actually keyY()
+	private boolean isInZone(String key) { // Vector2f key, so z-coord is
+											// actually keyY()
 		boolean result = false;
 		int x = keyX(key);
 		int z = keyY(key);
