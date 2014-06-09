@@ -181,7 +181,8 @@ public class ChunkManager {
 			try {
 				FileInputStream saveFile = new FileInputStream(filePath(x, z));
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
-				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector2f(x, z), (short[][][]) restore.readObject());
+				Chunk chunk = new Chunk(shader, new Vector2f(x, z), (short[][][]) restore.readObject());
+//				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector2f(x, z), (short[][][]) restore.readObject());
 				restore.close();
 				loadedChunks.put(key(x, z), chunk);
 				Constants.chunksLoaded++;
@@ -249,48 +250,21 @@ public class ChunkManager {
 	public static void loadChunkToActive(int x, int z) { // Add chunk from
 															// memory to active
 															// chunk list
-		if (!loadedChunks.containsKey(key(x, z))) {
-			if (!isCreated(x, z)) {
-				createChunk(x, z);
-				loadChunkToMem(x, z);
+		
+		for (int q = x - 1; q <= x + 1; q++) {
+			for (int w = z - 1; w <= z + 1; w++) {
+				if (!loadedChunks.containsKey(key(q, w))) {
+					if (!isCreated(q, w)) {
+						createChunk(q, w);
+						loadChunkToMem(q, w);
 
-			} else {
-				loadChunkToMem(x, z);
+					} else {
+						loadChunkToMem(q, w);
+					}
+				}
 			}
 		}
 
-		if (!loadedChunks.containsKey(key(x - 1, z))) {
-			if (!isCreated(x - 1, z)) {
-				createChunk(x - 1, z);
-				loadChunkToMem(x - 1, z);
-			} else {
-				loadChunkToMem(x - 1, z);
-			}
-		}
-		if (!loadedChunks.containsKey(key(x + 1, z))) {
-			if (!isCreated(x + 1, z)) {
-				createChunk(x + 1, z);
-				loadChunkToMem(x + 1, z);
-			} else {
-				loadChunkToMem(x + 1, z);
-			}
-		}
-		if (!loadedChunks.containsKey(key(x, z - 1))) {
-			if (!isCreated(x, z - 1)) {
-				createChunk(x, z - 1);
-				loadChunkToMem(x, z - 1);
-			} else {
-				loadChunkToMem(x, z - 1);
-			}
-		}
-		if (!loadedChunks.containsKey(key(x, z + 1))) {
-			if (!isCreated(x, z + 1)) {
-				createChunk(x, z + 1);
-				loadChunkToMem(x, z + 1);
-			} else {
-				loadChunkToMem(x, z + 1);
-			}
-		}
 		activeChunks.put(key(x, z), loadedChunks.get(key(x, z)));
 		Constants.chunksActive++;
 		activeChunks.get(key(x, z)).load();
@@ -337,10 +311,10 @@ public class ChunkManager {
 			for (int y = 0; y < worldHeight; y++) {
 				for (int z = 0; z < sizeAll; z++) {
 					blocks[x][y][z] = Block.Grass.getId();
-					if (y == 14) {
-						// blocks[x][y][z] = Block.Sand.getId();
-						// } else if ((x == 0) && (z == 0)) {
-						// blocks[x][y][z] = Block.Air.getId();
+					if ((y == 14) && (rand.nextInt(3) == 0)) {
+						blocks[x][y][z] = Block.Air.getId();
+					} else if ((y == 14)) {
+						//nothing because default is Grass
 					} else if (y == 0) {
 						blocks[x][y][z] = Block.Brick.getId();
 
@@ -404,7 +378,7 @@ public class ChunkManager {
 		 */
 		// ADD
 		// BLOCK RELATIVE
-		Vector2f blockPos = blockToChunk(Player.camera.getPos());
+		Vector2f blockPos = blockToChunk(Player.camera.getPos()); //Returns player's XZ Chunk coords
 		for (int x = (int) (blockPos.getX() - Constants.WORLDRADIUS); x <= (int) (blockPos.getX() + Constants.WORLDRADIUS); x++) {
 			for (int z = (int) (blockPos.getY() - Constants.WORLDRADIUS); z <= (int) (blockPos.getY() + Constants.WORLDRADIUS); z++) {
 				String key = key(x, z);
@@ -444,10 +418,10 @@ public class ChunkManager {
 
 	public void render() {
 		// String key = ChunkManager.key(x, y, z);
-		// for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-		// System.out.println("Key = " + entry.getKey() + ", Value = " +
-		// entry.getValue());
-		// }
+//		 for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+//		 System.out.println("Key = " + entry.getKey() + ", Value = " +
+//		 entry.getValue());
+//		 }
 
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()) {

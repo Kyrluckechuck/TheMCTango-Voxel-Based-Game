@@ -8,6 +8,7 @@ import java.awt.Font;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
 
@@ -20,7 +21,7 @@ import com.kyry.voxel.world.blocks.Block;
 
 public class World extends Screen {
 
-	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
+	//public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
 	private WorldManager worldManager;
 	private TrueTypeFont font;
@@ -78,6 +79,14 @@ public class World extends Screen {
 						Constants.PLAYER_SPEED += 15f;
 					noClip = !noClip;
 				}
+                // KEY_F5 toggles textColor between Black and White
+                if (Keyboard.isKeyDown(Keyboard.KEY_F5)) {
+                       if (Constants.textColor == Color.white) {
+                              Constants.textColor = Color.black;
+                       } else {
+                              Constants.textColor = Color.white;
+                       }
+                }
 			}
 
 		}
@@ -89,7 +98,6 @@ public class World extends Screen {
 		render3D();
 		logic();
 		worldRender();
-		// skyBoxRender();
 		renderSkyBox();
 
 		glLoadIdentity();
@@ -115,40 +123,41 @@ public class World extends Screen {
 	 * }
 	 */
 
-	private void renderText() {
-		font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       "+"noClip " + noClip);
-		font.drawString(10, 40, "Camera X: "
-				+ (int) worldManager.getMobManager().getPlayer().getX()
-				+ " Y: "
-				+ (int) worldManager.getMobManager().getPlayer().getY()
-				+ " Z: "
-				+ (int) worldManager.getMobManager().getPlayer().getZ());
-		font.drawString(10, 65, "Rotx: "
-				+ (int) worldManager.getMobManager().getPlayer().getPitch()
-				+ " Roty: "
-				+ (int) worldManager.getMobManager().getPlayer().getYaw()
-				+ " Rotz: "
-				+ (int) worldManager.getMobManager().getPlayer().getRoll());
-		font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " ("
-				+ Constants.chunksFrustum + ")" + "PhysBlocks: "
-				+ Constants.PhysBlocksLoaded + "   RenderBlocks: " + Constants.RenderBlocksLoaded);
+    private void renderText() {
+        font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       "+"noClip " + noClip, Constants.textColor);
+        font.drawString(10, 40, "Camera X: "
+                     + (int) worldManager.getMobManager().getPlayer().getX()
+                     + " Y: "
+                     + (int) worldManager.getMobManager().getPlayer().getY()
+                     + " Z: "
+                     + (int) worldManager.getMobManager().getPlayer().getZ(), Constants.textColor);
+        font.drawString(10, 65, "Rotx: "
+                     + (int) worldManager.getMobManager().getPlayer().getPitch()
+                     + " Roty: "
+                     + (int) worldManager.getMobManager().getPlayer().getYaw()
+                     + " Rotz: "
+                     + (int) worldManager.getMobManager().getPlayer().getRoll(), Constants.textColor);
+        font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " ("
+                     + Constants.chunksFrustum + ")" + "PhysBlocks: "
+                     + Constants.PhysBlocksLoaded + "   RenderBlocks: " + Constants.RenderBlocksLoaded, Constants.textColor);
 
-		font.drawString(10, 115, "playerSphereUpper X: "
-				+ (int) WorldManager.playerSphereUpper.getX() + " Y: "
-				+ (int) WorldManager.playerSphereUpper.getY() + " Z: "
-				+ (int) WorldManager.playerSphereUpper.getZ());
+        font.drawString(10, 115, "playerSphereUpper X: "
+                     + (int) WorldManager.playerSphereUpper.getX() + " Y: "
+                     + (int) WorldManager.playerSphereUpper.getY() + " Z: "
+                     + (int) WorldManager.playerSphereUpper.getZ(), Constants.textColor);
 
-		font.drawString(10, 140, "playerSphereLower X: "
-				+ (int) WorldManager.playerSphereLower.getX() + " Y: "
-				+ (int) WorldManager.playerSphereLower.getY() + " Z: "
-				+ (int) WorldManager.playerSphereLower.getZ());
-		font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x
-				+ " Y: " + Constants.playerSpeed.y + " Z: "
-				+ Constants.playerSpeed.z);
+        font.drawString(10, 140, "playerSphereLower X: "
+                     + (int) WorldManager.playerSphereLower.getX() + " Y: "
+                     + (int) WorldManager.playerSphereLower.getY() + " Z: "
+                     + (int) WorldManager.playerSphereLower.getZ(), Constants.textColor);
+        font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x
+                     + " Y: " + Constants.playerSpeed.y + " Z: "
+                     + Constants.playerSpeed.z, Constants.textColor);
+        font.drawString(10, 180, " ", Color.white);
 
-		TextureImpl.unbind();
+        TextureImpl.unbind();
 
-	}
+ }
 
 	public void render2D() {
 		glCullFace(GL_BACK);

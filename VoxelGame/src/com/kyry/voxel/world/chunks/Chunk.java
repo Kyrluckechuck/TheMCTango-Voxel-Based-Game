@@ -49,7 +49,7 @@ public class Chunk implements Serializable {
 	// public short[][][] blocks;
 	public ShaderProgram shader;
 
-	public int vcID, sizeX, sizeY, sizeZ, worldX, worldZ, internX, internY, internZ, type; // worldY,
+	public int vcID, sizeX, sizeY, sizeZ, worldX, worldZ, internX, internY, internZ;//, type; // worldY,
 	public boolean isActive;
 
 	public Random rand;
@@ -59,18 +59,29 @@ public class Chunk implements Serializable {
 	// public ArrayList<Vector3f> temp = new ArrayList<Vector3f>();
 	public ArrayList<String> temp = new ArrayList<String>();
 
-	public Chunk(ShaderProgram shader, int type, int x, int z) {
+	public Chunk(ShaderProgram shader, int x, int z) {
+		this(shader, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
+	}
+/*	public Chunk(ShaderProgram shader, int type, int x, int z) {
 		this(shader, type, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
 	}
-
-	public Chunk(ShaderProgram shader, int type, Vector2f grr, short[][][] loadedTiles) {
+*/
+	public Chunk(ShaderProgram shader, Vector2f grr, short[][][] loadedTiles) {
+		this.pos = new Vector3f(grr.getX(), 0, grr.getY());
+		this.shader = shader;
+//		this.type = type;
+		this.blocks = loadedTiles;// loads blocks
+		initGL();
+		init();
+	}
+/*	public Chunk(ShaderProgram shader, int type, Vector2f grr, short[][][] loadedTiles) {
 		this.pos = new Vector3f(grr.getX(), 0, grr.getY());
 		this.shader = shader;
 		this.type = type;
 		this.blocks = loadedTiles;// loads blocks
 		initGL();
 		init();
-	}
+	}*/
 
 	public void set() {
 
@@ -121,7 +132,7 @@ public class Chunk implements Serializable {
 	}
 
 	public void render() {
-		if (type != World.AIRCHUNK) {
+//		if (type != World.AIRCHUNK) {
 			// shader.use();
 			// int texLoc = GL20.glGetUniformLocation(shader.getProgram(),
 			// "u_texture");
@@ -130,14 +141,14 @@ public class Chunk implements Serializable {
 
 			// shader.release();
 			// System.out.println("MixedChunk");
-		}
-		if (type != World.MIXEDCHUNK) {
-			System.out.println("AirChunk");
-		}
+//		}
+//		if (type != World.MIXEDCHUNK) {
+//			System.out.println("AirChunk");
+//		}
 	}
 
 	public void rebuild() {
-		if (type != World.AIRCHUNK) {
+//		if (type != World.AIRCHUNK) {
 			for (int x = 0; x < sizeX; x++) {
 				for (int y = 0; y < sizeY; y++) {
 					for (int z = 0; z < sizeZ; z++) {
@@ -191,7 +202,7 @@ public class Chunk implements Serializable {
 			glEnd();
 			glEndList();
 
-		}
+//		}
 	}
 
 	private boolean checkTileNotInView(int x, int y, int z) {
@@ -342,9 +353,9 @@ public class Chunk implements Serializable {
 		return new Vector2f(pos.getX(), pos.getZ());
 	}
 
-	public int getType() {
-		return type;
-	}
+//	public int getType() {
+//		return type;
+//	}
 	public ArrayList<String> getChunk(){
 		return temp;
 	}

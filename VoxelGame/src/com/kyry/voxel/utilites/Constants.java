@@ -80,5 +80,9 @@ public class Constants {
 											// rendered on screen
 	public static boolean jumpEnabled = true; // Default assume you can jump.
 
-
+	public static Color textColor = Color.white; // Toggle Color Black/White for text being
+    // rendered on screen
+	
+	
+	
 }
