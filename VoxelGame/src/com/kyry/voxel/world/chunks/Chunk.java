@@ -28,6 +28,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
 import com.kyry.voxel.geometry.AABB;
+import com.kyry.voxel.geometry.Coordinate3f;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.world.World;
@@ -44,7 +45,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Chunk implements Serializable {
 
-	public Vector2f pos;
+	public Coordinate3f pos;
 	// public short[][][] chunks;
 	// public short[][][] blocks;
 	public ShaderProgram shader;
@@ -59,15 +60,15 @@ public class Chunk implements Serializable {
 	// public ArrayList<Vector3f> temp = new ArrayList<Vector3f>();
 	public ArrayList<String> temp = new ArrayList<String>();
 
-	public Chunk(ShaderProgram shader, int x, int z) {
-		this(shader, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
+	public Chunk(ShaderProgram shader, Coordinate3f coord) {
+		this(shader, coord, ChunkManager.loadChunkToMem(coord).blocks);
 	}
 /*	public Chunk(ShaderProgram shader, int type, int x, int z) {
 		this(shader, type, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
 	}
 */
-	public Chunk(ShaderProgram shader, Vector2f grr, short[][][] loadedTiles) {
-		this.pos = new Vector2f(grr.getX(), grr.getY());
+	public Chunk(ShaderProgram shader, Coordinate3f coord, short[][][] loadedTiles) {
+		this.pos = coord;
 		this.shader = shader;
 //		this.type = type;
 		this.blocks = loadedTiles;// loads blocks
@@ -157,8 +158,11 @@ public class Chunk implements Serializable {
 						// if ((blocks[x+1][y][z] = 0)) {
 						// if ((blocks[x+1][y-1][z] = 0)) {
 						// etc
-						if ((blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
-							temp.add(ChunkManager.key(x, y, z));
+						Coordinate3f tempCoord = new Coordinate3f(x, y, z);
+						System.out.println(tempCoord.key() + "!!!");
+						if ((blocks[x][y][z] != 0 && !checkTileNotInView(tempCoord))) {
+							
+							temp.add(tempCoord.key());
 							// temp[x][y][z] = true;
 						}
 						// else{
@@ -191,10 +195,10 @@ public class Chunk implements Serializable {
 			 * Block.getTile(blocks[x][y][z]).getTexCoords(), 1); } } } }
 			 */
 			for (int q = 0; q < temp.size(); q++) {
-
-				int x = ChunkManager.keyX(temp.get(q));
-				int y = ChunkManager.keyY(temp.get(q));
-				int z = ChunkManager.keyZ(temp.get(q));
+				Coordinate3f tempCoord = new Coordinate3f(temp.get(q));
+				int x = (int) tempCoord.x;
+				int y = (int) tempCoord.y;
+				int z = (int) tempCoord.z;
 
 				Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z, Block.getTile(blocks[x][y][z]).getColor(), Block.getTile(blocks[x][y][z]).getTexCoords(), 1);
 				Constants.RenderBlocksLoaded++;
@@ -205,26 +209,27 @@ public class Chunk implements Serializable {
 //		}
 	}
 
-	private boolean checkTileNotInView(int x, int y, int z) {
+	private boolean checkTileNotInView(Coordinate3f coord) {
 		boolean facesHidden[] = new boolean[6];
-		/*
-		 * for(int q = 0; q < 6; q++){ if (y==14){ facesHidden[q] = false; }
-		 * else { facesHidden[q] = true; } }
-		 */
+		int x = (int) coord.x;
+		int y = (int) coord.y;
+		int z = (int) coord.z;
 		if (x > pos.getX()) {
 			if ((x - 1) < 0) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x - 1));
 				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + z);
-				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
+				Coordinate3f tempCoord = new Coordinate3f(x1, 0, z1);
+				Chunk grr = ChunkManager.loadedChunks.get(tempCoord.toChunk().key());
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
 				// z1)) + " " + grr);
-				if (grr.blocks[Constants.CHUNKSIZE-1][y][z] != 0)
+				if (grr.blocks[Constants.CHUNKSIZE-1][y][z] != 0){
 					facesHidden[0] = true;
-				else
+				}
+				else{
 					facesHidden[0] = false;
+				}
 			} else {
-
 				if (blocks[x - 1][y][z] != 0)
 					facesHidden[0] = true;
 				else
@@ -238,7 +243,8 @@ public class Chunk implements Serializable {
 			if ((x + 1) > Constants.CHUNKSIZE) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x + 1));
 				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + z);
-				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
+				Coordinate3f tempCoord = new Coordinate3f(x1, 0, z1);
+				Chunk grr = ChunkManager.loadedChunks.get(tempCoord.toChunk().key());
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
 				// z1)) + " " + grr);
@@ -278,7 +284,8 @@ public class Chunk implements Serializable {
 			if ((z - 1) < 0) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
 				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + (z - 1));
-				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
+				Coordinate3f tempCoord = new Coordinate3f(x1, 0, z1);
+				Chunk grr = ChunkManager.loadedChunks.get(tempCoord.toChunk().key());
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
 				// z1)) + " " + grr);
@@ -300,7 +307,8 @@ public class Chunk implements Serializable {
 			if ((z + 1) > Constants.CHUNKSIZE) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
 				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + (z + 1));
-				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
+				Coordinate3f tempCoord = new Coordinate3f(x1, 0 , z1);
+				Chunk grr = ChunkManager.loadedChunks.get(tempCoord.toChunk().key());
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
 				// z1)) + " " + grr);

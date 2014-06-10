@@ -19,6 +19,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
+import com.kyry.voxel.geometry.Coordinate3f;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.utilities.Frustum;
@@ -48,68 +49,12 @@ public class ChunkManager {
 		// shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 
-	// Helper methods
-	public static String key(float x, float z) {// creates a key for the chunk
-		return new String((int) x + "_" + (int) z);
+	public static String filePath(Coordinate3f coord) {
+		return new String("C:\\Save\\" + coord.key() + ".dat");
 	}
 
-	public static String key(float x, float y, float z) {// creates a key for
-															// the chunk
-		return new String((int) x + "_" + (int) y + "_" + (int) z);
-	}
-
-	public static String key(Vector2f vec) {// creates a key for the chunk
-		return new String((int) vec.getX() + "_" + (int) vec.getY());
-	}
-
-	public static String key(Vector3f vec) {// creates a key for the chunk
-		return new String((int) vec.getX() + "_" + (int) vec.getY() + "_" + (int) vec.getZ());
-	}
-
-	public static int keyX(String s) {
-		return Integer.parseInt(s.split("_")[0]);
-	}
-
-	public static int keyY(String s) {
-		return Integer.parseInt(s.split("_")[1]);
-	}
-
-	public static int keyZ(String s) {
-		return Integer.parseInt(s.split("_")[2]);
-	}
-
-	public static Vector2f blockToChunk(Vector3f v) {
-		return new Vector2f(blockToChunk1f(v.getX()), blockToChunk1f(v.getZ()));
-		// return new
-		// Vector3f(blockToChunk1f(v.x),blockToChunk1f(v.y),blockToChunk1f(v.z));
-	}
-
-	public static Vector2f blockToChunk(float x, float z) {
-		return new Vector2f(blockToChunk1f(x), blockToChunk1f(z));
-		// return new
-		// Vector2f(blockToChunk1f(x),blockToChunk1f(y),blockToChunk1f(z));
-	}
-
-	public static Vector3f blockToChunk(float x, float y, float z) {
-		return new Vector3f(blockToChunk1f(x), blockToChunk1f(y), blockToChunk1f(z));
-	}
-
-	public static int blockToChunk1f(float f) {
-		int i = (int) f;
-		if (i < 0) {
-			i = ((int) ((i + 1) / 16)) - 1;
-		} else if (i >= 0) {
-			i = (int) (i / 16);
-		}
-		return (int) i;
-	}
-
-	public static String filePath(int x, int z) {
-		return new String("C:\\Save\\" + x + "_" + z + ".dat");
-	}
-
-	public static boolean isCreated(int x, int z) {
-		File f = new File(filePath(x, z));
+	public static boolean isCreated(Coordinate3f coord) {
+		File f = new File(filePath(coord));
 		if (f.exists() && !f.isDirectory()) {
 			return true;
 		} else
@@ -150,96 +95,82 @@ public class ChunkManager {
 	 * somehow } }
 	 */
 	// SAVE / LOAD
-	private static void saveChunk(float f, float h, short[][][] blocks) { // Save
-																			// chunk
-																			// to
-																			// data
-																			// file
-		int x = (int) f;
-		// int y = (int) g;
-		int z = (int) h;
+	private static void saveChunk(Coordinate3f coord, short[][][] blocks) { 
+		// Save chunk to data file
+	
 		try {
-			File dir = new File(filePath(x, z));
+			File dir = new File(filePath(coord));
 			dir.getParentFile().mkdir();
-			FileOutputStream saveFile = new FileOutputStream(filePath(x, z));
+			FileOutputStream saveFile = new FileOutputStream(filePath(coord));
 			ObjectOutputStream save = new ObjectOutputStream(saveFile);
 			save.writeObject(blocks);
 			save.flush();
 			save.close();
-			System.out.println("(" + x + "," + z + ") Saved Successfully.");
+			System.out.println("(" + coord.key() + ") Saved Successfully.");
 
 		} catch (IOException e) {
-			System.out.println("Failed to save  (" + x + "," + z + ")");
+			System.out.println("Failed to save  (" + coord.key() + ")");
 			e.printStackTrace();
 		}
 
 	}
 
-	public static Chunk loadChunkToMem(int x, int z) { // Add chunk from file to
+	public static Chunk loadChunkToMem(Coordinate3f coord) { // Add chunk from file to
 														// memory chunk list
-		if (isCreated(x, z)) {
+		if (isCreated(coord)) {
 			try {
-				FileInputStream saveFile = new FileInputStream(filePath(x, z));
+				FileInputStream saveFile = new FileInputStream(filePath(coord));
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
-				Chunk chunk = new Chunk(shader, new Vector2f(x, z), (short[][][]) restore.readObject());
+				Chunk chunk = new Chunk(shader, coord.toChunk(), (short[][][]) restore.readObject());
 //				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector2f(x, z), (short[][][]) restore.readObject());
 				restore.close();
-				loadedChunks.put(key(x, z), chunk);
+				loadedChunks.put(coord.key(), chunk);
 				Constants.chunksLoaded++;
-				System.out.println("(" + x + "," + z + ") Loaded Successfully.");
+				System.out.println("(" +coord.key() + ") Loaded Successfully.");
 
 				return chunk;
 			} catch (Exception e) {
 				// Take a second try through, creating the chunk forcefully.
-				createChunk(x, z);
-				return (loadChunkToMem(x, z));
+				createChunk(coord);
+				return (loadChunkToMem(coord));
 			}
 		} else {
-			createChunk(x, z);
-			return (loadChunkToMem(x, z));
+			createChunk(coord);
+			return (loadChunkToMem(coord));
 		}
 	}
 
-	public static void loadChunkToPhys(int x, int z) { // Add chunk from file to
+	public static void loadChunkToPhys(Coordinate3f coord) { // Add chunk from file to
 		// memory chunk list
-		String key = key(x, z);
 
-		ArrayList<String> temp = activeChunks.get(key).getChunk();
+		ArrayList<String> temp = activeChunks.get(coord.key()).getChunk();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
-
-			i = ChunkManager.keyX(temp.get(q));
-			o = ChunkManager.keyY(temp.get(q));
-			u = ChunkManager.keyZ(temp.get(q));
-			if (!CollisionLibrary.hasBlock(x, z, i, o, u)) {
-				CollisionLibrary.newBlock(x, z, i, o, u);
+			Coordinate3f tempCoord = new Coordinate3f(temp.get(q));
+			if (!CollisionLibrary.hasBlock(coord.x, coord.z, tempCoord.x, tempCoord.y, tempCoord.z)) {
+				CollisionLibrary.newBlock(coord.x, coord.z, tempCoord.x, tempCoord.y, tempCoord.z);
 				Constants.PhysBlocksLoaded++;
 			}
 			// This basically adds ONLY the blocks that were rendered to the
 			// physics environment
 		}
-		System.out.println("Chunk (" + x + ", " + z + ") added to PhysWorld");
+		System.out.println("Chunk (" + coord.key() + ") added to PhysWorld");
 
 	}
 
-	public static void removeChunkFromPhys(int x, int z) { // Add chunk from
+	public static void removeChunkFromPhys(Coordinate3f coord) { // Add chunk from
 															// file to
 		// memory chunk list
-		String key = key(x, z);
-		System.out.println("Chunk (" + x + ", " + z + ") removed from PhysWorld");
+		System.out.println("Chunk (" + coord.key() + ") removed from PhysWorld");
 		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
 			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 		}
-		System.out.println(key);
-		ArrayList<String> temp = activeChunks.get(key).getChunk();
+		System.out.println(coord.key());
+		ArrayList<String> temp = activeChunks.get(coord.key()).getChunk();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
-
-			i = ChunkManager.keyX(temp.get(q));
-			o = ChunkManager.keyY(temp.get(q));
-			u = ChunkManager.keyZ(temp.get(q));
-
-			CollisionLibrary.removeBlock(x, z, i, o, u);
+			Coordinate3f tempCoord =  new Coordinate3f(temp.get(q));
+			CollisionLibrary.removeBlock((int)coord.x, (int)coord.z, (int)tempCoord.x, (int)tempCoord.y, (int)tempCoord.z);
 			Constants.PhysBlocksLoaded--;
 			// This basically removes ONLY the blocks that had been rendered to
 			// the physics environment
@@ -247,51 +178,41 @@ public class ChunkManager {
 
 	}
 
-	public static void loadChunkToActive(int x, int z) { // Add chunk from
+	public static void loadChunkToActive(Coordinate3f coord) { // Add chunk from
 															// memory to active
 															// chunk list
 		
-		for (int q = x - 1; q <= x + 1; q++) {
-			for (int w = z - 1; w <= z + 1; w++) {
-				if (!loadedChunks.containsKey(key(q, w))) {
-					if (!isCreated(q, w)) {
-						createChunk(q, w);
-						loadChunkToMem(q, w);
+		for (int q = (int)coord.x - 1; q <= coord.x + 1; q++) {
+			for (int w = (int)coord.z - 1; w <= coord.z + 1; w++) {
+				Coordinate3f tempCoord = new Coordinate3f(q, 0, w);
+				if (!loadedChunks.containsKey(tempCoord.key())) {
+					if (!isCreated(tempCoord)) {
+						createChunk(tempCoord);
+						loadChunkToMem(tempCoord);
 
 					} else {
-						loadChunkToMem(q, w);
+						loadChunkToMem(tempCoord);
 					}
 				}
 			}
 		}
-
-		activeChunks.put(key(x, z), loadedChunks.get(key(x, z)));
+		
+		activeChunks.put(coord.key(), loadedChunks.get(coord.key()));
 		Constants.chunksActive++;
-		activeChunks.get(key(x, z)).load();
-		loadChunkToPhys(x, z);
-
+		activeChunks.get(coord.key()).load();
+		loadChunkToPhys(coord);
 	}
 
-	public void removeChunkFromActive(String s) { // Remove chunk
-		// from active
-		// chunk list
-		int x = ChunkManager.keyX(s);
-		int z = ChunkManager.keyY(s);
-
-		removeChunkFromActive(x, z);
-
-	}
-
-	public void removeChunkFromActive(int x, int z) { // Remove chunk
+	public void removeChunkFromActive(Coordinate3f coord) { // Remove chunk
 														// from active
 														// chunk list
-		removeChunkFromPhys(x, z);
-		activeChunks.remove(key(x, z));
+		removeChunkFromPhys(coord);
+		activeChunks.remove(coord.key());
 		Constants.chunksActive--;
 
 	}
 
-	public static void createChunk(int f, int h) {
+	public static void createChunk(Coordinate3f coord) {
 		int sizeAll = Constants.CHUNKSIZE;
 		int worldHeight = Constants.WORLDHEIGHT;
 		short[][][] blocks = new short[sizeAll][worldHeight][sizeAll];
@@ -348,14 +269,14 @@ public class ChunkManager {
 		 * "("+x+")"+"("+y+")"+"("+z+")"+"=" + blocks[x][y][z].getId()"Like so:
 		 * (0)(0)(0)=0; (0)(0)(1)=6; ... (15)(15)(15)=3; .. (x)(y)(z)=blockId;
 		 */
-		ChunkManager.saveChunk(f, h, blocks);
+		ChunkManager.saveChunk(coord, blocks);
 		// ///
 		// Seems redundant and unneeded. The createChunk method will not always
 		// be called in one instance of the game, loadChunk will be
 		// Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new
 		// Vector3f(f,g,h), blocks);
 		// activeChunks.put(key(f,g,h), chunk);
-		System.out.println("(" + f + "," + h + ") Created Successfully.");
+		System.out.println("(" + coord.key() + ") Created Successfully.");
 	}
 
 	//
@@ -378,12 +299,15 @@ public class ChunkManager {
 		 */
 		// ADD
 		// BLOCK RELATIVE
-		Vector2f blockPos = blockToChunk(Player.camera.getPos()); //Returns player's XZ Chunk coords
+		
+		//kinda complex, kinda cool, I create a new instance of coord from vector then call the method
+		//toChunk() and automatically converts it from only one line
+		Coordinate3f blockPos = new Coordinate3f(Player.camera.getPos()).toChunk(); //Returns player's XZ Chunk coords
 		for (int x = (int) (blockPos.getX() - Constants.WORLDRADIUS); x <= (int) (blockPos.getX() + Constants.WORLDRADIUS); x++) {
-			for (int z = (int) (blockPos.getY() - Constants.WORLDRADIUS); z <= (int) (blockPos.getY() + Constants.WORLDRADIUS); z++) {
-				String key = key(x, z);
-				if (!activeChunks.containsKey(key)) {
-					loadChunkToActive(x, z);
+			for (int z = (int) (blockPos.getZ() - Constants.WORLDRADIUS); z <= (int) (blockPos.getZ() + Constants.WORLDRADIUS); z++) {
+				Coordinate3f tempCoord =  new Coordinate3f(x, 0, z);
+				if (!activeChunks.containsKey(tempCoord.key())) {
+					loadChunkToActive(tempCoord);
 					// Chunk to loaded buffer
 				}
 			}// end for z
@@ -401,13 +325,13 @@ public class ChunkManager {
 	 * z }// end for y }// end for x }
 	 */
 
-	private boolean isInZone(String key) { // Vector2f key, so z-coord is
+	private boolean isInZone(Coordinate3f coord) { // Vector2f key, so z-coord is
 											// actually keyY()
 		boolean result = false;
-		int x = keyX(key);
-		int z = keyY(key);
+		int x = (int)coord.x;
+		int z = (int)coord.z;
 		// chunk relative position of player
-		Vector2f playerPos = blockToChunk(Player.camera.getX(), Player.camera.getZ());
+		Coordinate3f playerPos = new Coordinate3f(Player.camera.getPos());
 		if (x <= (playerPos.getX() + Constants.WORLDRADIUS) && x >= (playerPos.getX() - Constants.WORLDRADIUS)) {
 			if (z <= (playerPos.getY() + Constants.WORLDRADIUS) && z >= (playerPos.getY() - Constants.WORLDRADIUS)) {
 				result = true;
