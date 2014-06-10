@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
-import com.kyry.voxel.geometry.Coordinate3f;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilities.Constants;
@@ -24,7 +23,7 @@ public class CollisionLibrary {
 	}
 
 	public static void newBlock(float chunkX, float chunkZ, float x, float y, float z, float r) {
-		String key = new Coordinate3f((int) (chunkX*Constants.CHUNKSIZE + x), (int) y, (int) (chunkZ*Constants.CHUNKSIZE + z)).key();
+		String key = ChunkManager.key((int) (chunkX*Constants.CHUNKSIZE + x), (int) y, (int) (chunkZ*Constants.CHUNKSIZE + z));
 		// BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
 		BlockMap.put(key, new AABB(chunkX, chunkZ, x, y, z, r));
 		Constants.PhysBlocksLoaded++;
@@ -32,7 +31,7 @@ public class CollisionLibrary {
 	}
 
 	public static boolean hasBlock(float chunkX, float chunkZ, float x, float y, float z) {
-		String key = new Coordinate3f((int) (chunkX*Constants.CHUNKSIZE + x), (int) y, (int) (chunkZ*Constants.CHUNKSIZE + z)).key();
+		String key = ChunkManager.key((int) (chunkX*Constants.CHUNKSIZE + x), (int) y, (int) (chunkZ*Constants.CHUNKSIZE + z));
 		// BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
 		if (BlockMap.containsKey(key)) {
 			return true;
@@ -46,7 +45,7 @@ public class CollisionLibrary {
 	}
 
 	private static void removeBlock(int x, int y, int z) {
-		String key = new Coordinate3f(x, y, z).key();
+		String key = ChunkManager.key(x, y, z);
 		/*
 		 * Iterator<Entry<String, AABB>> iterator =
 		 * BlockMap.entrySet().iterator(); while (iterator.hasNext()){

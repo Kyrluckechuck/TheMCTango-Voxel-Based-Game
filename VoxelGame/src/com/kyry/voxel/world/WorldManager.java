@@ -16,7 +16,6 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.kyry.voxel.geometry.Coordinate3f;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilities.Constants;
@@ -58,12 +57,13 @@ public class WorldManager {
 	}
 
 	private void createWorld() {
-		Coordinate3f pos = new Coordinate3f(Player.camera.getPos()).toChunk();
-		for (int x = (int) (pos.getX() - Constants.WORLDRADIUS); x <= pos.getX() + Constants.WORLDRADIUS; x++) {
+		Vector3f pos3f = Player.camera.getPos();
+		Vector2f pos2f = ChunkManager.blockToChunk(pos3f);
+		int y = 0;
+		for (int x = (int) (pos2f.getX() - Constants.WORLDRADIUS); x <= pos2f.getX() + Constants.WORLDRADIUS; x++) {
 			//for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y <= pos.getY() +Constants.WORLDRADIUS; y++) {
-				for (int z = (int) (pos.getZ() - Constants.WORLDRADIUS); z <= pos.getZ() + Constants.WORLDRADIUS; z++) {
-					System.out.println("eh oh");
-					ChunkManager.loadChunkToActive(pos);
+				for (int z = (int) (pos2f.getY() - Constants.WORLDRADIUS); z <= pos2f.getY() + Constants.WORLDRADIUS; z++) {
+					ChunkManager.loadChunkToActive(x, z);
 					Constants.chunksActive++;
 					//chunkManager.activeChunks.put(ChunkManager.key(x, z), chunkManager.loadedChunks.get(ChunkManager.key(x,z)));
 					
