@@ -29,7 +29,7 @@ import org.lwjgl.opengl.GL20;
 
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
-import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.WorldRender;
@@ -44,7 +44,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Chunk implements Serializable {
 
-	public Vector3f pos;
+	public Vector2f pos;
 	// public short[][][] chunks;
 	// public short[][][] blocks;
 	public ShaderProgram shader;
@@ -67,7 +67,7 @@ public class Chunk implements Serializable {
 	}
 */
 	public Chunk(ShaderProgram shader, Vector2f grr, short[][][] loadedTiles) {
-		this.pos = new Vector3f(grr.getX(), 0, grr.getY());
+		this.pos = new Vector2f(grr.getX(), grr.getY());
 		this.shader = shader;
 //		this.type = type;
 		this.blocks = loadedTiles;// loads blocks
@@ -214,7 +214,7 @@ public class Chunk implements Serializable {
 		if (x > pos.getX()) {
 			if ((x - 1) < 0) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x - 1));
-				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + z);
+				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
@@ -237,7 +237,7 @@ public class Chunk implements Serializable {
 		if (x < (sizeX - 1)) {
 			if ((x + 1) > Constants.CHUNKSIZE) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x + 1));
-				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + z);
+				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
@@ -257,7 +257,7 @@ public class Chunk implements Serializable {
 
 		}
 
-		if (y > (pos.getY())) {
+		if (y > 0) {
 			if (blocks[x][y - 1][z] != 0)
 				facesHidden[2] = true;
 			else
@@ -274,10 +274,10 @@ public class Chunk implements Serializable {
 			facesHidden[3] = false;
 		}
 
-		if (z > pos.getZ()) {
+		if (z > pos.getY()) {
 			if ((z - 1) < 0) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
-				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + (z - 1));
+				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + (z - 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
@@ -299,7 +299,7 @@ public class Chunk implements Serializable {
 		if (z < (sizeZ - 1)) {
 			if ((z + 1) > Constants.CHUNKSIZE) {
 				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
-				int z1 = (int) (((int) pos.getZ() * Constants.CHUNKSIZE) + (z + 1));
+				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + (z + 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
@@ -346,11 +346,11 @@ public class Chunk implements Serializable {
 	}
 
 	public Vector2f getCenter() {
-		return new Vector2f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getZ() - (Constants.CHUNKSIZE / 2));
+		return new Vector2f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getY() - (Constants.CHUNKSIZE / 2));
 	}
 
 	public Vector2f getPos() {
-		return new Vector2f(pos.getX(), pos.getZ());
+		return new Vector2f(pos.getX(), pos.getY());
 	}
 
 //	public int getType() {

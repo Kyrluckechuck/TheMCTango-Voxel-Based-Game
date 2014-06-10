@@ -1,4 +1,4 @@
-package com.kyry.voxel.utilites;
+package com.kyry.voxel.utilities;
 
 import java.nio.FloatBuffer;
 

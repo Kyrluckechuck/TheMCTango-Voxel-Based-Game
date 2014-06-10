@@ -15,8 +15,8 @@ import org.newdawn.slick.opengl.TextureImpl;
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 //import com.bulletphysics.linearmath.Transform;
-import com.kyry.voxel.utilites.Constants;
-import com.kyry.voxel.utilites.Spritesheet;
+import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Spritesheet;
 import com.kyry.voxel.world.blocks.Block;
 
 public class World extends Screen {

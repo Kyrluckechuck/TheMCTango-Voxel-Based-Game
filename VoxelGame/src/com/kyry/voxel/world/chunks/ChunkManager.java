@@ -20,8 +20,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
-import com.kyry.voxel.utilites.Constants;
-import com.kyry.voxel.utilites.Frustum;
+import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Frustum;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.mobs.MobManager;
@@ -427,18 +427,18 @@ public class ChunkManager {
 		while (iterator.hasNext()) {
 			Entry<String, Chunk> entry = iterator.next();
 			if (Frustum.getFrustum().cubeFullyInFrustum(entry.getValue().getPos().getX(), 0,// entry.getValue().getPos().getY(),
-					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Constants.CHUNKSIZE, 0,// entry.getValue().getPos().getY()
+					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Constants.CHUNKSIZE, 0+Constants.WORLDHEIGHT,// entry.getValue().getPos().getY()
 																												// +
 																												// Constants.CHUNKSIZE,
 					entry.getValue().getPos().getY() + Constants.CHUNKSIZE)) {
-				if (Math.abs(entry.getValue().getCenter().getX() - (int) Player.camera.getX()) < 64
+/*				if (Math.abs(entry.getValue().getCenter().getX() - (int) Player.camera.getX()) < 64
 				// && Math.abs(entry.getValue().getCenter().getZ()
 				// - Player.camera.getZ()) < 64
-						&& Math.abs(entry.getValue().getCenter().getY() - Player.camera.getY()) < 32) {
+						&& Math.abs(entry.getValue().getCenter().getY() - Player.camera.getY()) < 32) {*/
 					Constants.chunksFrustum++;
 					entry.getValue().render();
 
-				}
+//				} //Commented out with the 64/32 code
 			}
 		}// end while for iterator
 	}// end render

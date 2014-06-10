@@ -3,7 +3,7 @@ package com.kyry.voxel.geometry;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.utilities.Constants;
 
 public class AABB {
 	public Vector3f center;

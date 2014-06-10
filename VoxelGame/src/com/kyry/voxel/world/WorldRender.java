@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import org.lwjgl.opengl.GL11;
 
 import com.kyry.voxel.geometry.Shape;
-import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;

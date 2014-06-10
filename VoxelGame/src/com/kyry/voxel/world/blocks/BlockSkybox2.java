@@ -1,7 +1,7 @@
 package com.kyry.voxel.world.blocks;
 
-import com.kyry.voxel.utilites.Constants;
-import com.kyry.voxel.utilites.Spritesheet;
+import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Spritesheet;
 import com.nishu.utils.Color4f;
 
 public class BlockSkybox2 extends Block{

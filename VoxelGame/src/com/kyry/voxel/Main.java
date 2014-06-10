@@ -10,7 +10,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
-import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.world.World;
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;

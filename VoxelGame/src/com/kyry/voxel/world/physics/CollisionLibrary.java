@@ -10,7 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
-import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.chunks.ChunkManager;
 
@@ -118,9 +118,9 @@ public class CollisionLibrary {
 		return sqDist;
 	}
 
-	public static boolean testCircleAABB(final Sphere sphere, final AABB box) {
+	public static boolean testSphereAABB(final Sphere sphere, final AABB cube) {
 		// get the squared distance between circle center and the AABB
-		float sqDist = sqDistPointAABB(sphere.center, box);
+		float sqDist = sqDistPointAABB(sphere.center, cube);
 		float r = sphere.radius;
 
 		return sqDist <= r * r;

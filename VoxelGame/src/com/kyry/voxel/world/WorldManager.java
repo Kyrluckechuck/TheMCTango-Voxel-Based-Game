@@ -18,9 +18,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
-import com.kyry.voxel.utilites.Constants;
-import com.kyry.voxel.utilites.Frustum;
-import com.kyry.voxel.utilites.Spritesheet;
+import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Frustum;
+import com.kyry.voxel.utilities.Spritesheet;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.chunks.ChunkManager;

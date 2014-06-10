@@ -1,4 +1,4 @@
-package com.kyry.voxel.utilites;
+package com.kyry.voxel.utilities;
 
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_RGBA;

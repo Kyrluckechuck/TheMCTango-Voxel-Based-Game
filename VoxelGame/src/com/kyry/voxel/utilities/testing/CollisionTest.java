@@ -1,4 +1,4 @@
-package com.kyry.voxel.utilites;
+package com.kyry.voxel.utilities.testing;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -19,7 +19,7 @@ public class CollisionTest {
 	      //sphere.update(somePosition);
 	      
 	      // test for overlap
-	      if(CollisionLibrary.testCircleAABB(sphere,box)) {
+	      if(CollisionLibrary.testSphereAABB(sphere,box)) {
 	         System.out.println("COLLIDED");
 	      }
 	      else {

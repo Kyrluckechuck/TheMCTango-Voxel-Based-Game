@@ -10,7 +10,7 @@ import org.lwjgl.input.Mouse;
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Sphere;
 //import com.bulletphysics.linearmath.Transform;
-import com.kyry.voxel.utilites.Constants;
+import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.blocks.Block;
@@ -139,10 +139,6 @@ public class Camera extends Entity {
 
 	public void move(float dX, float dY, float dZ) {
 		// Move Camera
-		float origX = getX();
-		float origY = getY();
-		float origZ = getZ();
-
 		Vector3f someOldPositionUpper = new Vector3f(getX(), getY(), getZ());
 		Vector3f someOldPositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());
 
@@ -150,45 +146,78 @@ public class Camera extends Entity {
 			// Constants.jumpEnabled = true;//not proper
 			noClipMove(dX * Constants.PLAYER_SPEED, dY * Constants.PLAYER_SPEED, dZ * Constants.PLAYER_SPEED);
 		} else if (!World.noClip) {// move normally
+			float origX = getX();
+			float origY = getY();
+			float origZ = getZ();
 
+			float newX = (float) (getX() - (dX * (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ * Math.sin(Math.toRadians(getYaw()))));
+			float newY = (float) (getY() - dY);
+			float newZ = (float) (getZ() + (dX * (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ * Math.cos(Math.toRadians(getYaw()))));
 			// Move to next possible position
-			setZ((float) (getZ() + (dX * (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ * Math.cos(Math.toRadians(getYaw())))));
+			//boolean moveAllowed = tryMove(newX, newY, newZ);
 
-			setX((float) (getX() - (dX * (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ * Math.sin(Math.toRadians(getYaw())))));
-			setY((float) (getY() - dY));
-			// Move Player's Invisible Collision object
-			Vector3f somePositionUpper = new Vector3f(getX(), getY(), getZ());
-			Vector3f somePositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());
-			WorldManager.playerSphereUpper.update(somePositionUpper);
-			WorldManager.playerSphereLower.update(somePositionLower);
-			// Check if it collides
-			boolean moveAllowed = true;
-			Vector3f playerPos = Player.camera.getPos();
-			for (int x = (int) playerPos.getX() - 1; x <= (int) playerPos.getX() + 1; x++) {
-				for (int y = (int) playerPos.getY() - 1; y <= (int) playerPos.getY() + 1; y++) {
-					for (int z = (int) playerPos.getZ() - 1; z <= (int) playerPos.getZ() + 1; z++) {
-						String key = ChunkManager.key(ChunkManager.blockToChunk(x, y, z));
-						AABB grr = CollisionLibrary.BlockMap.get(key);
-//						System.out.println(grr);
-						if ((CollisionLibrary.testCircleAABB(WorldManager.playerSphereUpper, grr)) || (CollisionLibrary.testCircleAABB(WorldManager.playerSphereLower, grr))) {
-							moveAllowed = false;
-							break;
-							// System.out.println(x);
-						}
+			if (!tryMove(newX, newY, newZ)) {// try X + Y + Z movement
+				if (!tryMove(newX, newY, origZ)) { // if not allowed try just X + Y movement
+					if (!tryMove(origX, newY, newZ)) { //if not allowed try just Z + Y movement
+						//if not allowed revert to original position
+						setX(origX);
+						setY(origY);
+						setZ(origZ);
+						WorldManager.playerSphereUpper.update(someOldPositionUpper);
+						WorldManager.playerSphereLower.update(someOldPositionLower);
 					}
 				}
-
-			}
-			// if it does collide then revert to original position
-			if (!moveAllowed) {
-				setX(origX);
-				setY(origY);
-				setZ(origZ);
-				WorldManager.playerSphereUpper.update(someOldPositionUpper);
-				WorldManager.playerSphereLower.update(someOldPositionLower);
+				
 				System.out.println("Collision!  - STAHPED MOVING");
 			}
+			// end new working code /|\ \|/ old dead code
+			/*
+			 * // Check if it collides boolean moveAllowed = true; Vector3f
+			 * playerPos = Player.camera.getPos(); for (int x = (int)
+			 * playerPos.getX() - 1; x <= (int) playerPos.getX() + 1; x++) { for
+			 * (int y = (int) playerPos.getY() - 1; y <= (int) playerPos.getY()
+			 * + 1; y++) { for (int z = (int) playerPos.getZ() - 1; z <= (int)
+			 * playerPos.getZ() + 1; z++) { String key =
+			 * ChunkManager.key(ChunkManager.blockToChunk(x, y, z)); AABB grr =
+			 * CollisionLibrary.BlockMap.get(key); // System.out.println(grr);
+			 * if
+			 * ((CollisionLibrary.testCircleAABB(WorldManager.playerSphereUpper,
+			 * grr)) ||
+			 * (CollisionLibrary.testCircleAABB(WorldManager.playerSphereLower,
+			 * grr))) { moveAllowed = false; break; // System.out.println(x); }
+			 * } }
+			 * 
+			 * } // if it does collide then revert to original position if
+			 * (!moveAllowed) { setX(origX); setY(origY); setZ(origZ);
+			 * WorldManager.playerSphereUpper.update(someOldPositionUpper);
+			 * WorldManager.playerSphereLower.update(someOldPositionLower);
+			 * System.out.println("Collision!  - STAHPED MOVING"); }
+			 */
+
 		}// End check if no clip
+	}
+
+	private boolean tryMove(float newX, float newY, float newZ) {
+		setX(newX);
+		setY(newY);
+		setZ(newZ);
+		// Move Player's Invisible Collision object
+		Vector3f somePositionUpper = new Vector3f(getX(), getY(), getZ());
+		Vector3f somePositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());
+		WorldManager.playerSphereUpper.update(somePositionUpper);
+		WorldManager.playerSphereLower.update(somePositionLower);
+		// begin new working code \|/
+		boolean moveAllowed = true;
+		Iterator<Entry<String, AABB>> iterator = CollisionLibrary.BlockMap.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, AABB> entry = iterator.next();
+			if ((CollisionLibrary.testSphereAABB(WorldManager.playerSphereUpper, entry.getValue())) || (CollisionLibrary.testSphereAABB(WorldManager.playerSphereLower, entry.getValue()))) {
+				moveAllowed = false;
+				break;
+				// System.out.println(x);
+			}
+		}
+		return moveAllowed;
 	}
 
 	private void noClipMove(float dX, float dY, float dZ) {
@@ -215,7 +244,7 @@ public class Camera extends Entity {
 		Iterator<Entry<String, AABB>> iterator = CollisionLibrary.BlockMap.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, AABB> entry = iterator.next();
-			if ((CollisionLibrary.testCircleAABB(WorldManager.playerSphereUpper, entry.getValue())) || (CollisionLibrary.testCircleAABB(WorldManager.playerSphereLower, entry.getValue()))) {
+			if ((CollisionLibrary.testSphereAABB(WorldManager.playerSphereUpper, entry.getValue())) || (CollisionLibrary.testSphereAABB(WorldManager.playerSphereLower, entry.getValue()))) {
 				moveAllowed = false;
 				break;
 				// System.out.println(x);
