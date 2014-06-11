@@ -20,7 +20,7 @@ public class Constants {
 											// text not get chopped off)
 	public static int WORLDRADIUS = 1; // How far over the chunks are being rendered *fix
 	public static int CHUNKSIZE = 16; // How many blocks wide+long a chunk is so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
-	public static int WORLDHEIGHT = 128; // The World Height (aka chunk height) so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
+	public static int WORLDHEIGHT = 32; // The World Height (aka chunk height) so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
 	public static float playerHeight = 0.8f; // Players height (distance between center's of two playerSphere's
 	public static final int TextureSize = 16; // The pixel size of a texture
 												// (the entire file is 256x256

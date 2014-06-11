@@ -11,7 +11,7 @@ public class RandomTerrain2D {
 
 	private int size = 4; // tile size in pixels
 
-	private int width = 256, length = 256; // map dimensions
+	private int width = 256, height = 256; // map dimensions
 	private int[] tiles; // tile array
 
 	public RandomTerrain2D() {
@@ -26,7 +26,7 @@ public class RandomTerrain2D {
 
 	private void makeTiles() {
 
-		tiles = new int[width * length];
+		tiles = new int[width * height];
 
 		SimplexNoise noise = new SimplexNoise();
 
@@ -34,10 +34,10 @@ public class RandomTerrain2D {
 			int x = i % width; // what are the coordinates from i ?
 			int y = i / width;
 
-			float frequency =  (float) 256; // change this and see what happens! :D
+			float frequency =  (float) 128; // change this and see what happens! :D
 
 			float h = (float) noise.noise((float) x / frequency, (float) y / frequency);
-			h *= 127;
+			h *= 64;
 			/*
 			 * if (h >= -127 && h < -50) tiles[x + y * width] = 1; // dirt tile
 			 * else if (h >= -50 && h < 0) tiles[x + y * width] = 2; // grass
@@ -46,7 +46,7 @@ public class RandomTerrain2D {
 			 * 4; // grass tile
 			 */
 			if (h >= -127 && h < -100)
-				tiles[x + y * width] = 1; // dirt tile
+				tiles[x + y * width] = 1; // hole tile
 			else if (h >= -100 && h < -75)
 				tiles[x + y * width] = 2; // grass tile
 			else if (h >= -75 && h < -50)
@@ -54,9 +54,9 @@ public class RandomTerrain2D {
 			else if (h >= -50 && h < -25)
 				tiles[x + y * width] = 4; // grass tile
 			else if (h >= -25 && h < 0)
-				tiles[x + y * width] = 5; // grass tile
+				tiles[x + y * width] = 5; // ground tile
 			else if (h >= 0 && h < 25)
-				tiles[x + y * width] = 6; // grass tile
+				tiles[x + y * width] = 6; // ground tile
 			else if (h >= 25 && h < 50)
 				tiles[x + y * width] = 7; // grass tile
 			else if (h >= 50 && h < 75)
@@ -64,7 +64,7 @@ public class RandomTerrain2D {
 			else if (h >= 75 && h < 100)
 				tiles[x + y * width] = 9; // grass tile
 			else if (h >= 100 && h <= 127)
-				tiles[x + y * width] = 10; // grass tile
+				tiles[x + y * width] = 10; // mountain tile
 		}
 
 	}
@@ -86,7 +86,7 @@ public class RandomTerrain2D {
 
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-		for (int y = 0; y < length; y++) {
+		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 
 				if (tiles[x + y * width] == 1) {
