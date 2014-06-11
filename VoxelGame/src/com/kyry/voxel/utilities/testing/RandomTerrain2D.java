@@ -34,10 +34,10 @@ public class RandomTerrain2D {
 			int x = i % width; // what are the coordinates from i ?
 			int y = i / width;
 
-			float frequency =  (float) 128; // change this and see what happens! :D
+			float frequency =  (float) 256; // change this and see what happens! :D
 
 			float h = (float) noise.noise((float) x / frequency, (float) y / frequency);
-			h *= 64;
+			h *= 127;
 			/*
 			 * if (h >= -127 && h < -50) tiles[x + y * width] = 1; // dirt tile
 			 * else if (h >= -50 && h < 0) tiles[x + y * width] = 2; // grass
@@ -46,7 +46,7 @@ public class RandomTerrain2D {
 			 * 4; // grass tile
 			 */
 			if (h >= -127 && h < -100)
-				tiles[x + y * width] = 1; // hole tile
+				tiles[x + y * width] = 1; // dirt tile
 			else if (h >= -100 && h < -75)
 				tiles[x + y * width] = 2; // grass tile
 			else if (h >= -75 && h < -50)
@@ -54,9 +54,9 @@ public class RandomTerrain2D {
 			else if (h >= -50 && h < -25)
 				tiles[x + y * width] = 4; // grass tile
 			else if (h >= -25 && h < 0)
-				tiles[x + y * width] = 5; // ground tile
+				tiles[x + y * width] = 5; // grass tile
 			else if (h >= 0 && h < 25)
-				tiles[x + y * width] = 6; // ground tile
+				tiles[x + y * width] = 6; // grass tile
 			else if (h >= 25 && h < 50)
 				tiles[x + y * width] = 7; // grass tile
 			else if (h >= 50 && h < 75)
@@ -64,7 +64,7 @@ public class RandomTerrain2D {
 			else if (h >= 75 && h < 100)
 				tiles[x + y * width] = 9; // grass tile
 			else if (h >= 100 && h <= 127)
-				tiles[x + y * width] = 10; // mountain tile
+				tiles[x + y * width] = 10; // grass tile
 		}
 
 	}
