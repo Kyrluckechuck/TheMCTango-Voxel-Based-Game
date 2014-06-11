@@ -287,32 +287,59 @@ public class Camera extends Entity {
 		// System.out.println(Constants.ray.x); //Just had to comment this out
 		// for my own debugging purposes
 		// Pick correct block
-		
+
 		for (int i = 0; i < Constants.rayDistance; i++) {
 			x = (int) (getX() + (Constants.ray.x * i));
 			y = (int) (getY() + (Constants.ray.y * i));
 			z = (int) (getZ() + (Constants.ray.z * i));
 			int chunkX = ChunkManager.blockToChunk1f(x);
 			int chunkZ = ChunkManager.blockToChunk1f(z);
-			
+
 			int internX = x - (chunkX * Constants.CHUNKSIZE);
 			int internY = y;
 			int internZ = z - (chunkZ * Constants.CHUNKSIZE);
-			try{
-				if(y < Constants.WORLDHEIGHT){//within bounds
-			
-				System.out.println("("+chunkX + ", "+chunkZ+")" + "blocks X:" + internX + " Y:" + internY + " Z:" + internZ);
-				if(ChunkManager.loadedChunks.get(ChunkManager.key(chunkX, chunkZ)).blocks[internX][internY][internZ] > 0){
-					//is not air
-					ChunkManager.selectedBlock = new Vector3f(x, y, z);
-					System.out.println("picked a block! " + ChunkManager.selectedBlock.x
-							+ " " + ChunkManager.selectedBlock.y + " " + ChunkManager.selectedBlock.z );
-					break;
-				} else{
-					ChunkManager.selectedBlock = new Vector3f(0, 0, 0);
+			try {
+				if (y < Constants.WORLDHEIGHT) {// within bounds
+
+					// System.out.println("(" + chunkX + ", " + chunkZ + ")" +
+					// "blocks X:" + internX + " Y:" + internY + " Z:" +
+					// internZ);
+					if (ChunkManager.loadedChunks.get(ChunkManager.key(chunkX, chunkZ)).blocks[internX][internY][internZ] > 0) {
+						// is not air
+						// ChunkManager.selectedBlock = new Vector3f(x, y, z);
+						// System.out.println("picked a block! " +
+						// ChunkManager.selectedBlock.x
+						// + " " + ChunkManager.selectedBlock.y + " " +
+						// ChunkManager.selectedBlock.z );
+						for (int q = 1; q < 11; q++) {
+							float takeDist = (float) (q * 0.1);
+							int faceX = (int) (getX() + (Constants.ray.x * (i - takeDist)));
+							int faceY = (int) (getY() + (Constants.ray.y * (i - takeDist)));
+							int faceZ = (int) (getZ() + (Constants.ray.z * (i - takeDist)));
+							int actualFaceX = faceX;
+							int actualFaceY = faceY;
+							int actualFaceZ = faceZ;
+							
+							// int faceX = (int) (x - takeDist);
+							// int faceY = (int) (y - takeDist);
+							// int faceZ = (int) (z - takeDist);
+							int faceChunkX = ChunkManager.blockToChunk1f(faceX);
+							int faceChunkZ = ChunkManager.blockToChunk1f(faceZ);
+							faceX = faceX - faceChunkX * Constants.CHUNKSIZE;
+							faceZ = faceZ - faceChunkZ * Constants.CHUNKSIZE;
+
+							System.out.println("(" + faceChunkX + ", " + faceChunkZ + ")" + "blocks X:" + faceX + " Y:" + faceY + " Z:" + faceZ);
+							if (ChunkManager.loadedChunks.get(ChunkManager.key(faceChunkX, faceChunkZ)).blocks[faceX][faceY][faceZ] == 0) {
+								ChunkManager.selectedBlock = new Vector3f(actualFaceX, actualFaceY, actualFaceZ);
+								break;
+							}
+						}
+						break;
+					} else {
+						ChunkManager.selectedBlock = new Vector3f(0, 0, 0);
+					}
 				}
-				}
-			} catch (NullPointerException e){
+			} catch (NullPointerException e) {
 				System.out.println("Null Pointer");
 			}
 		}

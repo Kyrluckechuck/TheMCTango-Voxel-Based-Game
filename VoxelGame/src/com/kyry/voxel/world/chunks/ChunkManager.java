@@ -475,7 +475,7 @@ public class ChunkManager {
 		if (selectedBlock.y < Constants.WORLDHEIGHT && selectedBlock.y > 0) {
 			float padding = 0.001f;
 			GL11.glBegin(GL11.GL_QUADS);
-			Shape.createCube(selectedBlock.x - padding, selectedBlock.y - padding, selectedBlock.z - padding, Block.Glass.getColor(), Block.Glass.getTexCoords(), 1 + (2 * padding));
+			Shape.createCube(selectedBlock.x - padding, selectedBlock.y - padding, selectedBlock.z - padding, Block.Wireframe.getColor(), Block.Wireframe.getTexCoords(), 1 + (2 * padding));
 			GL11.glEnd();
 		}
 	}// end render
