@@ -182,7 +182,8 @@ public class ChunkManager {
 				FileInputStream saveFile = new FileInputStream(filePath(x, z));
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
 				Chunk chunk = new Chunk(shader, new Vector2f(x, z), (short[][][]) restore.readObject());
-//				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector2f(x, z), (short[][][]) restore.readObject());
+				// Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new
+				// Vector2f(x, z), (short[][][]) restore.readObject());
 				restore.close();
 				loadedChunks.put(key(x, z), chunk);
 				Constants.chunksLoaded++;
@@ -250,7 +251,7 @@ public class ChunkManager {
 	public static void loadChunkToActive(int x, int z) { // Add chunk from
 															// memory to active
 															// chunk list
-		
+
 		for (int q = x - 1; q <= x + 1; q++) {
 			for (int w = z - 1; w <= z + 1; w++) {
 				if (!loadedChunks.containsKey(key(q, w))) {
@@ -314,7 +315,7 @@ public class ChunkManager {
 					if ((y == 14) && (rand.nextInt(3) == 0)) {
 						blocks[x][y][z] = Block.Air.getId();
 					} else if ((y == 14)) {
-						//nothing because default is Grass
+						// nothing because default is Grass
 					} else if (y == 0) {
 						blocks[x][y][z] = Block.Brick.getId();
 
@@ -367,18 +368,30 @@ public class ChunkManager {
 		// Basically will check if chunk is in the "bufferzone" if not then
 		// load, chunk, if not then delete
 		// DELETE
+		ArrayList<String> toRemove = new ArrayList<String>();
+		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Chunk> entry = iterator.next();
+			String key = entry.getKey();
+			if (!isInZone(key)) { // removes chunk
+				toRemove.add(key);
+				// removeChunkFromActive(key); // iterator.remove(); } }// end
+				// while for iterator
+			} // end if
+		}// end remove while
 
-		/*
-		 * Iterator<Entry<String, Chunk>> iterator =
-		 * activeChunks.entrySet().iterator(); while (iterator.hasNext()) {
-		 * Entry<String, Chunk> entry = iterator.next(); String key =
-		 * entry.getKey(); if (!isInZone(key)) { // removes chunk
-		 * removeChunkFromActive(key); // iterator.remove(); } }// end while for
-		 * iterator
-		 */
+		// Remove Unused Chunks
+		for (int q = 0; q < toRemove.size(); q++) {
+			removeChunkFromActive(toRemove.get(q));
+		}
+
+		// End Removal Of Unused Chunks
 		// ADD
 		// BLOCK RELATIVE
-		Vector2f blockPos = blockToChunk(Player.camera.getPos()); //Returns player's XZ Chunk coords
+		Vector2f blockPos = blockToChunk(Player.camera.getPos()); // Returns
+																	// player's
+																	// XZ Chunk
+																	// coords
 		for (int x = (int) (blockPos.getX() - Constants.WORLDRADIUS); x <= (int) (blockPos.getX() + Constants.WORLDRADIUS); x++) {
 			for (int z = (int) (blockPos.getY() - Constants.WORLDRADIUS); z <= (int) (blockPos.getY() + Constants.WORLDRADIUS); z++) {
 				String key = key(x, z);
@@ -418,27 +431,31 @@ public class ChunkManager {
 
 	public void render() {
 		// String key = ChunkManager.key(x, y, z);
-//		 for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-//		 System.out.println("Key = " + entry.getKey() + ", Value = " +
-//		 entry.getValue());
-//		 }
+		// for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+		// System.out.println("Key = " + entry.getKey() + ", Value = " +
+		// entry.getValue());
+		// }
 
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Chunk> entry = iterator.next();
 			if (Frustum.getFrustum().cubeFullyInFrustum(entry.getValue().getPos().getX(), 0,// entry.getValue().getPos().getY(),
-					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Constants.CHUNKSIZE, 0+Constants.WORLDHEIGHT,// entry.getValue().getPos().getY()
-																												// +
-																												// Constants.CHUNKSIZE,
+					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Constants.CHUNKSIZE, 0 + Constants.WORLDHEIGHT,// entry.getValue().getPos().getY()
+					// +
+					// Constants.CHUNKSIZE,
 					entry.getValue().getPos().getY() + Constants.CHUNKSIZE)) {
-/*				if (Math.abs(entry.getValue().getCenter().getX() - (int) Player.camera.getX()) < 64
-				// && Math.abs(entry.getValue().getCenter().getZ()
-				// - Player.camera.getZ()) < 64
-						&& Math.abs(entry.getValue().getCenter().getY() - Player.camera.getY()) < 32) {*/
-					Constants.chunksFrustum++;
-					entry.getValue().render();
+				/*
+				 * if (Math.abs(entry.getValue().getCenter().getX() - (int)
+				 * Player.camera.getX()) < 64 // &&
+				 * Math.abs(entry.getValue().getCenter().getZ() // -
+				 * Player.camera.getZ()) < 64 &&
+				 * Math.abs(entry.getValue().getCenter().getY() -
+				 * Player.camera.getY()) < 32) {
+				 */
+				Constants.chunksFrustum++;
+				entry.getValue().render();
 
-//				} //Commented out with the 64/32 code
+				// } //Commented out with the 64/32 code
 			}
 		}// end while for iterator
 	}// end render

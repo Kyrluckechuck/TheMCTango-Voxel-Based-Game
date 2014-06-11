@@ -14,13 +14,13 @@ public class Constants {
 
 	public static Random rand = new Random(); // Instantiate a new 'Random'
 												// object for chunk gen
-	public static  float PLAYER_SPEED = 10f; // Player speed
+	public static  float PLAYER_SPEED = 15f; // Player speed
 	public static float viewDistance = 50f; // The view distance (how far)
 	public static float viewClose = 0.01f; // How closely it renders (helps the
 											// text not get chopped off)
 	public static int WORLDRADIUS = 1; // How far over the chunks are being rendered *fix
 	public static int CHUNKSIZE = 16; // How many blocks wide+long a chunk is so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
-	public static int WORLDHEIGHT = 32; // The World Height (aka chunk height) so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
+	public static int WORLDHEIGHT = 128; // The World Height (aka chunk height) so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
 	public static float playerHeight = 0.8f; // Players height (distance between center's of two playerSphere's
 	public static final int TextureSize = 16; // The pixel size of a texture
 												// (the entire file is 256x256
@@ -34,11 +34,11 @@ public class Constants {
 																	// fog
 																	// colour
 																	// style
-	public static float gravity = 0.002f * (Constants.FPS);// is the
+	public static float gravity = 0.008f * (Constants.FPS);// is the
 															// acceleration
-	public static float jumpPower = 1;
-	public static float jumpFrames = 1;
-	public static float jumpCounter = 0;
+	public static float jumpPower = 4f;
+	public static float jumpFrames = 0f;
+	public static float jumpCounter = 0f;
 	// initial position of the player
 	public static final Vector3f initPos = new Vector3f(4f, 14f, 4f);
 	// Last center chunk that was used for the rendering system //to be finished
