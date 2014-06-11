@@ -33,6 +33,7 @@ import com.nishu.utils.ShaderProgram;
 
 public class ChunkManager {
 
+	public static HashMap<String, Short> queue = new HashMap<String, Short>();
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
 	public static HashMap<String, Chunk> loadedChunks = new HashMap<String, Chunk>();
@@ -308,7 +309,7 @@ public class ChunkManager {
 		
 		float freqH = (float) 32; 
 		// change this and see what happens!:D
-		float freqP = (float) 16;
+		float freqP = (float) 64;
 		
 		// int i = -1;
 		/*int[] tiles = new int[width * width];
@@ -402,7 +403,9 @@ public class ChunkManager {
 				}
 			}// end for z
 		}// end for x
-
+		/*
+			iterate through queue
+		*/
 	}// End Update()
 
 	/*

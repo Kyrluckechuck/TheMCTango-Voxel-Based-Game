@@ -64,7 +64,7 @@ public class Main extends Screen {
 				GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_NICEST);
 				GL11.glFogf(GL11.GL_FOG_START, Constants.fogNear);
 				GL11.glFogf(GL11.GL_FOG_END, Constants.fogFar);
-				GL11.glFogf(GL11.GL_FOG_DENSITY, 0.005f);
+				GL11.glFogf(GL11.GL_FOG_DENSITY, Constants.fogDensity);
 //			}
 		}
 	}

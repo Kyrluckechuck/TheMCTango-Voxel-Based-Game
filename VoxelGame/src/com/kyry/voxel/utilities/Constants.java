@@ -31,6 +31,7 @@ public class Constants {
 	public static float fogNear = 5.5f; // How close the fog begins
 	public static float fogFar = 12.4f; // How far until fog becomes too thick to
 										// see through
+	public static float fogDensity = 0.05f;
 	public static Color fogColor = new Color(0.3f, 0.6f, 0.8f, 1f); // Default
 																	// fog
 																	// colour
@@ -82,8 +83,5 @@ public class Constants {
 	public static boolean jumpEnabled = true; // Default assume you can jump.
 
 	public static Color textColor = Color.white; // Toggle Color Black/White for text being
-    // rendered on screen
-	
-	
-	
+    // rendered on screen	
 }
