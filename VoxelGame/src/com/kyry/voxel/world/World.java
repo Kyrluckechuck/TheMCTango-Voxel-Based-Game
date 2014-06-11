@@ -87,6 +87,9 @@ public class World extends Screen {
                               Constants.textColor = Color.white;
                        }
                 }
+                if (Keyboard.isKeyDown(Keyboard.KEY_F8)) {
+                	Constants.fogEnabled = !Constants.fogEnabled;
+                }
 			}
 
 		}
@@ -171,6 +174,11 @@ public class World extends Screen {
 	}
 
 	public void render3D() {
+		if (Constants.fogEnabled) {
+			glEnable(GL_FOG);
+		} else {
+			glDisable(GL_FOG);
+		}
 		glCullFace(GL_FRONT);
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);

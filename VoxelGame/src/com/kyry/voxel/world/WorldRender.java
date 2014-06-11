@@ -19,15 +19,15 @@ public class WorldRender {
 		float playerX = Player.camera.getX();
 		float playerY = Player.camera.getY();
 		float playerZ = Player.camera.getZ();
-		// float offset = 10f;
-		Shape.createSkybox(playerX - 10, playerY - 10, playerZ - 10, Block
+		float offset = 20f;
+		Shape.createSkybox(playerX - offset, playerY - offset, playerZ - offset, Block
 				.getTile(Block.Skybox1.getId()).getColor(),
 				Block.getTile(Block.Skybox1.getId()).getTexCoords(), Block
 						.getTile(Block.Skybox2.getId()).getTexCoords(), Block
 						.getTile(Block.Skybox3.getId()).getTexCoords(), Block
 						.getTile(Block.Skybox4.getId()).getTexCoords(), Block
 						.getTile(Block.Skybox5.getId()).getTexCoords(), Block
-						.getTile(Block.Skybox6.getId()).getTexCoords(), 40);
+						.getTile(Block.Skybox6.getId()).getTexCoords(), 2*offset);
 		/*
 		 * Shape.createSkybox(playerX - 10, playerY - 10, playerZ - 10, Block
 		 * .getTile(Block.Brick.getId()).getColor(),

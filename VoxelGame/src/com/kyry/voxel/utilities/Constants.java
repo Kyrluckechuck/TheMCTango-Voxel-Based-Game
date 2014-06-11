@@ -14,11 +14,11 @@ public class Constants {
 
 	public static Random rand = new Random(); // Instantiate a new 'Random'
 												// object for chunk gen
-	public static  float PLAYER_SPEED = 15f; // Player speed
+	public static  float PLAYER_SPEED = 10f; // Player speed
 	public static float viewDistance = 50f; // The view distance (how far)
 	public static float viewClose = 0.01f; // How closely it renders (helps the
 											// text not get chopped off)
-	public static int WORLDRADIUS = 1; // How far over the chunks are being rendered *fix
+	public static int WORLDRADIUS = 2; // How far over the chunks are being rendered *fix
 	public static int CHUNKSIZE = 16; // How many blocks wide+long a chunk is so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
 	public static int WORLDHEIGHT = 128; // The World Height (aka chunk height) so (CHUNKSIZE^2)*WORLDHEIGHT = # of blocks in chunk. (ie 16x16x32)
 	public static float playerHeight = 0.8f; // Players height (distance between center's of two playerSphere's
@@ -27,8 +27,9 @@ public class Constants {
 												// pixels, but each texture is
 												// 16x16 pixels)
 
-	public static float fogNear = 6.5f; // How close the fog begins
-	public static float fogFar = 9.4f; // How far until fog becomes too thick to
+	public static boolean fogEnabled = false; // How close the fog begins
+	public static float fogNear = 5.5f; // How close the fog begins
+	public static float fogFar = 12.4f; // How far until fog becomes too thick to
 										// see through
 	public static Color fogColor = new Color(0.3f, 0.6f, 0.8f, 1f); // Default
 																	// fog

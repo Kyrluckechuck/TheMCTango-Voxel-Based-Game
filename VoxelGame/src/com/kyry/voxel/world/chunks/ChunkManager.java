@@ -373,10 +373,8 @@ public class ChunkManager {
 		while (iterator.hasNext()) {
 			Entry<String, Chunk> entry = iterator.next();
 			String key = entry.getKey();
-			if (!isInZone(key)) { // removes chunk
-				toRemove.add(key);
-				// removeChunkFromActive(key); // iterator.remove(); } }// end
-				// while for iterator
+			if (!isInZone(key)) { // checks if the chunk is in the render-zone
+				toRemove.add(key);// end chunks to be removed
 			} // end if
 		}// end remove while
 

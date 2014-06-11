@@ -35,7 +35,6 @@ public class WorldManager {
 	MobManager mobManager;
 	public static Sphere playerSphereUpper = new Sphere(0.25f);
 	public static Sphere playerSphereLower = new Sphere(0.25f);
-	// PhysicsWorld physicsWorld;
 
 	//public ArrayList<Chunk> loadedChunks;
 	//public ArrayList<Chunk> activeChunks;
@@ -65,25 +64,9 @@ public class WorldManager {
 				for (int z = (int) (pos2f.getY() - Constants.WORLDRADIUS); z <= pos2f.getY() + Constants.WORLDRADIUS; z++) {
 					ChunkManager.loadChunkToActive(x, z);
 					Constants.chunksActive++;
-					//chunkManager.activeChunks.put(ChunkManager.key(x, z), chunkManager.loadedChunks.get(ChunkManager.key(x,z)));
-					
-					//activeChunks.add(new Chunk(shader, 1, x, y, z));					
-//					 * activeChunks.add(new Chunk(shader, 1, 2*x
-//					 * Constants.CHUNKSIZE, y * Constants.CHUNKSIZE, 2*z
-//					 * Constants.CHUNKSIZE));
-//					Constants.chunksLoaded++;					
 				}
 			//}
 		}
-		/*for (int x = (int) (Player.camera.getX() / Constants.CHUNKSIZE)-1; x < (Player.camera.getX() / Constants.CHUNKSIZE)+2; x++){
-			for (int y = (int) (Player.camera.getY() / Constants.CHUNKSIZE)-1; y < (Player.camera.getY() / Constants.CHUNKSIZE)+2; y++){
-				for (int z = (int) (Player.camera.getZ() / Constants.CHUNKSIZE)-1; z < (Player.camera.getZ() / Constants.CHUNKSIZE)+2; z++){
-					activeChunks.add(new Chunk(shader, 1, x, y, z));
-					System.out.println("Chunk ("+x+")("+y+")("+z+") added at X:"+x*Constants.CHUNKSIZE+" Y: "+y*Constants.CHUNKSIZE+" Z: "+z*Constants.CHUNKSIZE);
-					
-				}
-			}
-		}*/
 	}
 
 
@@ -94,40 +77,20 @@ public class WorldManager {
 
 	public void render() {
 		Constants.chunksFrustum = 0;
-		int prevX = (int) (Constants.playerPrevPos.getX()/Constants.CHUNKSIZE);
-		int prevY = (int) (Constants.playerPrevPos.getY()/Constants.CHUNKSIZE);
-		int prevZ = (int) (Constants.playerPrevPos.getZ()/Constants.CHUNKSIZE);
-		int nowX = (int) (Constants.playerPos.getX()/Constants.CHUNKSIZE);
-		int nowY = (int) (Constants.playerPos.getY()/Constants.CHUNKSIZE);
-		int nowZ = (int) (Constants.playerPos.getZ()/Constants.CHUNKSIZE);
-		
-		/*if (!new Vector3f (prevX,prevY,prevZ).equals(new Vector3f(nowX,nowY,nowZ))){
-			createWorld();
-		}*/
+
 		Spritesheet.tiles.bind();
 		
 		chunkManager.render();
 		mobManager.render();
-		/*
-		 * glBegin(GL_QUADS); for (int x = 0; x < Constants.PhysBlocksLoaded; x++) {
-		 * 
-		 * Shape.createCube(CollisionLibrary.BlockList.get(x).center.x,
-		 * CollisionLibrary.BlockList.get(x).center.y + .01f,
-		 * CollisionLibrary.BlockList.get(x).center.z,
-		 * Block.getTile(Block.Wireframe.getId()).getColor(), Block
-		 * .getTile(Block.Wireframe.getId()).getTexCoords(), 1f);
-		 * 
-		 * }
-		glEnd();*/
 		
-		/* renders RAY! keep
+		// renders RAY! keep
 		glBegin(GL_QUADS);
 		Shape.createCube(mobManager.getPlayer().getX() + Constants.ray.x,
 				mobManager.getPlayer().getY() + Constants.ray.y,
 				mobManager.getPlayer().getZ() + Constants.ray.z,
-				Block.getTile(Block.Brick.getId()).getColor(),
-				Block.getTile(Block.Brick.getId()).getTexCoords(), 0.2f);
-		glEnd();*/
+				Block.getTile(Block.Void.getId()).getColor(),
+				Block.getTile(Block.Void.getId()).getTexCoords(), 0.0099f);
+		glEnd();
 		
 		
 	}// end render
@@ -141,55 +104,6 @@ public class WorldManager {
 		getMobManager().getPlayer().getCamera().applyTranslations();
 		getMobManager().getPlayer().getCamera().applyPhysics();
 	}
-
-	/*public void saveChunk(Chunk c) {
-		// BufferedWriter bw = null;
-		// try {
-		// bw = new BufferedWriter(new FileWriter("/000chunk.dat"));
-		// bw.write(c.getPos().getX() + " " + c.getPos().getY() + " "
-		// + c.getPos().getZ());
-		// for (int x = (int) c.getPos().getX(); x < (int) c.getPos().getX()
-		// + Constants.CHUNKSIZE; x++) {
-		// for (int y = (int) c.getPos().getY(); y < (int) c.getPos()
-		// .getY() + Constants.CHUNKSIZE; y++) {
-		// for (int z = (int) c.getPos().getZ(); z < (int) c.getPos()
-		// .getZ() + Constants.CHUNKSIZE; z++) {
-		// bw.write(String.valueOf(c.getTileID(x, y, z)));
-		// }
-		// }
-		// }
-		// bw.close();
-		// } catch (IOException e) {
-		//
-		// e.printStackTrace();
-		// }
-
-	}*/
-
-	/*
-	 * private void loadChunksTemp() { for (int i = 0; i < activeChunks.size();
-	 * i++) { loadChunk(activeChunks.get(i)); } }
-	 * 
-	 * public void loadChunk(Chunk c) { BufferedReader br = null; String[]
-	 * tokens; String line; int sdat, length; try { br = new BufferedReader(new
-	 * FileReader("/000chunk.dat")); line = br.readLine(); if (line == null) {
-	 * break; } else { tokens = line.split(""); length = tokens.length; sdat =
-	 * Integer.parseInt(tokens [0]);
-	 * 
-	 * br.write(c.getPos().getX() + " " + c.getPos().getY() + " " +
-	 * c.getPos().getZ()); for (int x = (int) c.getPos().getX(); x < (int)
-	 * c.getPos().getX() + Constants.CHUNKSIZE; x++) { for (int y = (int)
-	 * c.getPos().getY(); y < (int) c.getPos().getY() + Constants.CHUNKSIZE;
-	 * y++) { for (int z = (int) c.getPos().getZ(); z < (int) c.getPos().getZ()
-	 * + Constants.CHUNKSIZE; z++) { br.write(String.valueOf(c.getTileID(x, y,
-	 * z))); } } }
-	 * 
-	 * br.close(); } } catch (IOException e) {
-	 * 
-	 * e.printStackTrace(); }
-	 * 
-	 * }
-	 */
 
 	public MobManager getMobManager() {
 		return mobManager;
