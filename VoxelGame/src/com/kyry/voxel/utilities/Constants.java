@@ -65,7 +65,7 @@ public class Constants {
 	// ray
 	public static Vector3f ray = new Vector3f(0f, 0f, 0f);
 	public static float rayConstant = 5f;
-	public static int rayDistance = (int) viewDistance;
+	public static int rayDistance = 5;//(int) viewDistance;
 	
 	public static int chunksLoaded = 0; // How many chunks have been loaded
 	public static int chunksActive = 0;  // How many chunks are active

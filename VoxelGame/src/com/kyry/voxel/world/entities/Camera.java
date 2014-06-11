@@ -308,6 +308,8 @@ public class Camera extends Entity {
 					System.out.println("picked a block! " + ChunkManager.selectedBlock.x
 							+ " " + ChunkManager.selectedBlock.y + " " + ChunkManager.selectedBlock.z );
 					break;
+				} else{
+					ChunkManager.selectedBlock = new Vector3f(0, 0, 0);
 				}
 				}
 			} catch (NullPointerException e){
