@@ -8,7 +8,7 @@ public abstract class Screen implements ScreenObject{
 	@Override
 	public abstract void update(); 
 	@Override
-	public abstract void render(); 
+	public abstract void worldRender(); 
 	@Override
 	public abstract void dispose(); 
 }

@@ -6,7 +6,7 @@ public class Spritesheet {
 	private String path;
 	private float size;
 	
-	public static Spritesheet tiles = new Spritesheet("textures/spritesheets/tiles/tiles.png", 16);
+	public static Spritesheet tiles = new Spritesheet("textures/spritesheets/blocks/blocks.png", 16);
 	
 	public Spritesheet(String path, float size) {
 		this.path = path;

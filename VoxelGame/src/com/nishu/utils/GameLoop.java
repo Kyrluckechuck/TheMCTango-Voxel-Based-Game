@@ -82,7 +82,7 @@ public class GameLoop {
 	}
 
 	private void render() {
-		currentScreen.render();
+		currentScreen.worldRender();
 	}
 
 	public void stop() {

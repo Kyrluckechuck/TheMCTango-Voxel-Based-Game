@@ -81,22 +81,22 @@ public class WorldManager {
 		Spritesheet.tiles.bind();
 		
 		chunkManager.render();
-		mobManager.render();
+		mobManager.mobRender();
 		
 		// renders RAY! keep
-		glBegin(GL_QUADS);
+/*		glBegin(GL_QUADS);
 		Shape.createCube(mobManager.getPlayer().getX() + Constants.ray.x,
 				mobManager.getPlayer().getY() + Constants.ray.y,
 				mobManager.getPlayer().getZ() + Constants.ray.z,
 				Block.getTile(Block.Void.getId()).getColor(),
 				Block.getTile(Block.Void.getId()).getTexCoords(), 0.0099f);
-		glEnd();
+		glEnd();*/
 		
 		
 	}// end render
 
 	public void skyBoxRender() {
-		WorldRender.render();
+		Skybox.render();
 	}
 
 	public void logic() {

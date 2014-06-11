@@ -46,17 +46,17 @@ public class MobManager implements GameObject {
 	}
 
 	@Override
-	public void render() {
-		player.render();
+	public void mobRender() {
+		player.mobRender();
 		for (int i = 0; i < mobs.size(); i++) {
-			mobs.get(i).render();
+			mobs.get(i).mobRender();
 		}
 		glCallList(mobRenderID);
 	}
 
 	@Override
-	public void dispose() {
-		player.dispose();
+	public void mobDispose() {
+		player.mobDispose();
 		glDeleteLists(mobRenderID, 1);
 	}
 

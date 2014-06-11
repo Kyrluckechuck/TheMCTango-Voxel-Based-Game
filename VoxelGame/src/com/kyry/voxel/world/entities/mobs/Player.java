@@ -22,10 +22,10 @@ public class Player extends Mob {
 	}
 
 	public void update() {
-		move();
+		mobMove();
 	}
 
-	public void render() {
+	public void mobRender() {
 //		GL11.glBegin(GL11.GL_QUADS);
 //		Vector3f playerPos= PhysicsWorld.playerBody.getWorldTransform(PhysicsWorld.DEFAULT_TRANSFORM).origin;
 //		Shape.createCube(playerPos.x, playerPos.y, playerPos.z,
@@ -35,7 +35,7 @@ public class Player extends Mob {
 		//System.out.println("HEYY!");
 	}
 
-	public void dispose() {
+	public void mobDispose() {
 	}
 
 }

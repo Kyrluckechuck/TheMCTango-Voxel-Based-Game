@@ -97,26 +97,26 @@ public class World extends Screen {
 	}
 
 	@Override
-	public void render() {
-		render3D();
-		logic();
-		worldRender();
-		renderSkyBox();
+	public void worldRender() {
+		render3D(); //Setup 3D matrix rendering environment
+		gameLogic(); //Perform any logisitical changes
+		mapRender(); //Render world (interactable map)
+		renderSkyBox(); //Render Skybox (outside of world, non-interactible)
 
-		glLoadIdentity();
+		glLoadIdentity(); //Reset 3D rendering matrix environment
 
 		if (renderText) {
-			render2D();
-			renderText();
+			render2D(); //Setup 2D matrix rendering environment
+			renderText(); //Render 2D text to screen
 		}
 
 	}
 
-	private void logic() {
+	private void gameLogic() {
 		worldManager.logic();
 	}
 
-	private void worldRender() {
+	private void mapRender() {
 		worldManager.render();
 	}
 
@@ -202,7 +202,7 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
-		WorldRender.render();
+		Skybox.render();
 	}
 
 	@Override

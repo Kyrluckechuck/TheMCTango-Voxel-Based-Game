@@ -25,7 +25,7 @@ public class Mob extends Entity implements GameObject{
 	public void update() {
 	}
 
-	public void move() {
+	public void mobMove() {
 		getCamera().updateMouse();
 		getCamera().updateKeyboard((float)(1/Constants.FPS), 1f);
 		setPos(getCamera().getX(), getCamera().getY(), getCamera().getZ());
@@ -33,11 +33,11 @@ public class Mob extends Entity implements GameObject{
 	}
 	
 	@Override
-	public void render() {
+	public void mobRender() {
 	}
 
 	@Override
-	public void dispose() {
+	public void mobDispose() {
 	}
 	
 	public int getID() {

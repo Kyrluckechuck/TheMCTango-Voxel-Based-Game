@@ -84,35 +84,35 @@ public class Camera extends Entity {
 		WorldManager.playerSphereLower.update(someOtherPosition);
 
 		if (keyUp && keyRight && !keyLeft && !keyDown) {// NE
-			move(deltaDis, 0, -deltaDis);
+			playerMove(deltaDis, 0, -deltaDis);
 		}
 		if (keyUp && keyLeft && !keyRight && !keyDown) {// NW
-			move(-deltaDis, 0, -deltaDis);
+			playerMove(-deltaDis, 0, -deltaDis);
 		}
 		if (keyUp && !keyLeft && !keyRight && !keyDown) {// N
-			move(0, 0, -deltaDis);
+			playerMove(0, 0, -deltaDis);
 		}
 		if (keyDown && keyLeft && !keyRight && !keyUp) {// SW
-			move(-deltaDis, 0, deltaDis);
+			playerMove(-deltaDis, 0, deltaDis);
 		}
 		if (keyDown && keyRight && !keyLeft && !keyUp) {// SE
-			move(deltaDis, 0, deltaDis);
+			playerMove(deltaDis, 0, deltaDis);
 		}
 		if (keyDown && !keyUp && !keyLeft && !keyRight) {// S
-			move(0, 0, deltaDis);
+			playerMove(0, 0, deltaDis);
 		}
 		if (keyLeft && !keyRight && !keyUp && !keyDown) {// W
-			move(-deltaDis, 0, 0);
+			playerMove(-deltaDis, 0, 0);
 		}
 		if (keyRight && !keyLeft && !keyUp && !keyDown) {// E
-			move(deltaDis, 0, 0);
+			playerMove(deltaDis, 0, 0);
 		}
 		if (space && !shift) {// JUMP
 			// made into a method cause its more complex and dont want clutter
 			jump(deltaDis);
 		}
 		if (shift && !space) {// DOWN
-			move(0, deltaDis, 0);
+			playerMove(0, deltaDis, 0);
 		}
 		if (!World.noClip)
 			gravity();
@@ -125,10 +125,10 @@ public class Camera extends Entity {
 	private void jump(float deltaDis) {
 		if (Constants.jumpEnabled) {
 			// if player can jump, then freaking jump already
-			move(0, -deltaDis * Constants.jumpPower, 0);
+			playerMove(0, -deltaDis * Constants.jumpPower, 0);
 			Constants.jumpCounter = 0;
 		} else if (!Constants.jumpEnabled && Constants.jumpCounter < Constants.jumpFrames) {
-			move(0, -deltaDis * Constants.jumpPower, 0);
+			playerMove(0, -deltaDis * Constants.jumpPower, 0);
 			Constants.jumpCounter++;
 		}
 		if (!World.noClip) {
@@ -137,7 +137,7 @@ public class Camera extends Entity {
 		}
 	}
 
-	public void move(float dX, float dY, float dZ) {
+	public void playerMove(float dX, float dY, float dZ) {
 		// Move Camera
 		Vector3f someOldPositionUpper = new Vector3f(getX(), getY(), getZ());
 		Vector3f someOldPositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());

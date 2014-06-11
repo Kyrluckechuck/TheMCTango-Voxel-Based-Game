@@ -32,7 +32,7 @@ import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
-import com.kyry.voxel.world.WorldRender;
+import com.kyry.voxel.world.Skybox;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
@@ -157,7 +157,7 @@ public class Chunk implements Serializable {
 						// if ((blocks[x+1][y][z] = 0)) {
 						// if ((blocks[x+1][y-1][z] = 0)) {
 						// etc
-						if ((blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
+						if ((y>25)&&(blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
 							temp.add(ChunkManager.key(x, y, z));
 							// temp[x][y][z] = true;
 						}

@@ -306,9 +306,9 @@ public class ChunkManager {
 		 */
 		SimplexNoise noise = new SimplexNoise();
 		
-		float freqH = (float) 64; 
+		float freqH = (float) 32; 
 		// change this and see what happens!:D
-		float freqP = (float) 32;
+		float freqP = (float) 16;
 		
 		// int i = -1;
 		/*int[] tiles = new int[width * width];
