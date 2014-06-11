@@ -285,13 +285,26 @@ public class Camera extends Entity {
 		// System.out.println(Constants.ray.x); //Just had to comment this out
 		// for my own debugging purposes
 		// Pick correct block
+		
 		for (int i = 0; i < Constants.rayDistance; i++) {
 			x = (int) (getX() + (Constants.ray.x * i));
-			y = (int) (getX() + (Constants.ray.y * i));
-			z = (int) (getX() + (Constants.ray.z * i));
-			/*
-			 * if(ChunkManager.isCreated(x, y, z)){ }
-			 */
+			y = (int) (getY() + (Constants.ray.y * i));
+			z = (int) (getZ() + (Constants.ray.z * i));
+			int chunkX = ChunkManager.blockToChunk1f(x);
+			int chunkZ = ChunkManager.blockToChunk1f(z);
+			
+			int internX = x - (chunkX * Constants.CHUNKSIZE);
+			int internY = y;
+			int internZ = z - (chunkZ * Constants.CHUNKSIZE);
+			if(y < Constants.WORLDHEIGHT){//within bounds
+				if(ChunkManager.loadedChunks.get(ChunkManager.key(chunkX, chunkZ)).blocks[internX][internY][internZ] > 0){
+					//is not air
+					ChunkManager.selectedBlock = new Vector3f(x, y, z);
+					System.out.println("picked a block! " + ChunkManager.selectedBlock.x
+							+ " " + ChunkManager.selectedBlock.y + " " + ChunkManager.selectedBlock.z );
+					break;
+				}
+			}
 		}
 		// pick correct face
 	}

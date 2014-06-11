@@ -91,8 +91,6 @@ public class WorldManager {
 				Block.getTile(Block.Void.getId()).getColor(),
 				Block.getTile(Block.Void.getId()).getTexCoords(), 0.0099f);
 		glEnd();*/
-		
-		
 	}// end render
 
 	public void skyBoxRender() {

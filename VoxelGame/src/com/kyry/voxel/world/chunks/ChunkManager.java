@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Map.Entry;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -32,7 +33,8 @@ import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 
 public class ChunkManager {
-
+	
+	public static Vector3f selectedBlock = new Vector3f(4,80,4);
 	public static HashMap<String, Short> queue = new HashMap<String, Short>();
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
@@ -348,7 +350,7 @@ public class ChunkManager {
 						}else if(tileProb < 0 && tileProb >= -32){
 							blocks[internX][internY][internZ] = Block.CrackedStone.getId();
 						}else if(tileProb > 0 && tileProb <= 32){
-							blocks[internX][internY][internZ] = Block.Dirt.getId();
+							blocks[internX][internY][internZ] = Block.Brick.getId();
 						}else if(tileProb > 32){
 							blocks[internX][internY][internZ] = Block.Grass.getId();
 						}
@@ -462,5 +464,16 @@ public class ChunkManager {
 				// } //Commented out with the 64/32 code
 			}
 		}// end while for iterator
+		/*
+		 * render selected block
+		 * */
+		if(selectedBlock.y < Constants.WORLDHEIGHT && selectedBlock.y > 0){
+			float padding  = 0.001f;
+			GL11.glBegin(GL11.GL_QUADS);
+				Shape.createCube(selectedBlock.x - padding, selectedBlock.y - padding,
+					selectedBlock.z - padding, Block.Glass.getColor(),
+					Block.Glass.getTexCoords(), 1 + (2 * padding));
+			GL11.glEnd();
+		}
 	}// end render
-}
+}//end class

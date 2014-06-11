@@ -23,7 +23,7 @@ public class Main extends Screen {
 
 	public Main() {
 		Thread.currentThread().setPriority((int) (Thread.MAX_PRIORITY * 0.95));
-		/*czech for multithreading*/
+		/* czech for multithreading */
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
 		gameLoop.start((int) Constants.FPS);
@@ -43,7 +43,8 @@ public class Main extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(67.0f, Constants.WIDTH / Constants.HEIGHT, Constants.viewClose, Constants.viewDistance);
+		gluPerspective(67.0f, Constants.WIDTH / Constants.HEIGHT,
+				Constants.viewClose, Constants.viewDistance);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
@@ -51,21 +52,24 @@ public class Main extends Screen {
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-/*		if (Constants.fogEnabled) {
-			GL11.glEnable(GL11.GL_FOG);
-*/
-			{
-				FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
-				fogColours.put(new float[] { Constants.fogColor.r, Constants.fogColor.g, Constants.fogColor.b, Constants.fogColor.a });
-				GL11.glClearColor(Constants.fogColor.r, Constants.fogColor.g, Constants.fogColor.b, Constants.fogColor.a);
-				fogColours.flip();
-				GL11.glFog(GL11.GL_FOG_COLOR, fogColours);
-				GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
-				GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_NICEST);
-				GL11.glFogf(GL11.GL_FOG_START, Constants.fogNear);
-				GL11.glFogf(GL11.GL_FOG_END, Constants.fogFar);
-				GL11.glFogf(GL11.GL_FOG_DENSITY, Constants.fogDensity);
-//			}
+		/*
+		 * if (Constants.fogEnabled) { GL11.glEnable(GL11.GL_FOG);
+		 */
+		{
+			FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
+			fogColours.put(new float[] { Constants.fogColor.r,
+					Constants.fogColor.g, Constants.fogColor.b,
+					Constants.fogColor.a });
+			GL11.glClearColor(Constants.fogColor.r, Constants.fogColor.g,
+					Constants.fogColor.b, Constants.fogColor.a);
+			fogColours.flip();
+			GL11.glFog(GL11.GL_FOG_COLOR, fogColours);
+			GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+			GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_NICEST);
+			GL11.glFogf(GL11.GL_FOG_START, Constants.fogNear);
+			GL11.glFogf(GL11.GL_FOG_END, Constants.fogFar);
+			GL11.glFogf(GL11.GL_FOG_DENSITY, Constants.fogDensity);
+			// }
 		}
 	}
 
@@ -78,11 +82,11 @@ public class Main extends Screen {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			dispose();
 		}
-		// if(gameLoop.getFPS() > 1){
-		// Constants.FPS = gameLoop.getFPS();
-		// }else {
-		// Constants.FPS = 0.01f;
-		// }
+		if (gameLoop.getFPS() > 1) {
+			Constants.FPS = gameLoop.getFPS();
+		} else {
+			Constants.FPS = 1f;
+		}
 		world.update();
 	}
 

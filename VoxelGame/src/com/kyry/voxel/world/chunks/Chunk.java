@@ -53,7 +53,7 @@ public class Chunk implements Serializable {
 	public boolean isActive;
 
 	public Random rand;
-	private short[][][] blocks;
+	public short[][][] blocks;
 	// boolean[][][] temp = new
 	// boolean[Constants.CHUNKSIZE][Constants.WORLDHEIGHT][Constants.CHUNKSIZE];
 	// public ArrayList<Vector3f> temp = new ArrayList<Vector3f>();
@@ -148,6 +148,7 @@ public class Chunk implements Serializable {
 	}
 
 	public void rebuild() {
+		temp = new ArrayList<String>();
 //		if (type != World.AIRCHUNK) {
 			for (int x = 0; x < sizeX; x++) {
 				for (int y = 0; y < sizeY; y++) {
