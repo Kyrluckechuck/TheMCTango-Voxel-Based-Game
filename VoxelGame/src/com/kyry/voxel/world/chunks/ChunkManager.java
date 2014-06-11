@@ -22,7 +22,6 @@ import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.utilities.Frustum;
-import com.kyry.voxel.utilities.SimplexNoise;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.mobs.MobManager;
@@ -183,8 +182,7 @@ public class ChunkManager {
 				FileInputStream saveFile = new FileInputStream(filePath(x, z));
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
 				Chunk chunk = new Chunk(shader, new Vector2f(x, z), (short[][][]) restore.readObject());
-				// Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new
-				// Vector2f(x, z), (short[][][]) restore.readObject());
+//				Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new Vector2f(x, z), (short[][][]) restore.readObject());
 				restore.close();
 				loadedChunks.put(key(x, z), chunk);
 				Constants.chunksLoaded++;
@@ -252,7 +250,7 @@ public class ChunkManager {
 	public static void loadChunkToActive(int x, int z) { // Add chunk from
 															// memory to active
 															// chunk list
-
+		
 		for (int q = x - 1; q <= x + 1; q++) {
 			for (int w = z - 1; w <= z + 1; w++) {
 				if (!loadedChunks.containsKey(key(q, w))) {
@@ -309,67 +307,54 @@ public class ChunkManager {
 		 * blocks[x][y][z] = Block.Air.getId(); } } } } if (type ==
 		 * World.MIXEDCHUNK) {
 		 */
-		int width = 16;
-		SimplexNoise noise = new SimplexNoise();
-		float frequency = (float) 8; // change this and see what happens!
-										// :D
-		// int i = -1;
-		int[] tiles = new int[width * width];
-		for (int i = 0; i < tiles.length; i++) {
-			int blockWidth = i % width;
-			int blockLength = i / width;
-			
-			float groundHeight = (float) noise.noise((float) blockWidth / frequency, (float) blockLength / frequency);
-			groundHeight *= 64;
-			tiles[blockWidth + blockLength * width] = (int) groundHeight;
-		}
-		for (int internX = 0; internX < sizeAll; internX++) {
-			for (int internZ = 0; internZ < sizeAll; internZ++) {
-				int i = (int)(internX*internZ);
-				int blockWidth = i % width;
-				int blockLength = i / width;
-				int groundHeight = (int) noise.noise((float) blockWidth / frequency, (float) blockLength / frequency);
-				for (int y1 = 0; y1 < worldHeight; y1++) {
-					for (int y2 = ((int) groundHeight); y2 < groundHeight; y2++) {
-						// System.out.println(x + " " + y2 + " " + z);
-						blocks[internX][y2 + 64][internZ] = Block.Air.getId();
+		for (int x = 0; x < sizeAll; x++) {
+			for (int y = 0; y < worldHeight; y++) {
+				for (int z = 0; z < sizeAll; z++) {
+					blocks[x][y][z] = Block.Grass.getId();
+					if ((y == 14) && (rand.nextInt(3) == 0)) {
+						blocks[x][y][z] = Block.Air.getId();
+					} else if ((y == 14)) {
+						//nothing because default is Grass
+					} else if (y == 0) {
+						blocks[x][y][z] = Block.Brick.getId();
 
-						if ((y2 == groundHeight)) {
-							blocks[internX][y2 + 64][internZ] = Block.Air.getId();
-						} else {
+					} else if (y > 14) {
+						blocks[x][y][z] = Block.Air.getId();
+					} else if (x == 0 || x == Constants.CHUNKSIZE - 1 || z == 0 || z == Constants.CHUNKSIZE - 1) {
+						blocks[x][y][z] = Block.Sand.getId();
 
-							blocks[internX][y2 + 64][internZ] = Block.Dirt.getId();
+					} else if (blocks[x][y][z] == Block.CrackedStone.getId() && (rand.nextInt(7) == 0)) {
+						blocks[x][y][z] = Block.CrackedStone.getId();
+						// } else if (rand.nextInt(2) == 0) {
+						// if (rand.nextBoolean())
+						// blocks[x][y][z] = Block.Air.getId();
+					} else
+						blocks[x][y][z] = Block.CrackedStone.getId();
 
-						}
-						/*
-						 * if ((y == 14) && (rand.nextInt(3) == 0)) {
-						 * blocks[x][y][z] = Block.Air.getId(); } else if ((y ==
-						 * 14)) { // nothing because default is Grass } else if
-						 * (y == 0) { blocks[x][y][z] = Block.Brick.getId();
-						 * 
-						 * } else if (y > 14) { blocks[x][y][z] =
-						 * Block.Air.getId(); } else if (x == 0 || x ==
-						 * Constants.CHUNKSIZE - 1 || z == 0 || z ==
-						 * Constants.CHUNKSIZE - 1) { blocks[x][y][z] =
-						 * Block.Sand.getId();
-						 * 
-						 * } else if (blocks[x][y][z] ==
-						 * Block.CrackedStone.getId() && (rand.nextInt(7) == 0))
-						 * { blocks[x][y][z] = Block.CrackedStone.getId(); }
-						 * else blocks[x][y][z] = Block.CrackedStone.getId();
-						 */
-						/*
-						 * if (rand.nextInt(5) == 0) if (rand.nextBoolean())
-						 * blocks[x][y][z] = Block.CrackedStone.getId(); if
-						 * (rand.nextInt(9) == 0) if (rand.nextBoolean())
-						 * blocks[x][y][z] = Block.Brick.getId(); else
-						 * blocks[x][y][z] = Block.Glass.getId();
-						 */
-					}
+					/*
+					 * if (rand.nextInt(5) == 0) if (rand.nextBoolean())
+					 * blocks[x][y][z] = Block.CrackedStone.getId(); if
+					 * (rand.nextInt(9) == 0) if (rand.nextBoolean())
+					 * blocks[x][y][z] = Block.Brick.getId(); else
+					 * blocks[x][y][z] = Block.Glass.getId();
+					 */
+
 				}
 			}
+			// }
 		}
+		// Store data to (chunkX)(chunkY)(chunkZ).dat;
+		/*
+		 * "("+x+")"+"("+y+")"+"("+z+")"+"=" + blocks[x][y][z].getId()"Like so:
+		 * (0)(0)(0)=0; (0)(0)(1)=6; ... (15)(15)(15)=3; .. (x)(y)(z)=blockId;
+		 */
 		ChunkManager.saveChunk(f, h, blocks);
+		// ///
+		// Seems redundant and unneeded. The createChunk method will not always
+		// be called in one instance of the game, loadChunk will be
+		// Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new
+		// Vector3f(f,g,h), blocks);
+		// activeChunks.put(key(f,g,h), chunk);
 		System.out.println("(" + f + "," + h + ") Created Successfully.");
 	}
 
@@ -393,10 +378,7 @@ public class ChunkManager {
 		 */
 		// ADD
 		// BLOCK RELATIVE
-		Vector2f blockPos = blockToChunk(Player.camera.getPos()); // Returns
-																	// player's
-																	// XZ Chunk
-																	// coords
+		Vector2f blockPos = blockToChunk(Player.camera.getPos()); //Returns player's XZ Chunk coords
 		for (int x = (int) (blockPos.getX() - Constants.WORLDRADIUS); x <= (int) (blockPos.getX() + Constants.WORLDRADIUS); x++) {
 			for (int z = (int) (blockPos.getY() - Constants.WORLDRADIUS); z <= (int) (blockPos.getY() + Constants.WORLDRADIUS); z++) {
 				String key = key(x, z);
@@ -436,31 +418,27 @@ public class ChunkManager {
 
 	public void render() {
 		// String key = ChunkManager.key(x, y, z);
-		// for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-		// System.out.println("Key = " + entry.getKey() + ", Value = " +
-		// entry.getValue());
-		// }
+//		 for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+//		 System.out.println("Key = " + entry.getKey() + ", Value = " +
+//		 entry.getValue());
+//		 }
 
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Chunk> entry = iterator.next();
 			if (Frustum.getFrustum().cubeFullyInFrustum(entry.getValue().getPos().getX(), 0,// entry.getValue().getPos().getY(),
-					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Constants.CHUNKSIZE, 0 + Constants.WORLDHEIGHT,// entry.getValue().getPos().getY()
-					// +
-					// Constants.CHUNKSIZE,
+					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Constants.CHUNKSIZE, 0+Constants.WORLDHEIGHT,// entry.getValue().getPos().getY()
+																												// +
+																												// Constants.CHUNKSIZE,
 					entry.getValue().getPos().getY() + Constants.CHUNKSIZE)) {
-				/*
-				 * if (Math.abs(entry.getValue().getCenter().getX() - (int)
-				 * Player.camera.getX()) < 64 // &&
-				 * Math.abs(entry.getValue().getCenter().getZ() // -
-				 * Player.camera.getZ()) < 64 &&
-				 * Math.abs(entry.getValue().getCenter().getY() -
-				 * Player.camera.getY()) < 32) {
-				 */
-				Constants.chunksFrustum++;
-				entry.getValue().render();
+/*				if (Math.abs(entry.getValue().getCenter().getX() - (int) Player.camera.getX()) < 64
+				// && Math.abs(entry.getValue().getCenter().getZ()
+				// - Player.camera.getZ()) < 64
+						&& Math.abs(entry.getValue().getCenter().getY() - Player.camera.getY()) < 32) {*/
+					Constants.chunksFrustum++;
+					entry.getValue().render();
 
-				// } //Commented out with the 64/32 code
+//				} //Commented out with the 64/32 code
 			}
 		}// end while for iterator
 	}// end render
