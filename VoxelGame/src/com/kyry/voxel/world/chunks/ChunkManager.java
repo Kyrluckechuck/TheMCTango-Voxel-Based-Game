@@ -106,7 +106,7 @@ public class ChunkManager {
 	}
 
 	public static String filePath(int x, int z) {
-		return new String("E:\\Save\\" + x + "_" + z + ".dat");
+		return new String("C:\\Save\\" + x + "_" + z + ".dat");
 	}
 
 	public static boolean isCreated(int x, int z) {
