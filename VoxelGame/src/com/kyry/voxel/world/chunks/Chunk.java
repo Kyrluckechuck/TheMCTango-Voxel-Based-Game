@@ -158,7 +158,7 @@ public class Chunk implements Serializable {
 						// if ((blocks[x+1][y][z] = 0)) {
 						// if ((blocks[x+1][y-1][z] = 0)) {
 						// etc
-						if ((y>25)&&(blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
+						if ((y>-1)&&(blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
 							temp.add(ChunkManager.key(x, y, z));
 							// temp[x][y][z] = true;
 						}

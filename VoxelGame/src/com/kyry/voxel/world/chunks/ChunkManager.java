@@ -33,8 +33,8 @@ import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 
 public class ChunkManager {
-	
-	public static Vector3f selectedBlock = new Vector3f(4,80,4);
+
+	public static Vector3f selectedBlock = new Vector3f(4, 80, 4);
 	public static HashMap<String, Short> queue = new HashMap<String, Short>();
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
@@ -109,7 +109,7 @@ public class ChunkManager {
 	}
 
 	public static String filePath(int x, int z) {
-		return new String("E:\\Save\\" + x + "_" + z + ".dat");
+		return new String("C:\\Save\\" + x + "_" + z + ".dat");
 	}
 
 	public static boolean isCreated(int x, int z) {
@@ -300,7 +300,7 @@ public class ChunkManager {
 		int sizeAll = Constants.CHUNKSIZE;
 		int worldHeight = Constants.WORLDHEIGHT;
 		short[][][] blocks = new short[sizeAll][worldHeight][sizeAll];
-		
+
 		/*
 		 * if (type == World.AIRCHUNK) { for (int x = 0; x < sizeAll; x++) { for
 		 * (int y = 0; y < sizeAll; y++) { for (int z = 0; z < sizeAll; z++) {
@@ -308,55 +308,60 @@ public class ChunkManager {
 		 * World.MIXEDCHUNK) {
 		 */
 		SimplexNoise noise = new SimplexNoise();
-		
-		float freqH = (float) 32; 
+
+		float freqH = (float) 32;
 		// change this and see what happens!:D
 		float freqP = (float) 64;
-		
+
 		// int i = -1;
-		/*int[] tiles = new int[width * width];
-		for (int i = 0; i < tiles.length; i++) {
-			int blockWidth = i % width;
-			int blockLength = i / width;
-			
-			float groundHeight = (float) noise.noise((float) blockWidth / frequency, (float) blockLength / frequency);
-			groundHeight *= Constants.WORLDHEIGHT/2;
-			groundHeight += Constants.WORLDHEIGHT/2;
-			tiles[blockWidth + blockLength * width] = (int) groundHeight;
-			
-		}*/
-		//Absolute block coords
+		/*
+		 * int[] tiles = new int[width * width]; for (int i = 0; i <
+		 * tiles.length; i++) { int blockWidth = i % width; int blockLength = i
+		 * / width;
+		 * 
+		 * float groundHeight = (float) noise.noise((float) blockWidth /
+		 * frequency, (float) blockLength / frequency); groundHeight *=
+		 * Constants.WORLDHEIGHT/2; groundHeight += Constants.WORLDHEIGHT/2;
+		 * tiles[blockWidth + blockLength * width] = (int) groundHeight;
+		 * 
+		 * }
+		 */
+		// Absolute block coords
 		for (int internX = 0; internX < sizeAll; internX++) {
 			for (int internZ = 0; internZ < sizeAll; internZ++) {
 				int x = (f * sizeAll) + internX;
 				int z = (h * sizeAll) + internZ;
-				/*int i = (int)(internX*internZ);
-				int blockWidth = i % width;
-				int blockLength = i / width;*/
-				//height is given by the 2d noise (birds-eye view)
-				float height = (float) noise.noise((float)(x / freqH), (float) (z / freqH));
+				/*
+				 * int i = (int)(internX*internZ); int blockWidth = i % width;
+				 * int blockLength = i / width;
+				 */
+				// height is given by the 2d noise (birds-eye view)
+				float height = (float) noise.noise((float) (x / freqH), (float) (z / freqH));
 				height *= 8;
 				height += 50;
-				for (int internY = 0; internY < worldHeight; internY++) {
+				blocks[internX][0][internZ] = Block.Adamantium.getId();
+				
+				for (int internY = 1; internY < worldHeight; internY++) {
 					int y = internY;
-					//probability of tile
-					float tileProb = (float) noise.noise((float)x /freqP, (float)y / freqP, (float) z / freqP);
+					// probability of tile
+					float tileProb = (float) noise.noise((float) x / freqP, (float) y / freqP, (float) z / freqP);
 					tileProb *= 64;
-					if(y < height){
-						//make tile
-						//do if tileProb is less than or whatever
-						if(tileProb < -32){
+					if (y < height) {
+						// make tile
+						// do if tileProb is less than or whatever
+						if (tileProb < -32) {
 							blocks[internX][internY][internZ] = Block.Air.getId();
-						}else if(tileProb < 0 && tileProb >= -32){
+						} else if (tileProb < 0 && tileProb >= -32) {
 							blocks[internX][internY][internZ] = Block.CrackedStone.getId();
-						}else if(tileProb > 0 && tileProb <= 32){
+						} else if (tileProb > 0 && tileProb <= 32) {
 							blocks[internX][internY][internZ] = Block.Brick.getId();
-						}else if(tileProb > 32){
+						} else if (tileProb > 32) {
 							blocks[internX][internY][internZ] = Block.Grass.getId();
 						}
-						
-					}else{ // air tile
+
+					} else { // air tile
 						blocks[internX][internY][internZ] = Block.Air.getId();
+
 					}
 				}
 			}
@@ -406,8 +411,8 @@ public class ChunkManager {
 			}// end for z
 		}// end for x
 		/*
-			iterate through queue
-		*/
+		 * iterate through queue
+		 */
 	}// End Update()
 
 	/*
@@ -466,14 +471,12 @@ public class ChunkManager {
 		}// end while for iterator
 		/*
 		 * render selected block
-		 * */
-		if(selectedBlock.y < Constants.WORLDHEIGHT && selectedBlock.y > 0){
-			float padding  = 0.001f;
+		 */
+		if (selectedBlock.y < Constants.WORLDHEIGHT && selectedBlock.y > 0) {
+			float padding = 0.001f;
 			GL11.glBegin(GL11.GL_QUADS);
-				Shape.createCube(selectedBlock.x - padding, selectedBlock.y - padding,
-					selectedBlock.z - padding, Block.Glass.getColor(),
-					Block.Glass.getTexCoords(), 1 + (2 * padding));
+			Shape.createCube(selectedBlock.x - padding, selectedBlock.y - padding, selectedBlock.z - padding, Block.Glass.getColor(), Block.Glass.getTexCoords(), 1 + (2 * padding));
 			GL11.glEnd();
 		}
 	}// end render
-}//end class
+}// end class

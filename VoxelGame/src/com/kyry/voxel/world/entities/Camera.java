@@ -154,12 +154,14 @@ public class Camera extends Entity {
 			float newY = (float) (getY() - dY);
 			float newZ = (float) (getZ() + (dX * (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ * Math.cos(Math.toRadians(getYaw()))));
 			// Move to next possible position
-			//boolean moveAllowed = tryMove(newX, newY, newZ);
+			// boolean moveAllowed = tryMove(newX, newY, newZ);
 
 			if (!tryMove(newX, newY, newZ)) {// try X + Y + Z movement
-				if (!tryMove(newX, newY, origZ)) { // if not allowed try just X + Y movement
-					if (!tryMove(origX, newY, newZ)) { //if not allowed try just Z + Y movement
-						//if not allowed revert to original position
+				if (!tryMove(newX, newY, origZ)) { // if not allowed try just X
+													// + Y movement
+					if (!tryMove(origX, newY, newZ)) { // if not allowed try
+														// just Z + Y movement
+						// if not allowed revert to original position
 						setX(origX);
 						setY(origY);
 						setZ(origZ);
@@ -167,7 +169,7 @@ public class Camera extends Entity {
 						WorldManager.playerSphereLower.update(someOldPositionLower);
 					}
 				}
-				
+
 				System.out.println("Collision!  - STAHPED MOVING");
 			}
 			// end new working code /|\ \|/ old dead code
@@ -296,7 +298,10 @@ public class Camera extends Entity {
 			int internX = x - (chunkX * Constants.CHUNKSIZE);
 			int internY = y;
 			int internZ = z - (chunkZ * Constants.CHUNKSIZE);
-			if(y < Constants.WORLDHEIGHT){//within bounds
+			try{
+				if(y < Constants.WORLDHEIGHT){//within bounds
+			
+				System.out.println("("+chunkX + ", "+chunkZ+")" + "blocks X:" + internX + " Y:" + internY + " Z:" + internZ);
 				if(ChunkManager.loadedChunks.get(ChunkManager.key(chunkX, chunkZ)).blocks[internX][internY][internZ] > 0){
 					//is not air
 					ChunkManager.selectedBlock = new Vector3f(x, y, z);
@@ -304,6 +309,9 @@ public class Camera extends Entity {
 							+ " " + ChunkManager.selectedBlock.y + " " + ChunkManager.selectedBlock.z );
 					break;
 				}
+				}
+			} catch (NullPointerException e){
+				System.out.println("Null Pointer");
 			}
 		}
 		// pick correct face
