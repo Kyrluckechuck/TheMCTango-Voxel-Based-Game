@@ -22,7 +22,8 @@ public class Main extends Screen {
 	private World world;
 
 	public Main() {
-		Thread.currentThread().setPriority((int) (Thread.MAX_PRIORITY * 0.80));
+		Thread.currentThread().setPriority((int) (Thread.MAX_PRIORITY * 0.95));
+		/*czech for multithreading*/
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
 		gameLoop.start((int) Constants.FPS);

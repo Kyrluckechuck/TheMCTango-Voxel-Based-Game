@@ -22,6 +22,7 @@ import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.utilities.Frustum;
+import com.kyry.voxel.utilities.SimplexNoise;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.mobs.MobManager;
@@ -296,66 +297,68 @@ public class ChunkManager {
 		int sizeAll = Constants.CHUNKSIZE;
 		int worldHeight = Constants.WORLDHEIGHT;
 		short[][][] blocks = new short[sizeAll][worldHeight][sizeAll];
-		// int internX = (int) Player.camera.getX() - chunkX *
-		// Constants.CHUNKSIZE ;
-		// int internY = (int) Player.camera.getY() - chunkX *
-		// Constants.CHUNKSIZE ;
-		// int internZ = (int) Player.camera.getZ() - chunkX *
-		// Constants.CHUNKSIZE ;
+		
 		/*
 		 * if (type == World.AIRCHUNK) { for (int x = 0; x < sizeAll; x++) { for
 		 * (int y = 0; y < sizeAll; y++) { for (int z = 0; z < sizeAll; z++) {
 		 * blocks[x][y][z] = Block.Air.getId(); } } } } if (type ==
 		 * World.MIXEDCHUNK) {
 		 */
-		for (int x = 0; x < sizeAll; x++) {
-			for (int y = 0; y < worldHeight; y++) {
-				for (int z = 0; z < sizeAll; z++) {
-					blocks[x][y][z] = Block.Grass.getId();
-					if ((y == 14) && (rand.nextInt(3) == 0)) {
-						blocks[x][y][z] = Block.Air.getId();
-					} else if ((y == 14)) {
-						// nothing because default is Grass
-					} else if (y == 0) {
-						blocks[x][y][z] = Block.Brick.getId();
-
-					} else if (y > 14) {
-						blocks[x][y][z] = Block.Air.getId();
-					} else if (x == 0 || x == Constants.CHUNKSIZE - 1 || z == 0 || z == Constants.CHUNKSIZE - 1) {
-						blocks[x][y][z] = Block.Sand.getId();
-
-					} else if (blocks[x][y][z] == Block.CrackedStone.getId() && (rand.nextInt(7) == 0)) {
-						blocks[x][y][z] = Block.CrackedStone.getId();
-						// } else if (rand.nextInt(2) == 0) {
-						// if (rand.nextBoolean())
-						// blocks[x][y][z] = Block.Air.getId();
-					} else
-						blocks[x][y][z] = Block.CrackedStone.getId();
-
-					/*
-					 * if (rand.nextInt(5) == 0) if (rand.nextBoolean())
-					 * blocks[x][y][z] = Block.CrackedStone.getId(); if
-					 * (rand.nextInt(9) == 0) if (rand.nextBoolean())
-					 * blocks[x][y][z] = Block.Brick.getId(); else
-					 * blocks[x][y][z] = Block.Glass.getId();
-					 */
-
+		SimplexNoise noise = new SimplexNoise();
+		
+		float freqH = (float) 64; 
+		// change this and see what happens!:D
+		float freqP = (float) 32;
+		
+		// int i = -1;
+		/*int[] tiles = new int[width * width];
+		for (int i = 0; i < tiles.length; i++) {
+			int blockWidth = i % width;
+			int blockLength = i / width;
+			
+			float groundHeight = (float) noise.noise((float) blockWidth / frequency, (float) blockLength / frequency);
+			groundHeight *= Constants.WORLDHEIGHT/2;
+			groundHeight += Constants.WORLDHEIGHT/2;
+			tiles[blockWidth + blockLength * width] = (int) groundHeight;
+			
+		}*/
+		//Absolute block coords
+		for (int internX = 0; internX < sizeAll; internX++) {
+			for (int internZ = 0; internZ < sizeAll; internZ++) {
+				int x = (f * sizeAll) + internX;
+				int z = (h * sizeAll) + internZ;
+				/*int i = (int)(internX*internZ);
+				int blockWidth = i % width;
+				int blockLength = i / width;*/
+				//height is given by the 2d noise (birds-eye view)
+				float height = (float) noise.noise((float)(x / freqH), (float) (z / freqH));
+				height *= 8;
+				height += 50;
+				for (int internY = 0; internY < worldHeight; internY++) {
+					int y = internY;
+					//probability of tile
+					float tileProb = (float) noise.noise((float)x /freqP, (float)y / freqP, (float) z / freqP);
+					tileProb *= 64;
+					if(y < height){
+						//make tile
+						//do if tileProb is less than or whatever
+						if(tileProb < -32){
+							blocks[internX][internY][internZ] = Block.Air.getId();
+						}else if(tileProb < 0 && tileProb >= -32){
+							blocks[internX][internY][internZ] = Block.CrackedStone.getId();
+						}else if(tileProb > 0 && tileProb <= 32){
+							blocks[internX][internY][internZ] = Block.Dirt.getId();
+						}else if(tileProb > 32){
+							blocks[internX][internY][internZ] = Block.Grass.getId();
+						}
+						
+					}else{ // air tile
+						blocks[internX][internY][internZ] = Block.Air.getId();
+					}
 				}
 			}
-			// }
 		}
-		// Store data to (chunkX)(chunkY)(chunkZ).dat;
-		/*
-		 * "("+x+")"+"("+y+")"+"("+z+")"+"=" + blocks[x][y][z].getId()"Like so:
-		 * (0)(0)(0)=0; (0)(0)(1)=6; ... (15)(15)(15)=3; .. (x)(y)(z)=blockId;
-		 */
 		ChunkManager.saveChunk(f, h, blocks);
-		// ///
-		// Seems redundant and unneeded. The createChunk method will not always
-		// be called in one instance of the game, loadChunk will be
-		// Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new
-		// Vector3f(f,g,h), blocks);
-		// activeChunks.put(key(f,g,h), chunk);
 		System.out.println("(" + f + "," + h + ") Created Successfully.");
 	}
 

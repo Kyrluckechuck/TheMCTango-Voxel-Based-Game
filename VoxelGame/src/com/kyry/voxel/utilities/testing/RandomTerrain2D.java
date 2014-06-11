@@ -9,9 +9,9 @@ import com.kyry.voxel.utilities.SimplexNoise;
 
 public class RandomTerrain2D {
 
-	private int size = 4; // tile size in pixels
+	private int size = 2; // tile size in pixels
 
-	private int width = 256, height = 256; // map dimensions
+	private int width = 1024, height = 1024; // map dimensions
 	private int[] tiles; // tile array
 
 	public RandomTerrain2D() {
@@ -34,7 +34,7 @@ public class RandomTerrain2D {
 			int x = i % width; // what are the coordinates from i ?
 			int y = i / width;
 
-			float frequency =  (float) 128; // change this and see what happens! :D
+			float frequency =  (float) 64; // change this and see what happens! :D
 
 			float h = (float) noise.noise((float) x / frequency, (float) y / frequency);
 			h *= 64;
