@@ -11,7 +11,7 @@ public class RandomTerrain2D {
 
 	private int size = 4; // tile size in pixels
 
-	private int width = 256, height = 256; // map dimensions
+	private int width = 256, length = 256; // map dimensions
 	private int[] tiles; // tile array
 
 	public RandomTerrain2D() {
@@ -26,7 +26,7 @@ public class RandomTerrain2D {
 
 	private void makeTiles() {
 
-		tiles = new int[width * height];
+		tiles = new int[width * length];
 
 		SimplexNoise noise = new SimplexNoise();
 
@@ -86,7 +86,7 @@ public class RandomTerrain2D {
 
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-		for (int y = 0; y < height; y++) {
+		for (int y = 0; y < length; y++) {
 			for (int x = 0; x < width; x++) {
 
 				if (tiles[x + y * width] == 1) {
