@@ -69,12 +69,14 @@ public class Camera extends Entity {
 	}
 
 	public void updateKeyboard(float deltaTime, float speed) {
-		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_W);
-		boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_S);
+		boolean keyForward = Keyboard.isKeyDown(Keyboard.KEY_W);
+		boolean keyBackward = Keyboard.isKeyDown(Keyboard.KEY_S);
 		boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_A);
 		boolean keyRight = Keyboard.isKeyDown(Keyboard.KEY_D);
-		boolean space = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+		boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+
+
 
 		float deltaDis = deltaTime * speed;
 
@@ -83,35 +85,52 @@ public class Camera extends Entity {
 		WorldManager.playerSphereUpper.update(somePosition);
 		WorldManager.playerSphereLower.update(someOtherPosition);
 
-		if (keyUp && keyRight && !keyLeft && !keyDown) {// NE
+		boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove block
+		boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block
+		if (clickBlockAdd && !clickBlockDelete) {
+			if (Constants.blockToAdd != null) {
+
+				ChunkManager.changeBlock(Constants.blockToAdd, Constants.selectedBlockType);
+			}
+
+		}
+		if (!clickBlockAdd && clickBlockDelete) {
+			if (Constants.selectedBlock != null)
+				ChunkManager.changeBlock(Constants.selectedBlock, Block.Air.getId());
+		}
+
+	
+
+
+		if (keyForward && keyRight && !keyLeft && !keyBackward) {// NE
 			playerMove(deltaDis, 0, -deltaDis);
 		}
-		if (keyUp && keyLeft && !keyRight && !keyDown) {// NW
+		if (keyForward && keyLeft && !keyRight && !keyBackward) {// NW
 			playerMove(-deltaDis, 0, -deltaDis);
 		}
-		if (keyUp && !keyLeft && !keyRight && !keyDown) {// N
+		if (keyForward && !keyLeft && !keyRight && !keyBackward) {// N
 			playerMove(0, 0, -deltaDis);
 		}
-		if (keyDown && keyLeft && !keyRight && !keyUp) {// SW
+		if (keyBackward && keyLeft && !keyRight && !keyForward) {// SW
 			playerMove(-deltaDis, 0, deltaDis);
 		}
-		if (keyDown && keyRight && !keyLeft && !keyUp) {// SE
+		if (keyBackward && keyRight && !keyLeft && !keyForward) {// SE
 			playerMove(deltaDis, 0, deltaDis);
 		}
-		if (keyDown && !keyUp && !keyLeft && !keyRight) {// S
+		if (keyBackward && !keyForward && !keyLeft && !keyRight) {// S
 			playerMove(0, 0, deltaDis);
 		}
-		if (keyLeft && !keyRight && !keyUp && !keyDown) {// W
+		if (keyLeft && !keyRight && !keyForward && !keyBackward) {// W
 			playerMove(-deltaDis, 0, 0);
 		}
-		if (keyRight && !keyLeft && !keyUp && !keyDown) {// E
+		if (keyRight && !keyLeft && !keyForward && !keyBackward) {// E
 			playerMove(deltaDis, 0, 0);
 		}
-		if (space && !shift) {// JUMP
+		if (keyUp && !keyDown) {// JUMP
 			// made into a method cause its more complex and dont want clutter
 			jump(deltaDis);
 		}
-		if (shift && !space) {// DOWN
+		if (keyDown && !keyUp) {// DOWN
 			playerMove(0, deltaDis, 0);
 		}
 		if (!World.noClip)
@@ -306,7 +325,7 @@ public class Camera extends Entity {
 					// internZ);
 					if (ChunkManager.loadedChunks.get(ChunkManager.key(chunkX, chunkZ)).blocks[internX][internY][internZ] > 0) {
 						// is not air
-						 ChunkManager.selectedBlock = new Vector3f(x, y, z);
+						Constants.selectedBlock = new Vector3f(x, y, z);
 						// System.out.println("picked a block! " +
 						// ChunkManager.blockToAdd.x
 						// + " " + ChunkManager.blockToAdd.y + " " +
@@ -319,7 +338,7 @@ public class Camera extends Entity {
 							int actualFaceX = faceX;
 							int actualFaceY = faceY;
 							int actualFaceZ = faceZ;
-							
+
 							// int faceX = (int) (x - takeDist);
 							// int faceY = (int) (y - takeDist);
 							// int faceZ = (int) (z - takeDist);
@@ -330,13 +349,14 @@ public class Camera extends Entity {
 
 							System.out.println("(" + faceChunkX + ", " + faceChunkZ + ")" + "blocks X:" + faceX + " Y:" + faceY + " Z:" + faceZ);
 							if (ChunkManager.loadedChunks.get(ChunkManager.key(faceChunkX, faceChunkZ)).blocks[faceX][faceY][faceZ] == 0) {
-								ChunkManager.blockToAdd = new Vector3f(actualFaceX, actualFaceY, actualFaceZ);
+								Constants.blockToAdd = new Vector3f(actualFaceX, actualFaceY, actualFaceZ);
 								break;
 							}
 						}
 						break;
 					} else {
-						ChunkManager.blockToAdd = new Vector3f(0, 0, 0);
+						Constants.selectedBlock = null;
+						Constants.blockToAdd = null;
 					}
 				}
 			} catch (NullPointerException e) {

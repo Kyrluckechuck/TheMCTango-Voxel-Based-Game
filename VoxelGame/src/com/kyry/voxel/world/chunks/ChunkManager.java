@@ -34,8 +34,6 @@ import com.nishu.utils.ShaderProgram;
 
 public class ChunkManager {
 
-	public static Vector3f blockToAdd = new Vector3f(0, 0, 0);
-	public static Vector3f selectedBlock = new Vector3f(0, 0, 0);
 	public static HashMap<String, Short> queue = new HashMap<String, Short>();
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
@@ -210,7 +208,7 @@ public class ChunkManager {
 		// memory chunk list
 		String key = key(x, z);
 
-		ArrayList<String> temp = activeChunks.get(key).getChunk();
+		ArrayList<String> temp = activeChunks.get(key).getRenderedBlocks();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
 
@@ -237,7 +235,7 @@ public class ChunkManager {
 			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 		}
 		System.out.println(key);
-		ArrayList<String> temp = activeChunks.get(key).getChunk();
+		ArrayList<String> temp = activeChunks.get(key).getRenderedBlocks();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
 
@@ -278,7 +276,7 @@ public class ChunkManager {
 
 	}
 
-	public void removeChunkFromActive(String s) { // Remove chunk
+	public static void removeChunkFromActive(String s) { // Remove chunk
 		// from active
 		// chunk list
 		int x = ChunkManager.keyX(s);
@@ -288,9 +286,9 @@ public class ChunkManager {
 
 	}
 
-	public void removeChunkFromActive(int x, int z) { // Remove chunk
-														// from active
-														// chunk list
+	public static void removeChunkFromActive(int x, int z) { // Remove chunk
+		// from active
+		// chunk list
 		removeChunkFromPhys(x, z);
 		activeChunks.remove(key(x, z));
 		Constants.chunksActive--;
@@ -341,7 +339,7 @@ public class ChunkManager {
 				height *= 8;
 				height += 50;
 				blocks[internX][0][internZ] = Block.Adamantium.getId();
-				
+
 				for (int internY = 1; internY < worldHeight; internY++) {
 					int y = internY;
 					// probability of tile
@@ -473,13 +471,36 @@ public class ChunkManager {
 		/*
 		 * render selected block
 		 */
-		if ((blockToAdd.y < Constants.WORLDHEIGHT && blockToAdd.y > 0)&&(selectedBlock.y < Constants.WORLDHEIGHT && selectedBlock.y > 0)) {
+		if ((Constants.selectedBlock != null) && (Constants.blockToAdd.y < Constants.WORLDHEIGHT && Constants.blockToAdd.y > 0) && (Constants.selectedBlock.y < Constants.WORLDHEIGHT && Constants.selectedBlock.y > 0)) {
 			float padding = 0.001f;
 			GL11.glBegin(GL11.GL_QUADS);
-			Shape.createCube(selectedBlock.x - padding, selectedBlock.y - padding, selectedBlock.z - padding, Block.Glass.getColor(), Block.Glass.getTexCoords(), 1 + (2 * padding));
-			Shape.createCube(blockToAdd.x - padding, blockToAdd.y - padding, blockToAdd.z - padding, Block.Wireframe.getColor(), Block.Wireframe.getTexCoords(), 1 + (2 * padding));
-			
+			Shape.createCube(Constants.selectedBlock.x - padding, Constants.selectedBlock.y - padding, Constants.selectedBlock.z - padding, Block.Glass.getColor(), Block.Glass.getTexCoords(), 1 + (2 * padding));
+			Shape.createCube(Constants.blockToAdd.x - padding, Constants.blockToAdd.y - padding, Constants.blockToAdd.z - padding, Block.Wireframe.getColor(), Block.Wireframe.getTexCoords(), 1 + (2 * padding));
+
 			GL11.glEnd();
 		}
 	}// end render
+
+	public static void changeBlock(Vector3f blockToAdd, short blockType) {
+		int worldX = (int) blockToAdd.getX();
+		int worldY = (int) blockToAdd.getY();
+		int worldZ = (int) blockToAdd.getZ();
+		int chunkX = (blockToChunk1f(worldX));
+		int chunkZ = (blockToChunk1f(worldZ));
+		int internX = (int) worldX - chunkX * Constants.CHUNKSIZE;
+		int internY = (int) worldY;
+		int internZ = (int) worldZ - chunkZ * Constants.CHUNKSIZE;
+		String key = key(chunkX, chunkZ);
+		removeChunkFromActive(key);
+		Chunk temp = loadedChunks.get(key);
+		if (temp.blocks[internX][internY][internZ] != 9) {
+			temp.blocks[internX][internY][internZ] = blockType;
+			loadedChunks.remove(key);
+			loadedChunks.put(key, temp);
+			activeChunks.remove(key);
+			loadChunkToActive(chunkX, chunkZ);
+			// activeChunks.put(key, temp);
+			// activeChunks.get(key).load();
+		}
+	}
 }// end class

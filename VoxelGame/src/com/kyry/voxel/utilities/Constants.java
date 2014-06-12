@@ -84,4 +84,7 @@ public class Constants {
 
 	public static Color textColor = Color.white; // Toggle Color Black/White for text being
     // rendered on screen	
+	public static Vector3f blockToAdd = new Vector3f(0, 0, 0);
+	public static Vector3f selectedBlock = new Vector3f(0, 0, 0);
+	public static short selectedBlockType = 4;
 }

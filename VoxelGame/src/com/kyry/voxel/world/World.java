@@ -18,10 +18,11 @@ import com.nishu.utils.Screen;
 import com.kyry.voxel.utilities.Constants;
 import com.kyry.voxel.utilities.Spritesheet;
 import com.kyry.voxel.world.blocks.Block;
+import com.kyry.voxel.world.chunks.ChunkManager;
 
 public class World extends Screen {
 
-	//public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
+	// public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
 	private WorldManager worldManager;
 	private TrueTypeFont font;
@@ -79,35 +80,59 @@ public class World extends Screen {
 						Constants.PLAYER_SPEED += 15f;
 					noClip = !noClip;
 				}
-                // KEY_F5 toggles textColor between Black and White
-                if (Keyboard.isKeyDown(Keyboard.KEY_F5)) {
-                       if (Constants.textColor == Color.white) {
-                              Constants.textColor = Color.black;
-                       } else {
-                              Constants.textColor = Color.white;
-                       }
-                }
-                if (Keyboard.isKeyDown(Keyboard.KEY_F8)) {
-                	Constants.fogEnabled = !Constants.fogEnabled;
-                }
+				// KEY_F5 toggles textColor between Black and White
+				if (Keyboard.isKeyDown(Keyboard.KEY_F5)) {
+					if (Constants.textColor == Color.white) {
+						Constants.textColor = Color.black;
+					} else {
+						Constants.textColor = Color.white;
+					}
+				}
+				if (Keyboard.isKeyDown(Keyboard.KEY_F8)) {
+					Constants.fogEnabled = !Constants.fogEnabled;
+				}
+				getInteractionKeys();
+
 			}
 
 		}
 
 	}
+	private void getInteractionKeys(){
+		boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove block
+		boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block
+		boolean cycleBlockType = Keyboard.isKeyDown(Keyboard.KEY_1); 
+/*		if (clickBlockAdd && !clickBlockDelete) {
+			if (Constants.blockToAdd != null) {
+
+				ChunkManager.changeBlock(Constants.selectedBlockType);
+			}
+
+		}
+		if (!clickBlockAdd && clickBlockDelete) {
+			if (Constants.selectedBlock != null)
+				ChunkManager.changeBlock(Block.Air.getId());
+		}*/
+		if (cycleBlockType) {
+			if (Constants.selectedBlockType <= 9)
+				Constants.selectedBlockType++;
+			else
+				Constants.selectedBlockType = 0;
+		}
+	}
 
 	@Override
 	public void worldRender() {
-		render3D(); //Setup 3D matrix rendering environment
-		gameLogic(); //Perform any logisitical changes
-		mapRender(); //Render world (interactable map)
-		renderSkyBox(); //Render Skybox (outside of world, non-interactible)
+		render3D(); // Setup 3D matrix rendering environment
+		gameLogic(); // Perform any logisitical changes
+		mapRender(); // Render world (interactable map)
+		renderSkyBox(); // Render Skybox (outside of world, non-interactible)
 
-		glLoadIdentity(); //Reset 3D rendering matrix environment
+		glLoadIdentity(); // Reset 3D rendering matrix environment
 
 		if (renderText) {
-			render2D(); //Setup 2D matrix rendering environment
-			renderText(); //Render 2D text to screen
+			render2D(); // Setup 2D matrix rendering environment
+			renderText(); // Render 2D text to screen
 		}
 
 	}
@@ -126,41 +151,24 @@ public class World extends Screen {
 	 * }
 	 */
 
-    private void renderText() {
-        font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       "+"noClip " + noClip, Constants.textColor);
-        font.drawString(10, 40, "Camera X: "
-                     + (int) worldManager.getMobManager().getPlayer().getX()
-                     + " Y: "
-                     + (int) worldManager.getMobManager().getPlayer().getY()
-                     + " Z: "
-                     + (int) worldManager.getMobManager().getPlayer().getZ(), Constants.textColor);
-        font.drawString(10, 65, "Rotx: "
-                     + (int) worldManager.getMobManager().getPlayer().getPitch()
-                     + " Roty: "
-                     + (int) worldManager.getMobManager().getPlayer().getYaw()
-                     + " Rotz: "
-                     + (int) worldManager.getMobManager().getPlayer().getRoll(), Constants.textColor);
-        font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " ("
-                     + Constants.chunksFrustum + ")" + "PhysBlocks: "
-                     + Constants.PhysBlocksLoaded + "   RenderBlocks: " + Constants.RenderBlocksLoaded, Constants.textColor);
+	private void renderText() {
+		font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       " + "noClip " + noClip, Constants.textColor);
+		font.drawString(10, 40, "Camera X: " + (int) worldManager.getMobManager().getPlayer().getX() + " Y: " + (int) worldManager.getMobManager().getPlayer().getY() + " Z: " + (int) worldManager.getMobManager().getPlayer().getZ(),
+				Constants.textColor);
+		font.drawString(10, 65, "Rotx: " + (int) worldManager.getMobManager().getPlayer().getPitch() + " Roty: " + (int) worldManager.getMobManager().getPlayer().getYaw() + " Rotz: "
+				+ (int) worldManager.getMobManager().getPlayer().getRoll(), Constants.textColor);
+		font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " (" + Constants.chunksFrustum + ")" + "PhysBlocks: " + Constants.PhysBlocksLoaded + "   RenderBlocks: " + Constants.RenderBlocksLoaded, Constants.textColor);
 
-        font.drawString(10, 115, "playerSphereUpper X: "
-                     + (int) WorldManager.playerSphereUpper.getX() + " Y: "
-                     + (int) WorldManager.playerSphereUpper.getY() + " Z: "
-                     + (int) WorldManager.playerSphereUpper.getZ(), Constants.textColor);
+		font.drawString(10, 115, "playerSphereUpper X: " + (int) WorldManager.playerSphereUpper.getX() + " Y: " + (int) WorldManager.playerSphereUpper.getY() + " Z: " + (int) WorldManager.playerSphereUpper.getZ(), Constants.textColor);
 
-        font.drawString(10, 140, "playerSphereLower X: "
-                     + (int) WorldManager.playerSphereLower.getX() + " Y: "
-                     + (int) WorldManager.playerSphereLower.getY() + " Z: "
-                     + (int) WorldManager.playerSphereLower.getZ(), Constants.textColor);
-        font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x
-                     + " Y: " + Constants.playerSpeed.y + " Z: "
-                     + Constants.playerSpeed.z, Constants.textColor);
-        font.drawString(10, 180, " ", Color.white);
+		font.drawString(10, 140, "playerSphereLower X: " + (int) WorldManager.playerSphereLower.getX() + " Y: " + (int) WorldManager.playerSphereLower.getY() + " Z: " + (int) WorldManager.playerSphereLower.getZ(), Constants.textColor);
+		font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x + " Y: " + Constants.playerSpeed.y + " Z: " + Constants.playerSpeed.z, Constants.textColor);
+		font.drawString(10, 180, " ", Color.white);
+		font.drawString(10, 195, "Selected Block Type: " + Constants.selectedBlockType, Color.white);
 
-        TextureImpl.unbind();
+		TextureImpl.unbind();
 
- }
+	}
 
 	public void render2D() {
 		glCullFace(GL_BACK);
@@ -184,8 +192,7 @@ public class World extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT,
-				Constants.viewClose, Constants.viewDistance);
+		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose, Constants.viewDistance);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
@@ -197,8 +204,7 @@ public class World extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT,
-				Constants.viewClose, Constants.viewDistance);
+		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose, Constants.viewDistance);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);

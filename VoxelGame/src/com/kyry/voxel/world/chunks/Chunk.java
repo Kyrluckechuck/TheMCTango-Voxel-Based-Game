@@ -357,7 +357,10 @@ public class Chunk implements Serializable {
 //	public int getType() {
 //		return type;
 //	}
-	public ArrayList<String> getChunk(){
+	public ArrayList<String> getRenderedBlocks(){
 		return temp;
+	}
+	public void setChunk(Chunk c){
+		
 	}
 }
