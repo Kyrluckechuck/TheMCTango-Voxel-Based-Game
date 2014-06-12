@@ -29,6 +29,10 @@ public class World extends Screen {
 
 	public static boolean noClip = true;
 	private boolean renderText = true;
+	
+	float screenObjOffset = 50;
+	float screenXMid = Constants.WIDTH/2;
+	float screenYMid = Constants.HEIGHT/2;
 
 	public World() {
 		initGL();
@@ -114,7 +118,7 @@ public class World extends Screen {
 				ChunkManager.changeBlock(Block.Air.getId());
 		}*/
 		if (cycleBlockType) {
-			if (Constants.selectedBlockType <= 9)
+			if (Constants.selectedBlockType < 9)
 				Constants.selectedBlockType++;
 			else
 				Constants.selectedBlockType = 0;
@@ -139,7 +143,7 @@ public class World extends Screen {
 
 	private void render2D() {
 		renderText(); // Render 2D text to screen
-		renderCrosshair();	//render 2D crosshair image
+		renderHUD();	//render 2D crosshair image
 	}
 	
 	public void ready2D() {
@@ -174,24 +178,27 @@ public class World extends Screen {
 
 	}
 
-	private void renderCrosshair() {
-//		glClearDepth(1);
-//		glMatrixMode(GL_PROJECTION);
-//		glLoadIdentity();
-
-//		glOrtho(0, Constants.WIDTH, Constants.HEIGHT, 0, -1, 1);
-//		glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
+	private void renderHUD() {
 		
 		Spritesheet.tiles.bind();
-		float offset = 50;
-		float x1 = Constants.WIDTH/2 - offset;
-		float y1 = Constants.HEIGHT/2 - offset;
-		float x2 = Constants.WIDTH/2 + offset;
-		float y2 = Constants.HEIGHT/2 + offset;
+		float x1Crosshair = screenXMid - screenObjOffset;
+		float y1Crosshair = screenYMid - screenObjOffset;
+		float x2Crosshair = screenXMid + screenObjOffset;
+		float y2Crosshair = screenYMid + screenObjOffset;
+		renderHUDObject(Block.Crosshair.getId(), x1Crosshair, y1Crosshair, x2Crosshair, y2Crosshair); //Draw Crosshair
+		float x1Selected = screenXMid*2 - screenObjOffset*2;
+		float y1Selected = 0;
+		float x2Selected = screenXMid*2;
+		float y2Selected = 0 + screenObjOffset*2;
+		renderHUDObject(Constants.selectedBlockType, x1Selected, y1Selected, x2Selected, y2Selected); //Draw Selected Object
+//		for ()
+//		renderHUDObject(Block.Crosshair.getId());
+
+	}
+
+	private void renderHUDObject(short texture, float x1, float y1, float x2, float y2 ) {
 		glBegin(GL_QUADS);
-		
-		System.out.println("x1: " + x1 +"y1: " + y1 + "x2: " + x2 + "y2: " + y2);
-		float[] texCoords = Block.getTile(Block.Crosshair.getId()).getTexCoords();
+		float[] texCoords = Block.getTile(texture).getTexCoords();
 		glTexCoord2f(texCoords[0], texCoords[1]);
 		glVertex2f(x1, y1);
 		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(),
@@ -203,9 +210,7 @@ public class World extends Screen {
 		glTexCoord2f(texCoords[0],
 				texCoords[1] + Spritesheet.tiles.uniformSize());
 		glVertex2f(x2, y1);
-		glEnd();
-
-		
+		glEnd();		
 	}
 
 	private void gameLogic() {

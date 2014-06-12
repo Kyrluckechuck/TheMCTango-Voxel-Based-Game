@@ -307,10 +307,10 @@ public class Camera extends Entity {
 		// for my own debugging purposes
 		// Pick correct block
 
-		for (int i = 0; i < Constants.rayDistance; i++) {
-			x = (int) (getX() + (Constants.ray.x * i));
-			y = (int) (getY() + (Constants.ray.y * i));
-			z = (int) (getZ() + (Constants.ray.z * i));
+		for (int i = 0; i < (Constants.rayDistance*2); i++) {
+			x = (int) (getX() + (Constants.ray.x * i *0.5));
+			y = (int) (getY() + (Constants.ray.y * i *0.5));
+			z = (int) (getZ() + (Constants.ray.z * i *0.5));
 			int chunkX = ChunkManager.blockToChunk1f(x);
 			int chunkZ = ChunkManager.blockToChunk1f(z);
 
@@ -318,7 +318,7 @@ public class Camera extends Entity {
 			int internY = y;
 			int internZ = z - (chunkZ * Constants.CHUNKSIZE);
 			try {
-				if (y < Constants.WORLDHEIGHT) {// within bounds
+				if ((y < Constants.WORLDHEIGHT) && y >= 0) {// within bounds
 
 					// System.out.println("(" + chunkX + ", " + chunkZ + ")" +
 					// "blocks X:" + internX + " Y:" + internY + " Z:" +
@@ -332,9 +332,9 @@ public class Camera extends Entity {
 						// ChunkManager.blockToAdd.z );
 						for (int q = 1; q < 50; q++) {
 							float takeDist = (float) (q * 0.02);
-							int faceX = (int) (getX() + (Constants.ray.x * (i - takeDist)));
-							int faceY = (int) (getY() + (Constants.ray.y * (i - takeDist)));
-							int faceZ = (int) (getZ() + (Constants.ray.z * (i - takeDist)));
+							int faceX = (int) (getX() + (Constants.ray.x * (i *0.5 - takeDist)));
+							int faceY = (int) (getY() + (Constants.ray.y * (i *0.5 - takeDist)));
+							int faceZ = (int) (getZ() + (Constants.ray.z * (i *0.5 - takeDist)));
 							int actualFaceX = faceX;
 							int actualFaceY = faceY;
 							int actualFaceZ = faceZ;
