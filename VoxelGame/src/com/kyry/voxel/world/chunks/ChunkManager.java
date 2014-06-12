@@ -310,7 +310,7 @@ public class ChunkManager {
 
 		float freqH = (float) 32;
 		// change this and see what happens!:D
-		float freqP = (float) 64;
+		float freqP = (float) 32; //was 64
 
 		// int i = -1;
 		/*
@@ -375,6 +375,9 @@ public class ChunkManager {
 	// according to each move, etc.. :S
 
 	public void update() {
+	
+	}// End Update()
+/*	public void update() {
 		// Basically will check if chunk is in the "bufferzone" if not then
 		// load, chunk, if not then delete
 		// DELETE
@@ -387,19 +390,19 @@ public class ChunkManager {
 				toRemove.add(key);// end chunks to be removed
 			} // end if
 		}// end remove while
-
+		
 		// Remove Unused Chunks
 		for (int q = 0; q < toRemove.size(); q++) {
 			removeChunkFromActive(toRemove.get(q));
 		}
-
+		
 		// End Removal Of Unused Chunks
 		// ADD
 		// BLOCK RELATIVE
 		Vector2f blockPos = blockToChunk(Player.camera.getPos()); // Returns
-																	// player's
-																	// XZ Chunk
-																	// coords
+		// player's
+		// XZ Chunk
+		// coords
 		for (int x = (int) (blockPos.getX() - Constants.WORLDRADIUS); x <= (int) (blockPos.getX() + Constants.WORLDRADIUS); x++) {
 			for (int z = (int) (blockPos.getY() - Constants.WORLDRADIUS); z <= (int) (blockPos.getY() + Constants.WORLDRADIUS); z++) {
 				String key = key(x, z);
@@ -409,22 +412,14 @@ public class ChunkManager {
 				}
 			}// end for z
 		}// end for x
-		/*
+		
 		 * iterate through queue
-		 */
+		 
 	}// End Update()
+*/
 
-	/*
-	 * private void removeChunk(String key) {// remove chunk from.. current set
-	 * and // Collision zone? // activeChunks.remove(key);//removes
-	 * chunk//causes ERROR! // remove the collision blocks for (int x = 0; x <
-	 * Constants.CHUNKSIZE; x++) { for (int y = 0; y < Constants.WORLDHEIGHT;
-	 * y++) { for (int z = 0; z < Constants.CHUNKSIZE; z++) {
-	 * CollisionLibrary.removeBlock(keyX(key), keyY(key), x, y, z); }// end for
-	 * z }// end for y }// end for x }
-	 */
 
-	private boolean isInZone(String key) { // Vector2f key, so z-coord is
+	public static boolean isInZone(String key) { // Vector2f key, so z-coord is
 											// actually keyY()
 		boolean result = false;
 		int x = keyX(key);
@@ -474,7 +469,7 @@ public class ChunkManager {
 		if ((Constants.selectedBlock != null) && (Constants.blockToAdd.y < Constants.WORLDHEIGHT && Constants.blockToAdd.y > 0) && (Constants.selectedBlock.y < Constants.WORLDHEIGHT && Constants.selectedBlock.y > 0)) {
 			float padding = 0.001f;
 			GL11.glBegin(GL11.GL_QUADS);
-			Shape.createCube(Constants.selectedBlock.x - padding, Constants.selectedBlock.y - padding, Constants.selectedBlock.z - padding, Block.Glass.getColor(), Block.Glass.getTexCoords(), 1 + (2 * padding));
+			Shape.createCube(Constants.selectedBlock.x - padding, Constants.selectedBlock.y - padding, Constants.selectedBlock.z - padding, Block.TransparentGray.getColor(), Block.TransparentGray.getTexCoords(), 1 + (2 * padding));
 			Shape.createCube(Constants.blockToAdd.x - padding, Constants.blockToAdd.y - padding, Constants.blockToAdd.z - padding, Block.Wireframe.getColor(), Block.Wireframe.getTexCoords(), 1 + (2 * padding));
 
 			GL11.glEnd();

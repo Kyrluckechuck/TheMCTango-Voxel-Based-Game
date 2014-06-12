@@ -163,8 +163,9 @@ public class World extends Screen {
 
 		font.drawString(10, 140, "playerSphereLower X: " + (int) WorldManager.playerSphereLower.getX() + " Y: " + (int) WorldManager.playerSphereLower.getY() + " Z: " + (int) WorldManager.playerSphereLower.getZ(), Constants.textColor);
 		font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x + " Y: " + Constants.playerSpeed.y + " Z: " + Constants.playerSpeed.z, Constants.textColor);
-		font.drawString(10, 180, " ", Color.white);
-		font.drawString(10, 195, "Selected Block Type: " + Constants.selectedBlockType, Color.white);
+		font.drawString(10, 190, "Selected Block Type: " + Constants.selectedBlockType, Constants.textColor);
+		
+		font.drawString(10, 205, " ", Color.white);
 
 		TextureImpl.unbind();
 
