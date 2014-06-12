@@ -34,7 +34,8 @@ import com.nishu.utils.ShaderProgram;
 
 public class ChunkManager {
 
-	public static Vector3f selectedBlock = new Vector3f(4, 80, 4);
+	public static Vector3f blockToAdd = new Vector3f(0, 0, 0);
+	public static Vector3f selectedBlock = new Vector3f(0, 0, 0);
 	public static HashMap<String, Short> queue = new HashMap<String, Short>();
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
@@ -472,10 +473,12 @@ public class ChunkManager {
 		/*
 		 * render selected block
 		 */
-		if (selectedBlock.y < Constants.WORLDHEIGHT && selectedBlock.y > 0) {
+		if ((blockToAdd.y < Constants.WORLDHEIGHT && blockToAdd.y > 0)&&(selectedBlock.y < Constants.WORLDHEIGHT && selectedBlock.y > 0)) {
 			float padding = 0.001f;
 			GL11.glBegin(GL11.GL_QUADS);
-			Shape.createCube(selectedBlock.x - padding, selectedBlock.y - padding, selectedBlock.z - padding, Block.Wireframe.getColor(), Block.Wireframe.getTexCoords(), 1 + (2 * padding));
+			Shape.createCube(selectedBlock.x - padding, selectedBlock.y - padding, selectedBlock.z - padding, Block.Glass.getColor(), Block.Glass.getTexCoords(), 1 + (2 * padding));
+			Shape.createCube(blockToAdd.x - padding, blockToAdd.y - padding, blockToAdd.z - padding, Block.Wireframe.getColor(), Block.Wireframe.getTexCoords(), 1 + (2 * padding));
+			
 			GL11.glEnd();
 		}
 	}// end render

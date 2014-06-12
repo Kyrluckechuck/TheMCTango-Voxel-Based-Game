@@ -306,11 +306,11 @@ public class Camera extends Entity {
 					// internZ);
 					if (ChunkManager.loadedChunks.get(ChunkManager.key(chunkX, chunkZ)).blocks[internX][internY][internZ] > 0) {
 						// is not air
-						// ChunkManager.selectedBlock = new Vector3f(x, y, z);
+						 ChunkManager.selectedBlock = new Vector3f(x, y, z);
 						// System.out.println("picked a block! " +
-						// ChunkManager.selectedBlock.x
-						// + " " + ChunkManager.selectedBlock.y + " " +
-						// ChunkManager.selectedBlock.z );
+						// ChunkManager.blockToAdd.x
+						// + " " + ChunkManager.blockToAdd.y + " " +
+						// ChunkManager.blockToAdd.z );
 						for (int q = 1; q < 11; q++) {
 							float takeDist = (float) (q * 0.1);
 							int faceX = (int) (getX() + (Constants.ray.x * (i - takeDist)));
@@ -330,13 +330,13 @@ public class Camera extends Entity {
 
 							System.out.println("(" + faceChunkX + ", " + faceChunkZ + ")" + "blocks X:" + faceX + " Y:" + faceY + " Z:" + faceZ);
 							if (ChunkManager.loadedChunks.get(ChunkManager.key(faceChunkX, faceChunkZ)).blocks[faceX][faceY][faceZ] == 0) {
-								ChunkManager.selectedBlock = new Vector3f(actualFaceX, actualFaceY, actualFaceZ);
+								ChunkManager.blockToAdd = new Vector3f(actualFaceX, actualFaceY, actualFaceZ);
 								break;
 							}
 						}
 						break;
 					} else {
-						ChunkManager.selectedBlock = new Vector3f(0, 0, 0);
+						ChunkManager.blockToAdd = new Vector3f(0, 0, 0);
 					}
 				}
 			} catch (NullPointerException e) {
