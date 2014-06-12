@@ -108,7 +108,7 @@ public class ChunkManager {
 	}
 
 	public static String filePath(int x, int z) {
-		return new String("C:\\Save\\" + x + "_" + z + ".dat");
+		return new String("E:\\Save\\" + x + "_" + z + ".dat");
 	}
 
 	public static boolean isCreated(int x, int z) {
@@ -463,7 +463,7 @@ public class ChunkManager {
 		/*
 		 * render selected block
 		 */
-		if ((Constants.selectedBlock != null) && (Constants.blockToAdd.y < Constants.WORLDHEIGHT && Constants.blockToAdd.y > 0) && (Constants.selectedBlock.y < Constants.WORLDHEIGHT && Constants.selectedBlock.y > 0)) {
+		if ((Constants.selectedBlock != null) && (Constants.blockToAdd != null) &&(Constants.blockToAdd.y < Constants.WORLDHEIGHT && Constants.blockToAdd.y > 0) && (Constants.selectedBlock.y < Constants.WORLDHEIGHT && Constants.selectedBlock.y > 0)) {
 			float padding = 0.001f;
 			GL11.glBegin(GL11.GL_QUADS);
 			Shape.createCube(Constants.selectedBlock.x - padding, Constants.selectedBlock.y - padding, Constants.selectedBlock.z - padding, Block.TransparentGray.getColor(), Block.TransparentGray.getTexCoords(), 1 + (2 * padding));

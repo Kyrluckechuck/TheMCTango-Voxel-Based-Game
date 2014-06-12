@@ -330,8 +330,8 @@ public class Camera extends Entity {
 						// ChunkManager.blockToAdd.x
 						// + " " + ChunkManager.blockToAdd.y + " " +
 						// ChunkManager.blockToAdd.z );
-						for (int q = 1; q < 11; q++) {
-							float takeDist = (float) (q * 0.1);
+						for (int q = 1; q < 50; q++) {
+							float takeDist = (float) (q * 0.02);
 							int faceX = (int) (getX() + (Constants.ray.x * (i - takeDist)));
 							int faceY = (int) (getY() + (Constants.ray.y * (i - takeDist)));
 							int faceZ = (int) (getZ() + (Constants.ray.z * (i - takeDist)));

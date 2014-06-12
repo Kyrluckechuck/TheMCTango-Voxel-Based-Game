@@ -26,7 +26,7 @@ public class Crosshair extends Block {
 					(height) * size };
 		} else {
 			return new float[] { (getId() - (actualSize * height)) * size,
-					(height + 1) * size };
+					(height) * size };
 		}
 		// Height is (+1) to account for the fact it's actually 1 larger than
 		// the column.

@@ -141,27 +141,92 @@ public class World extends Screen {
 		renderText(); // Render 2D text to screen
 		renderCrosshair();	//render 2D crosshair image
 	}
+	
+	public void ready2D() {
+		glCullFace(GL_BACK);
+		glClearDepth(1);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		glOrtho(0, Constants.WIDTH, Constants.HEIGHT, 0, -1, 1);
+		glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
+		glMatrixMode(GL_MODELVIEW);
+	}
+
+	private void renderText() {
+		font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       " + "noClip " + noClip, Constants.textColor);
+		font.drawString(10, 40, "Camera X: " + (int) worldManager.getMobManager().getPlayer().getX() + " Y: " + (int) worldManager.getMobManager().getPlayer().getY() + " Z: " + (int) worldManager.getMobManager().getPlayer().getZ(),
+				Constants.textColor);
+		font.drawString(10, 65, "Rotx: " + (int) worldManager.getMobManager().getPlayer().getPitch() + " Roty: " + (int) worldManager.getMobManager().getPlayer().getYaw() + " Rotz: "
+				+ (int) worldManager.getMobManager().getPlayer().getRoll(), Constants.textColor);
+		font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " (" + Constants.chunksFrustum + ")" + "PhysBlocks: " + Constants.PhysBlocksLoaded + "   RenderBlocks: " + Constants.RenderBlocksLoaded, Constants.textColor);
+
+		font.drawString(10, 115, "playerSphereUpper X: " + (int) WorldManager.playerSphereUpper.getX() + " Y: " + (int) WorldManager.playerSphereUpper.getY() + " Z: " + (int) WorldManager.playerSphereUpper.getZ(), Constants.textColor);
+
+		font.drawString(10, 140, "playerSphereLower X: " + (int) WorldManager.playerSphereLower.getX() + " Y: " + (int) WorldManager.playerSphereLower.getY() + " Z: " + (int) WorldManager.playerSphereLower.getZ(), Constants.textColor);
+		font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x + " Y: " + Constants.playerSpeed.y + " Z: " + Constants.playerSpeed.z, Constants.textColor);
+		font.drawString(10, 190, "Selected Block Type: " + Constants.selectedBlockType, Constants.textColor);
+		
+		font.drawString(10, 205, " ", Color.white);
+		
+		TextureImpl.unbind();
+		
+
+	}
 
 	private void renderCrosshair() {
+//		glClearDepth(1);
+//		glMatrixMode(GL_PROJECTION);
+//		glLoadIdentity();
+
+//		glOrtho(0, Constants.WIDTH, Constants.HEIGHT, 0, -1, 1);
+//		glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
+		
+		Spritesheet.tiles.bind();
+		float offset = 50;
+		float x1 = Constants.WIDTH/2 - offset;
+		float y1 = Constants.HEIGHT/2 - offset;
+		float x2 = Constants.WIDTH/2 + offset;
+		float y2 = Constants.HEIGHT/2 + offset;
 		glBegin(GL_QUADS);
+		
+		System.out.println("x1: " + x1 +"y1: " + y1 + "x2: " + x2 + "y2: " + y2);
 		float[] texCoords = Block.getTile(Block.Crosshair.getId()).getTexCoords();
 		glTexCoord2f(texCoords[0], texCoords[1]);
-		glVertex2f(100,100);
+		glVertex2f(x1, y1);
 		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(),
 				texCoords[1]);
-		glVertex2f(200,100);
+		glVertex2f(x1, y2);
 		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(),
 				texCoords[1] + Spritesheet.tiles.uniformSize());
-		glVertex2f(200, 200);
+		glVertex2f(x2, y2);
 		glTexCoord2f(texCoords[0],
 				texCoords[1] + Spritesheet.tiles.uniformSize());
-		glVertex2f(100, 200 );
+		glVertex2f(x2, y1);
 		glEnd();
-		TextureImpl.unbind();
+
+		
 	}
 
 	private void gameLogic() {
 		worldManager.logic();
+	}
+	
+	public void ready3D() {
+		if (Constants.fogEnabled) {
+			glEnable(GL_FOG);
+		} else {
+			glDisable(GL_FOG);
+		}
+		glCullFace(GL_FRONT);
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose, Constants.viewDistance);
+		glMatrixMode(GL_MODELVIEW);
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	private void render3D() {
@@ -181,56 +246,6 @@ public class World extends Screen {
 		glEnable(GL_DEPTH_TEST);
 		Skybox.skyRender();
 	}
-
-	private void renderText() {
-		font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       " + "noClip " + noClip, Constants.textColor);
-		font.drawString(10, 40, "Camera X: " + (int) worldManager.getMobManager().getPlayer().getX() + " Y: " + (int) worldManager.getMobManager().getPlayer().getY() + " Z: " + (int) worldManager.getMobManager().getPlayer().getZ(),
-				Constants.textColor);
-		font.drawString(10, 65, "Rotx: " + (int) worldManager.getMobManager().getPlayer().getPitch() + " Roty: " + (int) worldManager.getMobManager().getPlayer().getYaw() + " Rotz: "
-				+ (int) worldManager.getMobManager().getPlayer().getRoll(), Constants.textColor);
-		font.drawString(10, 90, "Chunks: " + Constants.chunksLoaded + " (" + Constants.chunksFrustum + ")" + "PhysBlocks: " + Constants.PhysBlocksLoaded + "   RenderBlocks: " + Constants.RenderBlocksLoaded, Constants.textColor);
-
-		font.drawString(10, 115, "playerSphereUpper X: " + (int) WorldManager.playerSphereUpper.getX() + " Y: " + (int) WorldManager.playerSphereUpper.getY() + " Z: " + (int) WorldManager.playerSphereUpper.getZ(), Constants.textColor);
-
-		font.drawString(10, 140, "playerSphereLower X: " + (int) WorldManager.playerSphereLower.getX() + " Y: " + (int) WorldManager.playerSphereLower.getY() + " Z: " + (int) WorldManager.playerSphereLower.getZ(), Constants.textColor);
-		font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x + " Y: " + Constants.playerSpeed.y + " Z: " + Constants.playerSpeed.z, Constants.textColor);
-		font.drawString(10, 190, "Selected Block Type: " + Constants.selectedBlockType, Constants.textColor);
-		
-		font.drawString(10, 205, " ", Color.white);
-
-		
-
-	}
-
-	public void ready2D() {
-		glCullFace(GL_BACK);
-		glClearDepth(1);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-
-		glOrtho(0, Constants.WIDTH, Constants.HEIGHT, 0, -1, 1);
-		glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
-		glMatrixMode(GL_MODELVIEW);
-	}
-
-	public void ready3D() {
-		if (Constants.fogEnabled) {
-			glEnable(GL_FOG);
-		} else {
-			glDisable(GL_FOG);
-		}
-		glCullFace(GL_FRONT);
-		glViewport(0, 0, Display.getWidth(), Display.getHeight());
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-
-		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose, Constants.viewDistance);
-		glMatrixMode(GL_MODELVIEW);
-
-		glEnable(GL_DEPTH_TEST);
-	}
-
-
 
 	@Override
 	public void dispose() {
