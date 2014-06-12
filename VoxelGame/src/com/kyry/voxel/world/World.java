@@ -186,11 +186,16 @@ public class World extends Screen {
 		float x2Crosshair = screenXMid + screenObjOffset;
 		float y2Crosshair = screenYMid + screenObjOffset;
 		renderHUDObject(Block.Crosshair.getId(), x1Crosshair, y1Crosshair, x2Crosshair, y2Crosshair); //Draw Crosshair
-		float x1Selected = screenXMid*2 - screenObjOffset*2;
-		float y1Selected = 0;
-		float x2Selected = screenXMid*2;
-		float y2Selected = 0 + screenObjOffset*2;
+		float x1Selected = screenXMid*2 - screenObjOffset*2 - 10;
+		float y1Selected = 0 + 10;
+		float x2Selected = screenXMid*2 - 10;
+		float y2Selected = 0 + screenObjOffset*2  + 10;
 		renderHUDObject(Constants.selectedBlockType, x1Selected, y1Selected, x2Selected, y2Selected); //Draw Selected Object
+		float x1SelectedOutline = screenXMid*2 - screenObjOffset*2 - 10*2;
+		float y1SelectedOutline = 0;
+		float x2SelectedOutline = screenXMid*2 + 10;
+		float y2SelectedOutline = 0 + screenObjOffset*2  + 10*2;
+		renderHUDObject(Block.TransparentGray.getId(), x1SelectedOutline, y1SelectedOutline, x2SelectedOutline, y2SelectedOutline); //Draw Selected Object
 //		for ()
 //		renderHUDObject(Block.Crosshair.getId());
 
