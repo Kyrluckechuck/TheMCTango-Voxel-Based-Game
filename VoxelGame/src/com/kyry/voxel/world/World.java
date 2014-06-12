@@ -123,33 +123,64 @@ public class World extends Screen {
 
 	@Override
 	public void worldRender() {
-		render3D(); // Setup 3D matrix rendering environment
+		ready3D(); // Setup 3D matrix rendering environment
 		gameLogic(); // Perform any logisitical changes
-		mapRender(); // Render world (interactable map)
-		renderSkyBox(); // Render Skybox (outside of world, non-interactible)
+		render3D(); 
+		//renderSkyBox(); 
 
 		glLoadIdentity(); // Reset 3D rendering matrix environment
 
 		if (renderText) {
-			render2D(); // Setup 2D matrix rendering environment
-			renderText(); // Render 2D text to screen
+			ready2D(); // Setup 2D matrix rendering environment
+			render2D();
 		}
 
+	}
+
+	private void render2D() {
+		renderText(); // Render 2D text to screen
+		renderCrosshair();	//render 2D crosshair image
+	}
+
+	private void renderCrosshair() {
+		glBegin(GL_QUADS);
+		float[] texCoords = Block.getTile(Block.Crosshair.getId()).getTexCoords();
+		glTexCoord2f(texCoords[0], texCoords[1]);
+		glVertex2f(100,100);
+		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(),
+				texCoords[1]);
+		glVertex2f(200,100);
+		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(),
+				texCoords[1] + Spritesheet.tiles.uniformSize());
+		glVertex2f(200, 200);
+		glTexCoord2f(texCoords[0],
+				texCoords[1] + Spritesheet.tiles.uniformSize());
+		glVertex2f(100, 200 );
+		glEnd();
+		TextureImpl.unbind();
 	}
 
 	private void gameLogic() {
 		worldManager.logic();
 	}
 
-	private void mapRender() {
-		worldManager.render();
+	private void render3D() {
+		worldManager.mapRender(); // Render world (interactable map)
+		renderSkyBox(); // Render Skybox (outside of world, non-interactible)
 	}
 
-	/*
-	 * private void skyBoxRender() { worldManager.skyBoxRender();
-	 * 
-	 * }
-	 */
+	public void renderSkyBox() {
+		glCullFace(GL_BACK);
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose, Constants.viewDistance);
+		glMatrixMode(GL_MODELVIEW);
+
+		glEnable(GL_DEPTH_TEST);
+		Skybox.skyRender();
+	}
 
 	private void renderText() {
 		font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       " + "noClip " + noClip, Constants.textColor);
@@ -167,11 +198,11 @@ public class World extends Screen {
 		
 		font.drawString(10, 205, " ", Color.white);
 
-		TextureImpl.unbind();
+		
 
 	}
 
-	public void render2D() {
+	public void ready2D() {
 		glCullFace(GL_BACK);
 		glClearDepth(1);
 		glMatrixMode(GL_PROJECTION);
@@ -182,7 +213,7 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 	}
 
-	public void render3D() {
+	public void ready3D() {
 		if (Constants.fogEnabled) {
 			glEnable(GL_FOG);
 		} else {
@@ -199,18 +230,7 @@ public class World extends Screen {
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	public void renderSkyBox() {
-		glCullFace(GL_BACK);
-		glViewport(0, 0, Display.getWidth(), Display.getHeight());
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
 
-		gluPerspective(67.0f, Constants.WIDTH / (float) Constants.HEIGHT, Constants.viewClose, Constants.viewDistance);
-		glMatrixMode(GL_MODELVIEW);
-
-		glEnable(GL_DEPTH_TEST);
-		Skybox.render();
-	}
 
 	@Override
 	public void dispose() {

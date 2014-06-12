@@ -14,7 +14,7 @@ import com.kyry.voxel.world.physics.CollisionLibrary;
 
 public class Skybox {
 
-	public static void render() {
+	public static void skyRender() {
 		glBegin(GL_QUADS);
 		float playerX = Player.camera.getX();
 		float playerY = Player.camera.getY();

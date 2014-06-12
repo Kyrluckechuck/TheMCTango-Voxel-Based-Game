@@ -75,7 +75,7 @@ public class WorldManager {
 		chunkManager.update();
 	}
 
-	public void render() {
+	public void mapRender() {
 		Constants.chunksFrustum = 0;
 
 		Spritesheet.tiles.bind();
@@ -94,7 +94,7 @@ public class WorldManager {
 	}// end render
 
 	public void skyBoxRender() {
-		Skybox.render();
+		Skybox.skyRender();
 	}
 
 	public void logic() {

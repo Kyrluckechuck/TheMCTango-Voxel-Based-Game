@@ -375,9 +375,6 @@ public class ChunkManager {
 	// according to each move, etc.. :S
 
 	public void update() {
-	
-	}// End Update()
-/*	public void update() {
 		// Basically will check if chunk is in the "bufferzone" if not then
 		// load, chunk, if not then delete
 		// DELETE
@@ -413,10 +410,10 @@ public class ChunkManager {
 			}// end for z
 		}// end for x
 		
-		 * iterate through queue
+		 // iterate through queue
 		 
 	}// End Update()
-*/
+
 
 
 	public static boolean isInZone(String key) { // Vector2f key, so z-coord is

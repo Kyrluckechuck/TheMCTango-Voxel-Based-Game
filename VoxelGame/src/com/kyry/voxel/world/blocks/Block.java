@@ -28,7 +28,8 @@ public abstract class Block {
 	public static Block Glass = new BlockGlass();
 	public static Block Wireframe = new BlockWireframe();
 	public static Block Adamantium = new BlockAdamantium();
-	public static Block TransparentGray = new BlockTransparentGray();
+	public static Block TransparentGray = new TileTransparentGray();
+	public static Block Crosshair = new Crosshair();
 	public static Block Skybox1 = new BlockSkybox1();
 	public static Block Skybox2 = new BlockSkybox1();
 	public static Block Skybox3 = new BlockSkybox1();
@@ -61,6 +62,7 @@ public abstract class Block {
 		tileMap.put((short) 8, Wireframe);
 		tileMap.put((short) 9, Adamantium);
 		tileMap.put((short) 16, TransparentGray);
+		tileMap.put((short) 17, Crosshair);
 		tileMap.put((short) 209, Skybox1);
 		tileMap.put((short) 224, Skybox2);
 		tileMap.put((short) 225, Skybox3);
