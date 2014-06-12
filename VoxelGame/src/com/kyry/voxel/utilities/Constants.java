@@ -42,7 +42,7 @@ public class Constants {
 	public static float jumpFrames = 0.25f;
 	public static float jumpCounter = 0f;
 	// initial position of the player
-	public static final Vector3f initPos = new Vector3f(4f, 25f, 4f);
+	public static final Vector3f initPos = new Vector3f(4f, 50f, 4f);
 	// Last center chunk that was used for the rendering system //to be finished
 	public static final Vector3f lastRenderChunk = new Vector3f(0f, 0f, 0f);
 	// store the speed of the player
