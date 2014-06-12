@@ -29,10 +29,10 @@ public class World extends Screen {
 
 	public static boolean noClip = true;
 	private boolean renderText = true;
-	
+
 	float screenObjOffset = 50;
-	float screenXMid = Constants.WIDTH/2;
-	float screenYMid = Constants.HEIGHT/2;
+	float screenXMid = Constants.WIDTH / 2;
+	float screenYMid = Constants.HEIGHT / 2;
 
 	public World() {
 		initGL();
@@ -69,9 +69,6 @@ public class World extends Screen {
 	}
 
 	private void input() {
-		if (Mouse.isButtonDown(0)) {
-			Mouse.setGrabbed(true);
-		}
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_F3)) {
@@ -100,23 +97,14 @@ public class World extends Screen {
 			}
 
 		}
+		getInteractionMouse();
 
 	}
-	private void getInteractionKeys(){
-		boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove block
-		boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block
-		boolean cycleBlockType = Keyboard.isKeyDown(Keyboard.KEY_1); 
-/*		if (clickBlockAdd && !clickBlockDelete) {
-			if (Constants.blockToAdd != null) {
 
-				ChunkManager.changeBlock(Constants.selectedBlockType);
-			}
+	private void getInteractionKeys() {
 
-		}
-		if (!clickBlockAdd && clickBlockDelete) {
-			if (Constants.selectedBlock != null)
-				ChunkManager.changeBlock(Block.Air.getId());
-		}*/
+		boolean cycleBlockType = Keyboard.isKeyDown(Keyboard.KEY_1);
+
 		if (cycleBlockType) {
 			if (Constants.selectedBlockType < 9)
 				Constants.selectedBlockType++;
@@ -125,12 +113,36 @@ public class World extends Screen {
 		}
 	}
 
+	public void getInteractionMouse() {
+
+		while (Mouse.next()) {
+			if (Mouse.getEventButtonState()) {
+				boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove
+																	// block
+				boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block
+				if (clickBlockAdd && !clickBlockDelete) {
+					Mouse.setGrabbed(true);
+					if (Constants.blockToAdd != null) {
+						ChunkManager.changeBlock(Constants.blockToAdd, Constants.selectedBlockType);
+					}
+
+				}
+				if (!clickBlockAdd && clickBlockDelete) {
+					Mouse.setGrabbed(true);
+					if (Constants.selectedBlock != null)
+						ChunkManager.changeBlock(Constants.selectedBlock, Block.Air.getId());
+				}
+
+			}
+		}
+	}
+
 	@Override
 	public void worldRender() {
 		ready3D(); // Setup 3D matrix rendering environment
 		gameLogic(); // Perform any logisitical changes
-		render3D(); 
-		//renderSkyBox(); 
+		render3D();
+		// renderSkyBox();
 
 		glLoadIdentity(); // Reset 3D rendering matrix environment
 
@@ -143,9 +155,9 @@ public class World extends Screen {
 
 	private void render2D() {
 		renderText(); // Render 2D text to screen
-		renderHUD();	//render 2D crosshair image
+		renderHUD(); // render 2D crosshair image
 	}
-	
+
 	public void ready2D() {
 		glCullFace(GL_BACK);
 		glClearDepth(1);
@@ -170,58 +182,59 @@ public class World extends Screen {
 		font.drawString(10, 140, "playerSphereLower X: " + (int) WorldManager.playerSphereLower.getX() + " Y: " + (int) WorldManager.playerSphereLower.getY() + " Z: " + (int) WorldManager.playerSphereLower.getZ(), Constants.textColor);
 		font.drawString(10, 165, "playerSpeed X: " + Constants.playerSpeed.x + " Y: " + Constants.playerSpeed.y + " Z: " + Constants.playerSpeed.z, Constants.textColor);
 		font.drawString(10, 190, "Selected Block Type: " + Constants.selectedBlockType, Constants.textColor);
-		
+
 		font.drawString(10, 205, " ", Color.white);
-		
+
 		TextureImpl.unbind();
-		
 
 	}
 
 	private void renderHUD() {
-		
+
 		Spritesheet.tiles.bind();
 		float x1Crosshair = screenXMid - screenObjOffset;
 		float y1Crosshair = screenYMid - screenObjOffset;
 		float x2Crosshair = screenXMid + screenObjOffset;
 		float y2Crosshair = screenYMid + screenObjOffset;
-		renderHUDObject(Block.Crosshair.getId(), x1Crosshair, y1Crosshair, x2Crosshair, y2Crosshair); //Draw Crosshair
-		float x1Selected = screenXMid*2 - screenObjOffset*2 - 10;
+		renderHUDObject(Block.Crosshair.getId(), x1Crosshair, y1Crosshair, x2Crosshair, y2Crosshair); // Draw
+																										// Crosshair
+		float x1Selected = screenXMid * 2 - screenObjOffset * 2 - 10;
 		float y1Selected = 0 + 10;
-		float x2Selected = screenXMid*2 - 10;
-		float y2Selected = 0 + screenObjOffset*2  + 10;
-		renderHUDObject(Constants.selectedBlockType, x1Selected, y1Selected, x2Selected, y2Selected); //Draw Selected Object
-		float x1SelectedOutline = screenXMid*2 - screenObjOffset*2 - 10*2;
+		float x2Selected = screenXMid * 2 - 10;
+		float y2Selected = 0 + screenObjOffset * 2 + 10;
+		renderHUDObject(Constants.selectedBlockType, x1Selected, y1Selected, x2Selected, y2Selected); // Draw
+																										// Selected
+																										// Object
+		float x1SelectedOutline = screenXMid * 2 - screenObjOffset * 2 - 10 * 2;
 		float y1SelectedOutline = 0;
-		float x2SelectedOutline = screenXMid*2 + 10;
-		float y2SelectedOutline = 0 + screenObjOffset*2  + 10*2;
-		renderHUDObject(Block.TransparentGray.getId(), x1SelectedOutline, y1SelectedOutline, x2SelectedOutline, y2SelectedOutline); //Draw Selected Object
-//		for ()
-//		renderHUDObject(Block.Crosshair.getId());
+		float x2SelectedOutline = screenXMid * 2 + 10;
+		float y2SelectedOutline = 0 + screenObjOffset * 2 + 10 * 2;
+		renderHUDObject(Block.TransparentGray.getId(), x1SelectedOutline, y1SelectedOutline, x2SelectedOutline, y2SelectedOutline); // Draw
+																																	// Selected
+																																	// Object
+		// for ()
+		// renderHUDObject(Block.Crosshair.getId());
 
 	}
 
-	private void renderHUDObject(short texture, float x1, float y1, float x2, float y2 ) {
+	private void renderHUDObject(short texture, float x1, float y1, float x2, float y2) {
 		glBegin(GL_QUADS);
 		float[] texCoords = Block.getTile(texture).getTexCoords();
 		glTexCoord2f(texCoords[0], texCoords[1]);
 		glVertex2f(x1, y1);
-		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(),
-				texCoords[1]);
+		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1]);
 		glVertex2f(x1, y2);
-		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(),
-				texCoords[1] + Spritesheet.tiles.uniformSize());
+		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1] + Spritesheet.tiles.uniformSize());
 		glVertex2f(x2, y2);
-		glTexCoord2f(texCoords[0],
-				texCoords[1] + Spritesheet.tiles.uniformSize());
+		glTexCoord2f(texCoords[0], texCoords[1] + Spritesheet.tiles.uniformSize());
 		glVertex2f(x2, y1);
-		glEnd();		
+		glEnd();
 	}
 
 	private void gameLogic() {
 		worldManager.logic();
 	}
-	
+
 	public void ready3D() {
 		if (Constants.fogEnabled) {
 			glEnable(GL_FOG);

@@ -85,7 +85,7 @@ public class Camera extends Entity {
 		WorldManager.playerSphereUpper.update(somePosition);
 		WorldManager.playerSphereLower.update(someOtherPosition);
 
-		boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove block
+/*		boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove block
 		boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block
 		if (clickBlockAdd && !clickBlockDelete) {
 			if (Constants.blockToAdd != null) {
@@ -97,7 +97,7 @@ public class Camera extends Entity {
 		if (!clickBlockAdd && clickBlockDelete) {
 			if (Constants.selectedBlock != null)
 				ChunkManager.changeBlock(Constants.selectedBlock, Block.Air.getId());
-		}
+		}*/
 
 	
 
