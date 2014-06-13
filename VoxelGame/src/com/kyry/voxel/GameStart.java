@@ -12,7 +12,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.nishu.utils.GameLoop;
@@ -29,7 +29,7 @@ public class GameStart extends Screen {
 		/* czech for multithreading */
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
-		gameLoop.start((int) Constants.FPS);
+		gameLoop.start((int) Globals.FPS);
 
 	}
 
@@ -46,8 +46,8 @@ public class GameStart extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(67.0f, Constants.WIDTH / Constants.HEIGHT,
-				Constants.viewClose, Constants.viewDistance);
+		gluPerspective(67.0f, Globals.WIDTH / Globals.HEIGHT,
+				Globals.viewClose, Globals.viewDistance);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
@@ -56,22 +56,22 @@ public class GameStart extends Screen {
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
 		/*
-		 * if (Constants.fogEnabled) { GL11.glEnable(GL11.GL_FOG);
+		 * if (Globals.fogEnabled) { GL11.glEnable(GL11.GL_FOG);
 		 */
 		{
 			FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
-			fogColours.put(new float[] { Constants.fogColor.r,
-					Constants.fogColor.g, Constants.fogColor.b,
-					Constants.fogColor.a });
-			GL11.glClearColor(Constants.fogColor.r, Constants.fogColor.g,
-					Constants.fogColor.b, Constants.fogColor.a);
+			fogColours.put(new float[] { Globals.fogColor.r,
+					Globals.fogColor.g, Globals.fogColor.b,
+					Globals.fogColor.a });
+			GL11.glClearColor(Globals.fogColor.r, Globals.fogColor.g,
+					Globals.fogColor.b, Globals.fogColor.a);
 			fogColours.flip();
 			GL11.glFog(GL11.GL_FOG_COLOR, fogColours);
 			GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
 			GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_NICEST);
-			GL11.glFogf(GL11.GL_FOG_START, Constants.fogNear);
-			GL11.glFogf(GL11.GL_FOG_END, Constants.fogFar);
-			GL11.glFogf(GL11.GL_FOG_DENSITY, Constants.fogDensity);
+			GL11.glFogf(GL11.GL_FOG_START, Globals.fogNear);
+			GL11.glFogf(GL11.GL_FOG_END, Globals.fogFar);
+			GL11.glFogf(GL11.GL_FOG_DENSITY, Globals.fogDensity);
 			// }
 		}
 	}
@@ -86,9 +86,9 @@ public class GameStart extends Screen {
 			dispose();
 		}
 		if (gameLoop.getFPS() > 1) {
-			Constants.FPS = gameLoop.getFPS();
+			Globals.FPS = gameLoop.getFPS();
 		} else {
-			Constants.FPS = 1f;
+			Globals.FPS = 1f;
 		}
 		world.update();
 	}
@@ -111,7 +111,7 @@ public class GameStart extends Screen {
 
 
 	public static void main(String[] args) {
-		Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "Voxels", true);
+		Window.createWindow(Globals.WIDTH, Globals.HEIGHT, "Voxels", true);
 		Display.setVSyncEnabled(true);
 //		Queue<Chunk> toRemove = new ConcurrentLinkedQueue<Chunk>();
 //		Queue<Chunk> toAdd = new ConcurrentLinkedQueue<Chunk>();

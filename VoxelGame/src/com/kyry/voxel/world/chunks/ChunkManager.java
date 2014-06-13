@@ -21,7 +21,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.Frustum;
 import com.kyry.voxel.utilities.SimplexNoise;
 import com.kyry.voxel.world.World;
@@ -189,7 +189,7 @@ public class ChunkManager {
 				// Vector2f(x, z), (short[][][]) restore.readObject());
 				restore.close();
 				loadedChunks.put(key(x, z), chunk);
-				Constants.chunksLoaded++;
+				Globals.chunksLoaded++;
 				System.out.println("(" + x + "," + z + ") Loaded Successfully.");
 
 				return chunk;
@@ -217,7 +217,7 @@ public class ChunkManager {
 			u = ChunkManager.keyZ(temp.get(q));
 			if (!CollisionLibrary.hasBlock(x, z, i, o, u)) {
 				CollisionLibrary.newBlock(x, z, i, o, u);
-				Constants.PhysBlocksLoaded++;
+				Globals.PhysBlocksLoaded++;
 			}
 			// This basically adds ONLY the blocks that were rendered to the
 			// physics environment
@@ -244,7 +244,7 @@ public class ChunkManager {
 			u = ChunkManager.keyZ(temp.get(q));
 
 			CollisionLibrary.removeBlock(x, z, i, o, u);
-			Constants.PhysBlocksLoaded--;
+			Globals.PhysBlocksLoaded--;
 			// This basically removes ONLY the blocks that had been rendered to
 			// the physics environment
 		}
@@ -270,7 +270,7 @@ public class ChunkManager {
 		}
 
 		activeChunks.put(key(x, z), loadedChunks.get(key(x, z)));
-		Constants.chunksActive++;
+		Globals.chunksActive++;
 		activeChunks.get(key(x, z)).load();
 		loadChunkToPhys(x, z);
 
@@ -291,13 +291,13 @@ public class ChunkManager {
 		// chunk list
 		removeChunkFromPhys(x, z);
 		activeChunks.remove(key(x, z));
-		Constants.chunksActive--;
+		Globals.chunksActive--;
 
 	}
 
 	public static void createChunk(int f, int h) {
-		int sizeAll = Constants.CHUNKSIZE;
-		int worldHeight = Constants.WORLDHEIGHT;
+		int sizeAll = Globals.CHUNKSIZE;
+		int worldHeight = Globals.WORLDHEIGHT;
 		short[][][] blocks = new short[sizeAll][worldHeight][sizeAll];
 
 		/*
@@ -320,7 +320,7 @@ public class ChunkManager {
 		 * 
 		 * float groundHeight = (float) noise.noise((float) blockWidth /
 		 * frequency, (float) blockLength / frequency); groundHeight *=
-		 * Constants.WORLDHEIGHT/2; groundHeight += Constants.WORLDHEIGHT/2;
+		 * Globals.WORLDHEIGHT/2; groundHeight += Globals.WORLDHEIGHT/2;
 		 * tiles[blockWidth + blockLength * width] = (int) groundHeight;
 		 * 
 		 * }
@@ -400,8 +400,8 @@ public class ChunkManager {
 		// player's
 		// XZ Chunk
 		// coords
-		for (int x = (int) (blockPos.getX() - Constants.WORLDRADIUS); x <= (int) (blockPos.getX() + Constants.WORLDRADIUS); x++) {
-			for (int z = (int) (blockPos.getY() - Constants.WORLDRADIUS); z <= (int) (blockPos.getY() + Constants.WORLDRADIUS); z++) {
+		for (int x = (int) (blockPos.getX() - Globals.WORLDRADIUS); x <= (int) (blockPos.getX() + Globals.WORLDRADIUS); x++) {
+			for (int z = (int) (blockPos.getY() - Globals.WORLDRADIUS); z <= (int) (blockPos.getY() + Globals.WORLDRADIUS); z++) {
 				String key = key(x, z);
 				if (!activeChunks.containsKey(key)) {
 					loadChunkToActive(x, z);
@@ -423,8 +423,8 @@ public class ChunkManager {
 		int z = keyY(key);
 		// chunk relative position of player
 		Vector2f playerPos = blockToChunk(Player.camera.getX(), Player.camera.getZ());
-		if (x <= (playerPos.getX() + Constants.WORLDRADIUS) && x >= (playerPos.getX() - Constants.WORLDRADIUS)) {
-			if (z <= (playerPos.getY() + Constants.WORLDRADIUS) && z >= (playerPos.getY() - Constants.WORLDRADIUS)) {
+		if (x <= (playerPos.getX() + Globals.WORLDRADIUS) && x >= (playerPos.getX() - Globals.WORLDRADIUS)) {
+			if (z <= (playerPos.getY() + Globals.WORLDRADIUS) && z >= (playerPos.getY() - Globals.WORLDRADIUS)) {
 				result = true;
 			}
 		}
@@ -442,10 +442,10 @@ public class ChunkManager {
 		while (iterator.hasNext()) {
 			Entry<String, Chunk> entry = iterator.next();
 			if (Frustum.getFrustum().cubeFullyInFrustum(entry.getValue().getPos().getX(), 0,// entry.getValue().getPos().getY(),
-					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Constants.CHUNKSIZE, 0 + Constants.WORLDHEIGHT,// entry.getValue().getPos().getY()
+					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Globals.CHUNKSIZE, 0 + Globals.WORLDHEIGHT,// entry.getValue().getPos().getY()
 					// +
-					// Constants.CHUNKSIZE,
-					entry.getValue().getPos().getY() + Constants.CHUNKSIZE)) {
+					// Globals.CHUNKSIZE,
+					entry.getValue().getPos().getY() + Globals.CHUNKSIZE)) {
 				/*
 				 * if (Math.abs(entry.getValue().getCenter().getX() - (int)
 				 * Player.camera.getX()) < 64 // &&
@@ -454,7 +454,7 @@ public class ChunkManager {
 				 * Math.abs(entry.getValue().getCenter().getY() -
 				 * Player.camera.getY()) < 32) {
 				 */
-				Constants.chunksFrustum++;
+				Globals.chunksFrustum++;
 				entry.getValue().render();
 
 				// } //Commented out with the 64/32 code
@@ -463,11 +463,11 @@ public class ChunkManager {
 		/*
 		 * render selected block
 		 */
-		if ((Constants.selectedBlock != null) && (Constants.blockToAdd != null) &&(Constants.blockToAdd.y < Constants.WORLDHEIGHT && Constants.blockToAdd.y > 0) && (Constants.selectedBlock.y < Constants.WORLDHEIGHT && Constants.selectedBlock.y > 0)) {
+		if ((Globals.selectedBlock != null) && (Globals.blockToAdd != null) &&(Globals.blockToAdd.y < Globals.WORLDHEIGHT && Globals.blockToAdd.y > 0) && (Globals.selectedBlock.y < Globals.WORLDHEIGHT && Globals.selectedBlock.y > 0)) {
 			float padding = 0.001f;
 			GL11.glBegin(GL11.GL_QUADS);
-			Shape.createCube(Constants.selectedBlock.x - padding, Constants.selectedBlock.y - padding, Constants.selectedBlock.z - padding, Block.TransparentGray.getColor(), Block.TransparentGray.getTexCoords(), 1 + (2 * padding));
-			Shape.createCube(Constants.blockToAdd.x - padding, Constants.blockToAdd.y - padding, Constants.blockToAdd.z - padding, Block.Wireframe.getColor(), Block.Wireframe.getTexCoords(), 1 + (2 * padding));
+			Shape.createCube(Globals.selectedBlock.x - padding, Globals.selectedBlock.y - padding, Globals.selectedBlock.z - padding, Block.TransparentGray.getColor(), Block.TransparentGray.getTexCoords(), 1 + (2 * padding));
+			Shape.createCube(Globals.blockToAdd.x - padding, Globals.blockToAdd.y - padding, Globals.blockToAdd.z - padding, Block.Wireframe.getColor(), Block.Wireframe.getTexCoords(), 1 + (2 * padding));
 
 			GL11.glEnd();
 		}
@@ -479,9 +479,9 @@ public class ChunkManager {
 		int worldZ = (int) blockToAdd.getZ();
 		int chunkX = (blockToChunk1f(worldX));
 		int chunkZ = (blockToChunk1f(worldZ));
-		int internX = (int) worldX - chunkX * Constants.CHUNKSIZE;
+		int internX = (int) worldX - chunkX * Globals.CHUNKSIZE;
 		int internY = (int) worldY;
-		int internZ = (int) worldZ - chunkZ * Constants.CHUNKSIZE;
+		int internZ = (int) worldZ - chunkZ * Globals.CHUNKSIZE;
 		String key = key(chunkX, chunkZ);
 		removeChunkFromActive(key);
 		Chunk temp = loadedChunks.get(key);

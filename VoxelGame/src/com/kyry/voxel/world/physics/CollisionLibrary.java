@@ -10,7 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.chunks.ChunkManager;
 
@@ -23,15 +23,15 @@ public class CollisionLibrary {
 	}
 
 	public static void newBlock(float chunkX, float chunkZ, float x, float y, float z, float r) {
-		String key = ChunkManager.key((int) (chunkX*Constants.CHUNKSIZE + x), (int) y, (int) (chunkZ*Constants.CHUNKSIZE + z));
+		String key = ChunkManager.key((int) (chunkX*Globals.CHUNKSIZE + x), (int) y, (int) (chunkZ*Globals.CHUNKSIZE + z));
 		// BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
 		BlockMap.put(key, new AABB(chunkX, chunkZ, x, y, z, r));
-		Constants.PhysBlocksLoaded++;
+		Globals.PhysBlocksLoaded++;
 
 	}
 
 	public static boolean hasBlock(float chunkX, float chunkZ, float x, float y, float z) {
-		String key = ChunkManager.key((int) (chunkX*Constants.CHUNKSIZE + x), (int) y, (int) (chunkZ*Constants.CHUNKSIZE + z));
+		String key = ChunkManager.key((int) (chunkX*Globals.CHUNKSIZE + x), (int) y, (int) (chunkZ*Globals.CHUNKSIZE + z));
 		// BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
 		if (BlockMap.containsKey(key)) {
 			return true;
@@ -41,7 +41,7 @@ public class CollisionLibrary {
 	}
 
 	public static void removeBlock(int chunkX, int chunkZ, int x, int y, int z) {
-		removeBlock((int) (chunkX*Constants.CHUNKSIZE + x), y, (int) (chunkZ*Constants.CHUNKSIZE + z));
+		removeBlock((int) (chunkX*Globals.CHUNKSIZE + x), y, (int) (chunkZ*Globals.CHUNKSIZE + z));
 	}
 
 	private static void removeBlock(int x, int y, int z) {

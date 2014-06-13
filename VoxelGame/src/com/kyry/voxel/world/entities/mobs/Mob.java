@@ -2,7 +2,7 @@ package com.kyry.voxel.world.entities.mobs;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.GameObject;
 import com.kyry.voxel.world.entities.Camera;
 import com.kyry.voxel.world.entities.Entity;
@@ -27,7 +27,7 @@ public class Mob extends Entity implements GameObject{
 
 	public void mobMove() {
 		getCamera().updateMouse();
-		getCamera().updateKeyboard((float)(1/Constants.FPS), 1f);
+		getCamera().updateKeyboard((float)(1/Globals.FPS), 1f);
 		setPos(getCamera().getX(), getCamera().getY(), getCamera().getZ());
 		setRot(getCamera().getPitch(), getCamera().getYaw(), getCamera().getRoll());
 	}

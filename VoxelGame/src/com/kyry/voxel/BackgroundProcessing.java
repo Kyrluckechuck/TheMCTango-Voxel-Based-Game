@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.chunks.ChunkManager;
 import com.kyry.voxel.world.entities.mobs.Player;
@@ -55,8 +55,8 @@ public class BackgroundProcessing extends Thread{
 																	// player's
 																	// XZ Chunk
 																	// coords
-		for (int x = (int) (blockPos.getX() - Constants.WORLDRADIUS); x <= (int) (blockPos.getX() + Constants.WORLDRADIUS); x++) {
-			for (int z = (int) (blockPos.getY() - Constants.WORLDRADIUS); z <= (int) (blockPos.getY() + Constants.WORLDRADIUS); z++) {
+		for (int x = (int) (blockPos.getX() - Globals.WORLDRADIUS); x <= (int) (blockPos.getX() + Globals.WORLDRADIUS); x++) {
+			for (int z = (int) (blockPos.getY() - Globals.WORLDRADIUS); z <= (int) (blockPos.getY() + Globals.WORLDRADIUS); z++) {
 				String key = ChunkManager.key(x, z);
 				if (!ChunkManager.activeChunks.containsKey(key)) {
 					ChunkManager.loadChunkToActive(x, z);

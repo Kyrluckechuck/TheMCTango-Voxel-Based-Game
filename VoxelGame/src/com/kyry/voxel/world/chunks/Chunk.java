@@ -29,7 +29,7 @@ import org.lwjgl.opengl.GL20;
 
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.Skybox;
@@ -55,7 +55,7 @@ public class Chunk implements Serializable {
 	public Random rand;
 	public short[][][] blocks;
 	// boolean[][][] temp = new
-	// boolean[Constants.CHUNKSIZE][Constants.WORLDHEIGHT][Constants.CHUNKSIZE];
+	// boolean[Globals.CHUNKSIZE][Globals.WORLDHEIGHT][Globals.CHUNKSIZE];
 	// public ArrayList<Vector3f> temp = new ArrayList<Vector3f>();
 	public ArrayList<String> temp = new ArrayList<String>();
 
@@ -90,20 +90,20 @@ public class Chunk implements Serializable {
 	public void initGL() {
 		rand = new Random(); // initialize random number generator
 
-		sizeX = Constants.CHUNKSIZE;// TBH, idk -> LOL I do
-		sizeY = Constants.WORLDHEIGHT;
-		sizeZ = Constants.CHUNKSIZE;
+		sizeX = Globals.CHUNKSIZE;// TBH, idk -> LOL I do
+		sizeY = Globals.WORLDHEIGHT;
+		sizeZ = Globals.CHUNKSIZE;
 
 		// internX = (int) ( Player.camera.getX() - pos.getX() *
-		// Constants.CHUNKSIZE); //Internal chunk coords
+		// Globals.CHUNKSIZE); //Internal chunk coords
 		// internY = (int) ( Player.camera.getY() - pos.getY() *
-		// Constants.CHUNKSIZE);
+		// Globals.CHUNKSIZE);
 		// internZ = (int) ( Player.camera.getZ() - pos.getZ() *
-		// Constants.CHUNKSIZE);
+		// Globals.CHUNKSIZE);
 
-		worldX = (int) pos.getX() * Constants.CHUNKSIZE; // World chunk coords
-		// worldY = 0;//(int) pos.getY() * Constants.CHUNKSIZE;
-		worldZ = (int) pos.getY() * Constants.CHUNKSIZE;
+		worldX = (int) pos.getX() * Globals.CHUNKSIZE; // World chunk coords
+		// worldY = 0;//(int) pos.getY() * Globals.CHUNKSIZE;
+		worldZ = (int) pos.getY() * Globals.CHUNKSIZE;
 
 		vcID = glGenLists(1); // Generate blank list for vcID
 
@@ -177,7 +177,7 @@ public class Chunk implements Serializable {
 			 */System.out.println("Total chunk coords being done: " + temp.size());
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
-			// int sizeAll = Constants.CHUNKSIZE;
+			// int sizeAll = Globals.CHUNKSIZE;
 			/*
 			 * Vector3f loadChunkVector = ChunkManager.blockToChunk(
 			 * Player.camera.getX(), Player.camera.getY(),
@@ -198,7 +198,7 @@ public class Chunk implements Serializable {
 				int z = ChunkManager.keyZ(temp.get(q));
 
 				Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z, Block.getTile(blocks[x][y][z]).getColor(), Block.getTile(blocks[x][y][z]).getTexCoords(), 1);
-				Constants.RenderBlocksLoaded++;
+				Globals.RenderBlocksLoaded++;
 			}
 			glEnd();
 			glEndList();
@@ -214,13 +214,13 @@ public class Chunk implements Serializable {
 		 */
 		if (x > pos.getX()) {
 			if ((x - 1) < 0) {
-				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x - 1));
-				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + z);
+				int x1 = (int) (((int) pos.getX() * Globals.CHUNKSIZE) + (x - 1));
+				int z1 = (int) (((int) pos.getY() * Globals.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
 				// z1)) + " " + grr);
-				if (grr.blocks[Constants.CHUNKSIZE-1][y][z] != 0)
+				if (grr.blocks[Globals.CHUNKSIZE-1][y][z] != 0)
 					facesHidden[0] = true;
 				else
 					facesHidden[0] = false;
@@ -236,9 +236,9 @@ public class Chunk implements Serializable {
 		}
 
 		if (x < (sizeX - 1)) {
-			if ((x + 1) > Constants.CHUNKSIZE) {
-				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + (x + 1));
-				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + z);
+			if ((x + 1) > Globals.CHUNKSIZE) {
+				int x1 = (int) (((int) pos.getX() * Globals.CHUNKSIZE) + (x + 1));
+				int z1 = (int) (((int) pos.getY() * Globals.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
@@ -277,13 +277,13 @@ public class Chunk implements Serializable {
 
 		if (z > pos.getY()) {
 			if ((z - 1) < 0) {
-				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
-				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + (z - 1));
+				int x1 = (int) (((int) pos.getX() * Globals.CHUNKSIZE) + x);
+				int z1 = (int) (((int) pos.getY() * Globals.CHUNKSIZE) + (z - 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
 				// z1)) + " " + grr);
-				if (grr.blocks[Constants.CHUNKSIZE-1][y][z] != 0)
+				if (grr.blocks[Globals.CHUNKSIZE-1][y][z] != 0)
 					facesHidden[4] = true;
 				else
 					facesHidden[4] = false;
@@ -298,9 +298,9 @@ public class Chunk implements Serializable {
 
 		}
 		if (z < (sizeZ - 1)) {
-			if ((z + 1) > Constants.CHUNKSIZE) {
-				int x1 = (int) (((int) pos.getX() * Constants.CHUNKSIZE) + x);
-				int z1 = (int) (((int) pos.getY() * Constants.CHUNKSIZE) + (z + 1));
+			if ((z + 1) > Globals.CHUNKSIZE) {
+				int x1 = (int) (((int) pos.getX() * Globals.CHUNKSIZE) + x);
+				int z1 = (int) (((int) pos.getY() * Globals.CHUNKSIZE) + (z + 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
 				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
@@ -333,13 +333,13 @@ public class Chunk implements Serializable {
 	/*
 	 * public short getBlockID(int x, int y, int z) {
 	 * 
-	 * int loadChunkX = (int) (Player.camera.getX() / Constants.CHUNKSIZE); int
-	 * loadChunkY = (int) (Player.camera.getY() / Constants.CHUNKSIZE); int
-	 * loadChunkZ = (int) (Player.camera.getZ() / Constants.CHUNKSIZE);
+	 * int loadChunkX = (int) (Player.camera.getX() / Globals.CHUNKSIZE); int
+	 * loadChunkY = (int) (Player.camera.getY() / Globals.CHUNKSIZE); int
+	 * loadChunkZ = (int) (Player.camera.getZ() / Globals.CHUNKSIZE);
 	 * 
-	 * if (x < pos.getX() || x > pos.getX() + Constants.CHUNKSIZE || y <
-	 * pos.getY() || y > pos.getY() + Constants.CHUNKSIZE || z < pos.getZ() || z
-	 * > pos.getZ() + Constants.CHUNKSIZE) return 1; return blocks[x][y][z]; }
+	 * if (x < pos.getX() || x > pos.getX() + Globals.CHUNKSIZE || y <
+	 * pos.getY() || y > pos.getY() + Globals.CHUNKSIZE || z < pos.getZ() || z
+	 * > pos.getZ() + Globals.CHUNKSIZE) return 1; return blocks[x][y][z]; }
 	 */
 
 	public void setActive(boolean isActive) {
@@ -347,7 +347,7 @@ public class Chunk implements Serializable {
 	}
 
 	public Vector2f getCenter() {
-		return new Vector2f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getY() - (Constants.CHUNKSIZE / 2));
+		return new Vector2f(pos.getX() - (Globals.CHUNKSIZE / 2), pos.getY() - (Globals.CHUNKSIZE / 2));
 	}
 
 	public Vector2f getPos() {

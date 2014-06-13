@@ -1,6 +1,6 @@
 package com.kyry.voxel.world.blocks;
 
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.Spritesheet;
 import com.nishu.utils.Color4f;
 
@@ -18,7 +18,7 @@ public class Crosshair extends Block {
 
 	@Override
 	public float[] getTexCoords() {
-		float actualSize = Constants.TextureSize;
+		float actualSize = Globals.TextureSize;
 		float size = Spritesheet.tiles.uniformSize();
 		int height = (int) (getId() / (float) actualSize);
 		if (height == (getId() / (float) actualSize)) {

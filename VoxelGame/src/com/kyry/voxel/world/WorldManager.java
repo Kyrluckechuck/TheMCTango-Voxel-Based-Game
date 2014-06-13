@@ -18,7 +18,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.Frustum;
 import com.kyry.voxel.utilities.Spritesheet;
 import com.kyry.voxel.world.blocks.Block;
@@ -59,11 +59,11 @@ public class WorldManager {
 		Vector3f pos3f = Player.camera.getPos();
 		Vector2f pos2f = ChunkManager.blockToChunk(pos3f);
 		int y = 0;
-		for (int x = (int) (pos2f.getX() - Constants.WORLDRADIUS); x <= pos2f.getX() + Constants.WORLDRADIUS; x++) {
-			//for (int y = (int) (pos.getY() - Constants.WORLDRADIUS); y <= pos.getY() +Constants.WORLDRADIUS; y++) {
-				for (int z = (int) (pos2f.getY() - Constants.WORLDRADIUS); z <= pos2f.getY() + Constants.WORLDRADIUS; z++) {
+		for (int x = (int) (pos2f.getX() - Globals.WORLDRADIUS); x <= pos2f.getX() + Globals.WORLDRADIUS; x++) {
+			//for (int y = (int) (pos.getY() - Globals.WORLDRADIUS); y <= pos.getY() +Globals.WORLDRADIUS; y++) {
+				for (int z = (int) (pos2f.getY() - Globals.WORLDRADIUS); z <= pos2f.getY() + Globals.WORLDRADIUS; z++) {
 					ChunkManager.loadChunkToActive(x, z);
-					Constants.chunksActive++;
+					Globals.chunksActive++;
 				}
 			//}
 		}
@@ -76,7 +76,7 @@ public class WorldManager {
 	}
 
 	public void mapRender() {
-		Constants.chunksFrustum = 0;
+		Globals.chunksFrustum = 0;
 
 		Spritesheet.tiles.bind();
 		
@@ -85,9 +85,9 @@ public class WorldManager {
 		
 		// renders RAY! keep
 /*		glBegin(GL_QUADS);
-		Shape.createCube(mobManager.getPlayer().getX() + Constants.ray.x,
-				mobManager.getPlayer().getY() + Constants.ray.y,
-				mobManager.getPlayer().getZ() + Constants.ray.z,
+		Shape.createCube(mobManager.getPlayer().getX() + Globals.ray.x,
+				mobManager.getPlayer().getY() + Globals.ray.y,
+				mobManager.getPlayer().getZ() + Globals.ray.z,
 				Block.getTile(Block.Void.getId()).getColor(),
 				Block.getTile(Block.Void.getId()).getTexCoords(), 0.0099f);
 		glEnd();*/

@@ -60,7 +60,7 @@ private static short p[] = { (short) rn.nextInt(255), (short) rn.nextInt(255), (
 
 	public SimplexNoise() {
 		/*for (int x = 0; x < 256; x++) {
-			p[x] = (short) Constants.rand.nextInt(255);
+			p[x] = (short) Globals.rand.nextInt(255);
 		}*/
 	}
 

@@ -10,7 +10,7 @@ import org.lwjgl.input.Mouse;
 import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Sphere;
 //import com.bulletphysics.linearmath.Transform;
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.blocks.Block;
@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Camera extends Entity {
 
 	private float speed, maxU, maxD;
-	private final float playerHeight = Constants.playerHeight;
+	private final float playerHeight = Globals.playerHeight;
 
 	/*
 	 * Rotation x - pitch y - yaw z - roll
@@ -76,8 +76,6 @@ public class Camera extends Entity {
 		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
 		boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 
-
-
 		float deltaDis = deltaTime * speed;
 
 		Vector3f somePosition = new Vector3f(camera.getX(), camera.getY(), camera.getZ());
@@ -85,22 +83,19 @@ public class Camera extends Entity {
 		WorldManager.playerSphereUpper.update(somePosition);
 		WorldManager.playerSphereLower.update(someOtherPosition);
 
-/*		boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove block
-		boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block
-		if (clickBlockAdd && !clickBlockDelete) {
-			if (Constants.blockToAdd != null) {
-
-				ChunkManager.changeBlock(Constants.blockToAdd, Constants.selectedBlockType);
-			}
-
-		}
-		if (!clickBlockAdd && clickBlockDelete) {
-			if (Constants.selectedBlock != null)
-				ChunkManager.changeBlock(Constants.selectedBlock, Block.Air.getId());
-		}*/
-
-	
-
+		/*
+		 * boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove block
+		 * boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block if
+		 * (clickBlockAdd && !clickBlockDelete) { if (Globals.blockToAdd !=
+		 * null) {
+		 * 
+		 * ChunkManager.changeBlock(Globals.blockToAdd,
+		 * Globals.selectedBlockType); }
+		 * 
+		 * } if (!clickBlockAdd && clickBlockDelete) { if (Globals.selectedBlock
+		 * != null) ChunkManager.changeBlock(Globals.selectedBlock,
+		 * Block.Air.getId()); }
+		 */
 
 		if (keyForward && keyRight && !keyLeft && !keyBackward) {// NE
 			playerMove(deltaDis, 0, -deltaDis);
@@ -142,17 +137,19 @@ public class Camera extends Entity {
 	}
 
 	private void jump(float deltaDis) {
-		if (Constants.jumpEnabled) {
+		if (Globals.jumpEnabled) {
 			// if player can jump, then freaking jump already
-			playerMove(0, -deltaDis * Constants.jumpPower, 0);
-			Constants.jumpCounter = 0;
-		} else if (!Constants.jumpEnabled && Constants.jumpCounter < Constants.jumpFrames) {
-			playerMove(0, -deltaDis * Constants.jumpPower, 0);
-			Constants.jumpCounter++;
+			playerMove(0, -deltaDis * Globals.jumpPower, 0);
+			Globals.jumpCounter = 0;
+		} else if (!Globals.jumpEnabled && Globals.jumpCounter < Globals.jumpFrames) {
+			playerMove(0, -deltaDis * Globals.jumpPower, 0);
+			Globals.jumpCounter++;
 		}
 		if (!World.noClip) {
 			// only disable jump if not noclip
-			Constants.jumpEnabled = false;
+			Globals.jumpEnabled = false;
+		}else{
+			Globals.jumpEnabled = true;
 		}
 	}
 
@@ -162,8 +159,8 @@ public class Camera extends Entity {
 		Vector3f someOldPositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());
 
 		if (World.noClip) {
-			// Constants.jumpEnabled = true;//not proper
-			noClipMove(dX * Constants.PLAYER_SPEED, dY * Constants.PLAYER_SPEED, dZ * Constants.PLAYER_SPEED);
+			// Globals.jumpEnabled = true;//not proper
+			noClipMove(dX * Globals.PLAYER_SPEED, dY * Globals.PLAYER_SPEED, dZ * Globals.PLAYER_SPEED);
 		} else if (!World.noClip) {// move normally
 			float origX = getX();
 			float origY = getY();
@@ -256,9 +253,13 @@ public class Camera extends Entity {
 	private void gravity() {
 		float origY = getY();
 		// change in the y direction,by changing the speed
-		float dY = (1 / Constants.FPS) * (Constants.playerSpeed.y - Constants.gravity);
-
+		float dY = (1 / Globals.FPS) * (Globals.playerSpeed.getY() - Globals.gravity);
+		
+		if (Globals.playerSpeed.getY() >= Globals.maxSpeed) {
+			dY = (1 / Globals.FPS) * (Globals.maxSpeed - Globals.gravity);
+		}
 		setY((getY() + dY));
+		
 		WorldManager.playerSphereUpper.update(new Vector3f(getX(), getY(), getZ()));
 		WorldManager.playerSphereLower.update(new Vector3f(getX(), getY() - playerHeight, getZ()));
 		boolean moveAllowed = true;
@@ -275,7 +276,7 @@ public class Camera extends Entity {
 			setY(origY);
 			WorldManager.playerSphereUpper.update(new Vector3f(getX(), getY(), getZ()));
 			WorldManager.playerSphereLower.update(new Vector3f(getX(), getY() - playerHeight, getZ()));
-			Constants.jumpEnabled = true;
+			Globals.jumpEnabled = true;
 		}
 	}
 
@@ -290,51 +291,51 @@ public class Camera extends Entity {
 	}
 
 	public void applyPhysics() {
-		Vector3f diffPos = new Vector3f((getX() - Constants.playerPrevPos.x), (getY() - Constants.playerPrevPos.y), (getZ() - Constants.playerPrevPos.z));
-		diffPos.scale(Constants.FPS);// scale it. delta Pos / time
-		Constants.playerSpeed = diffPos;
+		Vector3f diffPos = new Vector3f((getX() - Globals.playerPrevPos.x), (getY() - Globals.playerPrevPos.y), (getZ() - Globals.playerPrevPos.z));
+		diffPos.scale(Globals.FPS);// scale it. delta Pos / time
+		Globals.playerSpeed = diffPos;
 
 		// Current are now the previous value for the next iteration
-		Constants.playerPrevPos = new Vector3f(getX(), getY(), getZ());
+		Globals.playerPrevPos = new Vector3f(getX(), getY(), getZ());
 	}
 
 	public void castRay() {
 		int x, y, z = 0;
 		defineRay();
 		// make it a unit vector
-		Constants.ray = (Vector3f) Constants.ray.scale((float) Math.pow(Constants.ray.length(), -1));
-		// System.out.println(Constants.ray.x); //Just had to comment this out
+		Globals.ray = (Vector3f) Globals.ray.scale((float) Math.pow(Globals.ray.length(), -1));
+		// System.out.println(Globals.ray.x); //Just had to comment this out
 		// for my own debugging purposes
 		// Pick correct block
 
-		for (int i = 0; i < (Constants.rayDistance*2); i++) {
-			x = (int) (getX() + (Constants.ray.x * i *0.5));
-			y = (int) (getY() + (Constants.ray.y * i *0.5));
-			z = (int) (getZ() + (Constants.ray.z * i *0.5));
+		for (int i = 0; i < (Globals.rayDistance * 2); i++) {
+			x = (int) (getX() + (Globals.ray.x * i * 0.5));
+			y = (int) (getY() + (Globals.ray.y * i * 0.5));
+			z = (int) (getZ() + (Globals.ray.z * i * 0.5));
 			int chunkX = ChunkManager.blockToChunk1f(x);
 			int chunkZ = ChunkManager.blockToChunk1f(z);
 
-			int internX = x - (chunkX * Constants.CHUNKSIZE);
+			int internX = x - (chunkX * Globals.CHUNKSIZE);
 			int internY = y;
-			int internZ = z - (chunkZ * Constants.CHUNKSIZE);
+			int internZ = z - (chunkZ * Globals.CHUNKSIZE);
 			try {
-				if ((y < Constants.WORLDHEIGHT) && y >= 0) {// within bounds
+				if ((y < Globals.WORLDHEIGHT) && y >= 0) {// within bounds
 
 					// System.out.println("(" + chunkX + ", " + chunkZ + ")" +
 					// "blocks X:" + internX + " Y:" + internY + " Z:" +
 					// internZ);
 					if (ChunkManager.loadedChunks.get(ChunkManager.key(chunkX, chunkZ)).blocks[internX][internY][internZ] > 0) {
 						// is not air
-						Constants.selectedBlock = new Vector3f(x, y, z);
+						Globals.selectedBlock = new Vector3f(x, y, z);
 						// System.out.println("picked a block! " +
 						// ChunkManager.blockToAdd.x
 						// + " " + ChunkManager.blockToAdd.y + " " +
 						// ChunkManager.blockToAdd.z );
 						for (int q = 1; q < 50; q++) {
 							float takeDist = (float) (q * 0.02);
-							int faceX = (int) (getX() + (Constants.ray.x * (i *0.5 - takeDist)));
-							int faceY = (int) (getY() + (Constants.ray.y * (i *0.5 - takeDist)));
-							int faceZ = (int) (getZ() + (Constants.ray.z * (i *0.5 - takeDist)));
+							int faceX = (int) (getX() + (Globals.ray.x * (i * 0.5 - takeDist)));
+							int faceY = (int) (getY() + (Globals.ray.y * (i * 0.5 - takeDist)));
+							int faceZ = (int) (getZ() + (Globals.ray.z * (i * 0.5 - takeDist)));
 							int actualFaceX = faceX;
 							int actualFaceY = faceY;
 							int actualFaceZ = faceZ;
@@ -344,19 +345,19 @@ public class Camera extends Entity {
 							// int faceZ = (int) (z - takeDist);
 							int faceChunkX = ChunkManager.blockToChunk1f(faceX);
 							int faceChunkZ = ChunkManager.blockToChunk1f(faceZ);
-							faceX = faceX - faceChunkX * Constants.CHUNKSIZE;
-							faceZ = faceZ - faceChunkZ * Constants.CHUNKSIZE;
+							faceX = faceX - faceChunkX * Globals.CHUNKSIZE;
+							faceZ = faceZ - faceChunkZ * Globals.CHUNKSIZE;
 
 							System.out.println("(" + faceChunkX + ", " + faceChunkZ + ")" + "blocks X:" + faceX + " Y:" + faceY + " Z:" + faceZ);
 							if (ChunkManager.loadedChunks.get(ChunkManager.key(faceChunkX, faceChunkZ)).blocks[faceX][faceY][faceZ] == 0) {
-								Constants.blockToAdd = new Vector3f(actualFaceX, actualFaceY, actualFaceZ);
+								Globals.blockToAdd = new Vector3f(actualFaceX, actualFaceY, actualFaceZ);
 								break;
 							}
 						}
 						break;
 					} else {
-						Constants.selectedBlock = null;
-						Constants.blockToAdd = null;
+						Globals.selectedBlock = null;
+						Globals.blockToAdd = null;
 					}
 				}
 			} catch (NullPointerException e) {
@@ -367,12 +368,12 @@ public class Camera extends Entity {
 	}
 
 	public void defineRay() {
-		float x = Constants.rayConstant * (float) (Math.cos(Math.toRadians(getPitch())) * Math.sin(Math.toRadians(getYaw())));
+		float x = Globals.rayConstant * (float) (Math.cos(Math.toRadians(getPitch())) * Math.sin(Math.toRadians(getYaw())));
 
-		float y = Constants.rayConstant * (float) (Math.cos(Math.toRadians(getPitch() + 90)));
+		float y = Globals.rayConstant * (float) (Math.cos(Math.toRadians(getPitch() + 90)));
 
-		float z = Constants.rayConstant * (float) (Math.cos(Math.toRadians(getYaw())) * Math.sin(Math.toRadians(getPitch() - 90)));
-		Constants.ray = new Vector3f(x, y, z);
+		float z = Globals.rayConstant * (float) (Math.cos(Math.toRadians(getYaw())) * Math.sin(Math.toRadians(getPitch() - 90)));
+		Globals.ray = new Vector3f(x, y, z);
 	}
 
 }

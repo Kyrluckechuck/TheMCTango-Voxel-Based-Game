@@ -3,7 +3,7 @@ package com.kyry.voxel.geometry;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.kyry.voxel.utilities.Constants;
+import com.kyry.voxel.utilities.Globals;
 
 public class AABB {
 	public Vector3f center;
@@ -15,7 +15,7 @@ public class AABB {
 
 	public AABB(final float chunkX, final float chunkZ,
 			final float x, final float y, final float z, final float size) {
-		this(chunkX*Constants.CHUNKSIZE + x, y, chunkZ*Constants.CHUNKSIZE + z, size);
+		this(chunkX*Globals.CHUNKSIZE + x, y, chunkZ*Globals.CHUNKSIZE + z, size);
 	}
 	public AABB(final float x, final float y, final float z, final float size) {
 		center = new Vector3f(x + (size * .5f), y
