@@ -78,7 +78,7 @@ public class WorldManager {
 	public void mapRender() {
 		Globals.chunksFrustum = 0;
 
-		Spritesheet.tiles.bind();
+		Spritesheet.blocks.bind();
 		
 		chunkManager.render();
 		mobManager.mobRender();

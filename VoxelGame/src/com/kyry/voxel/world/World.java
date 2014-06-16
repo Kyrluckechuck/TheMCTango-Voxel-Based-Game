@@ -14,25 +14,19 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
+import com.kyry.voxel.geometry.Shape;
 //import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.Spritesheet;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.chunks.ChunkManager;
+import com.kyry.voxel.world.entities.mobs.Player;
 
 public class World extends Screen {
 
 	// public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
-	private WorldManager worldManager;
-	private TrueTypeFont font;
-
-	public static boolean noClip = true;
-	private boolean renderText = true;
-
-	float screenObjOffset = 50;
-	float screenXMid = Globals.WIDTH / 2;
-	float screenYMid = Globals.HEIGHT / 2;
+	static WorldManager worldManager;
 
 	public World() {
 		initGL();
@@ -42,11 +36,11 @@ public class World extends Screen {
 	@Override
 	public void init() {
 
-		Spritesheet.tiles.bind();
+		Spritesheet.blocks.bind();
 		Block.createTileMap();
 
-		Font tempFont = new Font("Arial", Font.PLAIN, 16);
-		font = new TrueTypeFont(tempFont, true);
+		Font tempFont = new Font("Arial", Font.BOLD, 16);
+		HUD.font = new TrueTypeFont(tempFont, true);
 
 		worldManager = new WorldManager();
 	}
@@ -72,14 +66,14 @@ public class World extends Screen {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_F3)) {
-					renderText = !renderText;
+					Globals.renderHUDText = !Globals.renderHUDText;
 				}
 				if (Keyboard.isKeyDown(Keyboard.KEY_F4)) {
-					if (noClip)
+					if (Globals.noClip)
 						Globals.PLAYER_SPEED -= 15f;
 					else
 						Globals.PLAYER_SPEED += 15f;
-					noClip = !noClip;
+					Globals.noClip = !Globals.noClip;
 				}
 				// KEY_F5 toggles textColor between Black and White
 				if (Keyboard.isKeyDown(Keyboard.KEY_F5)) {
@@ -106,10 +100,10 @@ public class World extends Screen {
 		boolean cycleBlockType = Keyboard.isKeyDown(Keyboard.KEY_1);
 
 		if (cycleBlockType) {
-			if (Globals.selectedBlockType < 9)
-				Globals.selectedBlockType++;
+			if (Globals.blockToAddType < 8)
+				Globals.blockToAddType++;
 			else
-				Globals.selectedBlockType = 0;
+				Globals.blockToAddType = 2;
 		}
 	}
 
@@ -123,7 +117,7 @@ public class World extends Screen {
 				if (clickBlockAdd && !clickBlockDelete) {
 					Mouse.setGrabbed(true);
 					if (Globals.blockToAdd != null) {
-						ChunkManager.changeBlock(Globals.blockToAdd, Globals.selectedBlockType);
+						ChunkManager.changeBlock(Globals.blockToAdd, Globals.blockToAddType);
 					}
 
 				}
@@ -146,19 +140,19 @@ public class World extends Screen {
 
 		glLoadIdentity(); // Reset 3D rendering matrix environment
 
-		if (renderText) {
+/*		if (renderText) {
 			ready2D(); // Setup 2D matrix rendering environment
-			render2D();
-		}
+			HUD.renderHUD(); //Render ALL Heads Up Display Elements
+		}*/
+
+//			ready2D(); // Setup 2D matrix rendering environment
+			HUD.renderHUD(); //Render ALL Heads Up Display Elements
 
 	}
 
-	private void render2D() {
-		renderText(); // Render 2D text to screen
-		renderHUD(); // render 2D crosshair image
-	}
 
-	public void ready2D() {
+
+	public static void ready2D() {
 		glCullFace(GL_BACK);
 		glClearDepth(1);
 		glMatrixMode(GL_PROJECTION);
@@ -169,67 +163,6 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 	}
 
-	private void renderText() {
-		font.drawString(10, 15, "FPS: " + GameLoop.getFPS() + "       " + "noClip " + noClip, Globals.textColor);
-		font.drawString(10, 40, "Camera X: " + (int) worldManager.getMobManager().getPlayer().getX() + " Y: " + (int) worldManager.getMobManager().getPlayer().getY() + " Z: " + (int) worldManager.getMobManager().getPlayer().getZ(),
-				Globals.textColor);
-		font.drawString(10, 65, "Rotx: " + (int) worldManager.getMobManager().getPlayer().getPitch() + " Roty: " + (int) worldManager.getMobManager().getPlayer().getYaw() + " Rotz: "
-				+ (int) worldManager.getMobManager().getPlayer().getRoll(), Globals.textColor);
-		font.drawString(10, 90, "Chunks: " + Globals.chunksLoaded + " (" + Globals.chunksFrustum + ")" + "PhysBlocks: " + Globals.PhysBlocksLoaded + "   RenderBlocks: " + Globals.RenderBlocksLoaded, Globals.textColor);
-
-		font.drawString(10, 115, "playerSphereUpper X: " + (int) WorldManager.playerSphereUpper.getX() + " Y: " + (int) WorldManager.playerSphereUpper.getY() + " Z: " + (int) WorldManager.playerSphereUpper.getZ(), Globals.textColor);
-
-		font.drawString(10, 140, "playerSphereLower X: " + (int) WorldManager.playerSphereLower.getX() + " Y: " + (int) WorldManager.playerSphereLower.getY() + " Z: " + (int) WorldManager.playerSphereLower.getZ(), Globals.textColor);
-		font.drawString(10, 165, "playerSpeed X: " + Globals.playerSpeed.x + " Y: " + Globals.playerSpeed.y + " Z: " + Globals.playerSpeed.z, Globals.textColor);
-		font.drawString(10, 190, "Selected Block Type: " + Globals.selectedBlockType, Globals.textColor);
-
-		font.drawString(10, 205, " ", Color.white);
-
-		TextureImpl.unbind();
-
-	}
-
-	private void renderHUD() {
-
-		Spritesheet.tiles.bind();
-		float x1Crosshair = screenXMid - screenObjOffset;
-		float y1Crosshair = screenYMid - screenObjOffset;
-		float x2Crosshair = screenXMid + screenObjOffset;
-		float y2Crosshair = screenYMid + screenObjOffset;
-		renderHUDObject(Block.Crosshair.getId(), x1Crosshair, y1Crosshair, x2Crosshair, y2Crosshair); // Draw
-																										// Crosshair
-		float x1Selected = screenXMid * 2 - screenObjOffset * 2 - 10;
-		float y1Selected = 0 + 10;
-		float x2Selected = screenXMid * 2 - 10;
-		float y2Selected = 0 + screenObjOffset * 2 + 10;
-		renderHUDObject(Globals.selectedBlockType, x1Selected, y1Selected, x2Selected, y2Selected); // Draw
-																										// Selected
-																										// Object
-		float x1SelectedOutline = screenXMid * 2 - screenObjOffset * 2 - 10 * 2;
-		float y1SelectedOutline = 0;
-		float x2SelectedOutline = screenXMid * 2 + 10;
-		float y2SelectedOutline = 0 + screenObjOffset * 2 + 10 * 2;
-		renderHUDObject(Block.TransparentGray.getId(), x1SelectedOutline, y1SelectedOutline, x2SelectedOutline, y2SelectedOutline); // Draw
-																																	// Selected
-																																	// Object
-		// for ()
-		// renderHUDObject(Block.Crosshair.getId());
-
-	}
-
-	private void renderHUDObject(short texture, float x1, float y1, float x2, float y2) {
-		glBegin(GL_QUADS);
-		float[] texCoords = Block.getTile(texture).getTexCoords();
-		glTexCoord2f(texCoords[0], texCoords[1]);
-		glVertex2f(x1, y1);
-		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1]);
-		glVertex2f(x1, y2);
-		glTexCoord2f(texCoords[0] + Spritesheet.tiles.uniformSize(), texCoords[1] + Spritesheet.tiles.uniformSize());
-		glVertex2f(x2, y2);
-		glTexCoord2f(texCoords[0], texCoords[1] + Spritesheet.tiles.uniformSize());
-		glVertex2f(x2, y1);
-		glEnd();
-	}
 
 	private void gameLogic() {
 		worldManager.logic();
@@ -254,10 +187,12 @@ public class World extends Screen {
 
 	private void render3D() {
 		worldManager.mapRender(); // Render world (interactable map)
+		readyPlayerRelative3D();
 		renderSkyBox(); // Render Skybox (outside of world, non-interactible)
+
 	}
 
-	public void renderSkyBox() {
+	public void readyPlayerRelative3D() {
 		glCullFace(GL_BACK);
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
@@ -267,6 +202,10 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
+	}
+
+	public void renderSkyBox() {
+
 		Skybox.skyRender();
 	}
 

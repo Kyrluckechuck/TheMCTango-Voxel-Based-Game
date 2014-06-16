@@ -11,7 +11,6 @@ import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Sphere;
 //import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.utilities.Globals;
-import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.chunks.Chunk;
@@ -83,20 +82,6 @@ public class Camera extends Entity {
 		WorldManager.playerSphereUpper.update(somePosition);
 		WorldManager.playerSphereLower.update(someOtherPosition);
 
-		/*
-		 * boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove block
-		 * boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block if
-		 * (clickBlockAdd && !clickBlockDelete) { if (Globals.blockToAdd !=
-		 * null) {
-		 * 
-		 * ChunkManager.changeBlock(Globals.blockToAdd,
-		 * Globals.selectedBlockType); }
-		 * 
-		 * } if (!clickBlockAdd && clickBlockDelete) { if (Globals.selectedBlock
-		 * != null) ChunkManager.changeBlock(Globals.selectedBlock,
-		 * Block.Air.getId()); }
-		 */
-
 		if (keyForward && keyRight && !keyLeft && !keyBackward) {// NE
 			playerMove(deltaDis, 0, -deltaDis);
 		}
@@ -128,7 +113,7 @@ public class Camera extends Entity {
 		if (keyDown && !keyUp) {// DOWN
 			playerMove(0, deltaDis, 0);
 		}
-		if (!World.noClip)
+		if (!Globals.noClip)
 			gravity();
 	}
 
@@ -145,10 +130,10 @@ public class Camera extends Entity {
 			playerMove(0, -deltaDis * Globals.jumpPower, 0);
 			Globals.jumpCounter++;
 		}
-		if (!World.noClip) {
+		if (!Globals.noClip) {
 			// only disable jump if not noclip
 			Globals.jumpEnabled = false;
-		}else{
+		} else {
 			Globals.jumpEnabled = true;
 		}
 	}
@@ -158,10 +143,10 @@ public class Camera extends Entity {
 		Vector3f someOldPositionUpper = new Vector3f(getX(), getY(), getZ());
 		Vector3f someOldPositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());
 
-		if (World.noClip) {
+		if (Globals.noClip) {
 			// Globals.jumpEnabled = true;//not proper
 			noClipMove(dX * Globals.PLAYER_SPEED, dY * Globals.PLAYER_SPEED, dZ * Globals.PLAYER_SPEED);
-		} else if (!World.noClip) {// move normally
+		} else if (!Globals.noClip) {// move normally
 			float origX = getX();
 			float origY = getY();
 			float origZ = getZ();
@@ -254,12 +239,12 @@ public class Camera extends Entity {
 		float origY = getY();
 		// change in the y direction,by changing the speed
 		float dY = (1 / Globals.FPS) * (Globals.playerSpeed.getY() - Globals.gravity);
-		
+
 		if (Globals.playerSpeed.getY() >= Globals.maxSpeed) {
 			dY = (1 / Globals.FPS) * (Globals.maxSpeed - Globals.gravity);
 		}
 		setY((getY() + dY));
-		
+
 		WorldManager.playerSphereUpper.update(new Vector3f(getX(), getY(), getZ()));
 		WorldManager.playerSphereLower.update(new Vector3f(getX(), getY() - playerHeight, getZ()));
 		boolean moveAllowed = true;
@@ -308,10 +293,13 @@ public class Camera extends Entity {
 		// for my own debugging purposes
 		// Pick correct block
 
-		for (int i = 0; i < (Globals.rayDistance * 2); i++) {
-			x = (int) (getX() + (Globals.ray.x * i * 0.5));
-			y = (int) (getY() + (Globals.ray.y * i * 0.5));
-			z = (int) (getZ() + (Globals.ray.z * i * 0.5));
+		for (int i = 0; i < (Globals.rayDistance * 4); i++) {
+			x = (int) (getX() + (Globals.ray.x * i * 0.25));
+			y = (int) (getY() + (Globals.ray.y * i * 0.25));
+			z = (int) (getZ() + (Globals.ray.z * i * 0.25));
+			/*
+			 * if (x <= 0) x--; if (z <= 0) z--;
+			 */
 			int chunkX = ChunkManager.blockToChunk1f(x);
 			int chunkZ = ChunkManager.blockToChunk1f(z);
 
@@ -319,7 +307,7 @@ public class Camera extends Entity {
 			int internY = y;
 			int internZ = z - (chunkZ * Globals.CHUNKSIZE);
 			try {
-				if ((y < Globals.WORLDHEIGHT) && y >= 0) {// within bounds
+				if ((y < Globals.WORLDHEIGHT) && y >= 1) {// within bounds
 
 					// System.out.println("(" + chunkX + ", " + chunkZ + ")" +
 					// "blocks X:" + internX + " Y:" + internY + " Z:" +
@@ -331,11 +319,14 @@ public class Camera extends Entity {
 						// ChunkManager.blockToAdd.x
 						// + " " + ChunkManager.blockToAdd.y + " " +
 						// ChunkManager.blockToAdd.z );
-						for (int q = 1; q < 50; q++) {
-							float takeDist = (float) (q * 0.02);
-							int faceX = (int) (getX() + (Globals.ray.x * (i * 0.5 - takeDist)));
-							int faceY = (int) (getY() + (Globals.ray.y * (i * 0.5 - takeDist)));
-							int faceZ = (int) (getZ() + (Globals.ray.z * (i * 0.5 - takeDist)));
+						for (int q = 1; q < 500; q++) {
+							float takeDist = (float) (q * 0.001);
+							int faceX = (int) (getX() + (Globals.ray.x * (i * 0.25 - takeDist)));
+							int faceY = (int) (getY() + (Globals.ray.y * (i * 0.25 - takeDist)));
+							int faceZ = (int) (getZ() + (Globals.ray.z * (i * 0.25 - takeDist)));
+							/*
+							 * if (faceX <= 0) faceX--; if (faceZ <= 0) faceZ--;
+							 */
 							int actualFaceX = faceX;
 							int actualFaceY = faceY;
 							int actualFaceZ = faceZ;
@@ -348,8 +339,12 @@ public class Camera extends Entity {
 							faceX = faceX - faceChunkX * Globals.CHUNKSIZE;
 							faceZ = faceZ - faceChunkZ * Globals.CHUNKSIZE;
 
-							System.out.println("(" + faceChunkX + ", " + faceChunkZ + ")" + "blocks X:" + faceX + " Y:" + faceY + " Z:" + faceZ);
-							if (ChunkManager.loadedChunks.get(ChunkManager.key(faceChunkX, faceChunkZ)).blocks[faceX][faceY][faceZ] == 0) {
+							// System.out.println("(" + faceChunkX + ", " +
+							// faceChunkZ + ")" + "blocks X:" + faceX + " Y:" +
+							// faceY + " Z:" + faceZ);
+							if ((ChunkManager.loadedChunks.get(ChunkManager.key(faceChunkX, faceChunkZ)).blocks[faceX][faceY][faceZ] == 0)
+									&& (new Vector3f((int) WorldManager.playerSphereLower.getX(), (int) WorldManager.playerSphereLower.getY(), (int) WorldManager.playerSphereLower.getZ()) != new Vector3f((int) x, (int) y, (int) z))
+									&& (new Vector3f((int) WorldManager.playerSphereUpper.getX(), (int) WorldManager.playerSphereUpper.getY(), (int) WorldManager.playerSphereUpper.getZ()) != new Vector3f((int) x, (int) y, (int) z))) {
 								Globals.blockToAdd = new Vector3f(actualFaceX, actualFaceY, actualFaceZ);
 								break;
 							}

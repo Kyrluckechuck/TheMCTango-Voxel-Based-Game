@@ -18,4 +18,9 @@ public class BlockAir extends Block{
 	public float[] getTexCoords() {
 		return new float[] {-1, -1};
 	}
+	
+	@Override
+	public String getName() {
+		return "Air";
+	}
 }

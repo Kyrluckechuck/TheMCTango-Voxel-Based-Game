@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.Camera;
@@ -16,7 +17,7 @@ public class Player extends Mob {
 		super(camera, camera.getX(), camera.getY(), camera.getZ(), camera
 				.getPitch(), camera.getYaw(), camera.getRoll(), id, 0);
 		Vector3f somePosition = new Vector3f(camera.getX(), camera.getY(), camera.getZ());
-		Vector3f someOtherPosition = new Vector3f(camera.getX(), camera.getY()-1, camera.getZ());
+		Vector3f someOtherPosition = new Vector3f(camera.getX(), camera.getY()-Globals.playerHeight, camera.getZ());
 		WorldManager.playerSphereUpper.update(somePosition);
 		WorldManager.playerSphereLower.update(someOtherPosition);
 	}

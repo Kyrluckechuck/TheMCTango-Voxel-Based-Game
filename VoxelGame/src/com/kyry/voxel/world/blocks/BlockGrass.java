@@ -27,11 +27,15 @@ public class BlockGrass extends Block {
 
 	@Override
 	public float[] getTexCoords() {
-		return new float[] { 4 * Spritesheet.tiles.uniformSize(), Spritesheet.tiles.uniformSize(), 
-				Spritesheet.tiles.uniformSize(), Spritesheet.tiles.uniformSize(),
-				3 * Spritesheet.tiles.uniformSize(), Spritesheet.tiles.uniformSize(),
-				3 * Spritesheet.tiles.uniformSize(), 0,
-				3 * Spritesheet.tiles.uniformSize(), Spritesheet.tiles.uniformSize(),
-				3 * Spritesheet.tiles.uniformSize(), Spritesheet.tiles.uniformSize() };
+		return new float[] { 4 * Spritesheet.blocks.uniformSize(), Spritesheet.blocks.uniformSize(), 
+				Spritesheet.blocks.uniformSize(), Spritesheet.blocks.uniformSize(),
+				3 * Spritesheet.blocks.uniformSize(), Spritesheet.blocks.uniformSize(),
+				3 * Spritesheet.blocks.uniformSize(), 0,
+				3 * Spritesheet.blocks.uniformSize(), Spritesheet.blocks.uniformSize(),
+				3 * Spritesheet.blocks.uniformSize(), Spritesheet.blocks.uniformSize() };
+	}
+	@Override
+	public String getName() {
+		return "Grass";
 	}
 }

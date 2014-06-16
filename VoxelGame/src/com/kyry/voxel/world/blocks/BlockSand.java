@@ -19,8 +19,12 @@ public class BlockSand extends Block{
 	@Override
 	public float[] getTexCoords() {
 		float actualSize = Globals.TextureSize;
-		float size = Spritesheet.tiles.uniformSize();
+		float size = Spritesheet.blocks.uniformSize();
 		int height = (int) (getId() / (float)actualSize);
 		return new float[] { (getId()-(size*height)) * size, height * size };
+	}
+	@Override
+	public String getName() {
+		return "Sand";
 	}
 }

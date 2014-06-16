@@ -19,7 +19,7 @@ public class BlockSkybox1 extends Block {
 	@Override
 	public float[] getTexCoords() {
 		float actualSize = Globals.TextureSize;
-		float size = Spritesheet.tiles.uniformSize();
+		float size = Spritesheet.blocks.uniformSize();
 		int height = (int) (getId() / (float) actualSize);
 		if (height == (getId() / (float) actualSize)) {
 			return new float[] { (getId() - (actualSize * height)) * size,
@@ -30,5 +30,9 @@ public class BlockSkybox1 extends Block {
 		}
 		// Height is (+1) to account for the fact it's actually 1 larger than
 		// the column.
+	}
+	@Override
+	public String getName() {
+		return "Skybox1";
 	}
 }

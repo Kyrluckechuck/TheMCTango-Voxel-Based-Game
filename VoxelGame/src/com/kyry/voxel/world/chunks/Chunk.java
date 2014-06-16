@@ -174,7 +174,8 @@ public class Chunk implements Serializable {
 			 * !checkTileNotInView(x, y, z))) {
 			 * temp.add(ChunkManager.key(x,y,z)); // temp[x][y][z] = true; } //
 			 * else{ // temp[x][y][z] = false; // } } } }
-			 */System.out.println("Total chunk coords being done: " + temp.size());
+			 */
+			System.out.println("Total blocks rendered for this chunk: " + temp.size());
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
 			// int sizeAll = Globals.CHUNKSIZE;

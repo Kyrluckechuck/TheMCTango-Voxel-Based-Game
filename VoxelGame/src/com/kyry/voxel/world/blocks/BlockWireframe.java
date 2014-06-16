@@ -4,11 +4,11 @@ import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.Spritesheet;
 import com.nishu.utils.Color4f;
 
-public class BlockWireframe extends Block{
+public class BlockWireframe extends Block {
 
 	@Override
 	public short getId() {
-		return 8;
+		return 178;
 	}
 
 	@Override
@@ -19,10 +19,14 @@ public class BlockWireframe extends Block{
 	@Override
 	public float[] getTexCoords() {
 		float actualSize = Globals.TextureSize;
-		float size = Spritesheet.tiles.uniformSize();
-		int height = (int) (getId() / (float)actualSize);
-		return new float[] { (getId()-(size*height)) * size, height * size };
+		float size = Spritesheet.blocks.uniformSize();
+		int height = (int) (getId() / (float) actualSize);
+		return new float[] { (getId() - (actualSize * height)) * size, (height) * size };
 	}
-	
-	
+
+	@Override
+	public String getName() {
+		return "Wireframe";
+	}
+
 }

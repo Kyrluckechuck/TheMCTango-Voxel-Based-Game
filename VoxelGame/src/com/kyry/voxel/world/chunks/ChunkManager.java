@@ -231,10 +231,11 @@ public class ChunkManager {
 		// memory chunk list
 		String key = key(x, z);
 		System.out.println("Chunk (" + x + ", " + z + ") removed from PhysWorld");
-		for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-		}
-		System.out.println(key);
+		// for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
+		// System.out.println("Key = " + entry.getKey() + ", Value = " +
+		// entry.getValue());
+		// }
+		// System.out.println(key);
 		ArrayList<String> temp = activeChunks.get(key).getRenderedBlocks();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
@@ -251,28 +252,28 @@ public class ChunkManager {
 
 	}
 
-	public static void loadChunkToActive(int x, int z) { // Add chunk from
+	public static void loadChunkToActive(int chunkX, int chunkZ) { // Add chunk from
 															// memory to active
 															// chunk list
 
-		for (int q = x - 1; q <= x + 1; q++) {
-			for (int w = z - 1; w <= z + 1; w++) {
-				if (!loadedChunks.containsKey(key(q, w))) {
-					if (!isCreated(q, w)) {
-						createChunk(q, w);
-						loadChunkToMem(q, w);
+		for (int potentialX = chunkX - 1; potentialX <= chunkX + 1; potentialX++) {
+			for (int potentialZ = chunkZ - 1; potentialZ <= chunkZ + 1; potentialZ++) {
+				if (!loadedChunks.containsKey(key(potentialX, potentialZ))) {
+					if (!isCreated(potentialX, potentialZ)) {
+						createChunk(potentialX, potentialZ);
+						loadChunkToMem(potentialX, potentialZ);
 
 					} else {
-						loadChunkToMem(q, w);
+						loadChunkToMem(potentialX, potentialZ);
 					}
 				}
 			}
 		}
 
-		activeChunks.put(key(x, z), loadedChunks.get(key(x, z)));
+		activeChunks.put(key(chunkX, chunkZ), loadedChunks.get(key(chunkX, chunkZ)));
 		Globals.chunksActive++;
-		activeChunks.get(key(x, z)).load();
-		loadChunkToPhys(x, z);
+		activeChunks.get(key(chunkX, chunkZ)).load();
+		loadChunkToPhys(chunkX, chunkZ);
 
 	}
 
@@ -299,32 +300,13 @@ public class ChunkManager {
 		int sizeAll = Globals.CHUNKSIZE;
 		int worldHeight = Globals.WORLDHEIGHT;
 		short[][][] blocks = new short[sizeAll][worldHeight][sizeAll];
-
-		/*
-		 * if (type == World.AIRCHUNK) { for (int x = 0; x < sizeAll; x++) { for
-		 * (int y = 0; y < sizeAll; y++) { for (int z = 0; z < sizeAll; z++) {
-		 * blocks[x][y][z] = Block.Air.getId(); } } } } if (type ==
-		 * World.MIXEDCHUNK) {
-		 */
+		
+		
 		SimplexNoise noise = new SimplexNoise();
 
 		float freqH = (float) 32;
 		// change this and see what happens!:D
-		float freqP = (float) 32; //was 64
-
-		// int i = -1;
-		/*
-		 * int[] tiles = new int[width * width]; for (int i = 0; i <
-		 * tiles.length; i++) { int blockWidth = i % width; int blockLength = i
-		 * / width;
-		 * 
-		 * float groundHeight = (float) noise.noise((float) blockWidth /
-		 * frequency, (float) blockLength / frequency); groundHeight *=
-		 * Globals.WORLDHEIGHT/2; groundHeight += Globals.WORLDHEIGHT/2;
-		 * tiles[blockWidth + blockLength * width] = (int) groundHeight;
-		 * 
-		 * }
-		 */
+		float freqP = (float) 32; // was 64
 		// Absolute block coords
 		for (int internX = 0; internX < sizeAll; internX++) {
 			for (int internZ = 0; internZ < sizeAll; internZ++) {
@@ -351,7 +333,7 @@ public class ChunkManager {
 						if (tileProb < -32) {
 							blocks[internX][internY][internZ] = Block.Air.getId();
 						} else if (tileProb < 0 && tileProb >= -32) {
-							blocks[internX][internY][internZ] = Block.CrackedStone.getId();
+							blocks[internX][internY][internZ] = Block.Stone.getId();
 						} else if (tileProb > 0 && tileProb <= 32) {
 							blocks[internX][internY][internZ] = Block.Brick.getId();
 						} else if (tileProb > 32) {
@@ -387,12 +369,12 @@ public class ChunkManager {
 				toRemove.add(key);// end chunks to be removed
 			} // end if
 		}// end remove while
-		
+
 		// Remove Unused Chunks
 		for (int q = 0; q < toRemove.size(); q++) {
 			removeChunkFromActive(toRemove.get(q));
 		}
-		
+
 		// End Removal Of Unused Chunks
 		// ADD
 		// BLOCK RELATIVE
@@ -409,15 +391,13 @@ public class ChunkManager {
 				}
 			}// end for z
 		}// end for x
-		
-		 // iterate through queue
-		 
+
+		// iterate through queue
+
 	}// End Update()
 
-
-
 	public static boolean isInZone(String key) { // Vector2f key, so z-coord is
-											// actually keyY()
+		// actually keyY()
 		boolean result = false;
 		int x = keyX(key);
 		int z = keyY(key);
@@ -441,29 +421,14 @@ public class ChunkManager {
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Chunk> entry = iterator.next();
-			if (Frustum.getFrustum().cubeFullyInFrustum(entry.getValue().getPos().getX(), 0,// entry.getValue().getPos().getY(),
-					entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Globals.CHUNKSIZE, 0 + Globals.WORLDHEIGHT,// entry.getValue().getPos().getY()
-					// +
-					// Globals.CHUNKSIZE,
+			if (Frustum.getFrustum().cubeFullyInFrustum(entry.getValue().getPos().getX(), 0, entry.getValue().getPos().getY(), entry.getValue().getPos().getX() + Globals.CHUNKSIZE, 0 + Globals.WORLDHEIGHT,
 					entry.getValue().getPos().getY() + Globals.CHUNKSIZE)) {
-				/*
-				 * if (Math.abs(entry.getValue().getCenter().getX() - (int)
-				 * Player.camera.getX()) < 64 // &&
-				 * Math.abs(entry.getValue().getCenter().getZ() // -
-				 * Player.camera.getZ()) < 64 &&
-				 * Math.abs(entry.getValue().getCenter().getY() -
-				 * Player.camera.getY()) < 32) {
-				 */
 				Globals.chunksFrustum++;
 				entry.getValue().render();
-
-				// } //Commented out with the 64/32 code
 			}
 		}// end while for iterator
-		/*
-		 * render selected block
-		 */
-		if ((Globals.selectedBlock != null) && (Globals.blockToAdd != null) &&(Globals.blockToAdd.y < Globals.WORLDHEIGHT && Globals.blockToAdd.y > 0) && (Globals.selectedBlock.y < Globals.WORLDHEIGHT && Globals.selectedBlock.y > 0)) {
+		/* Render selected block */
+		if ((Globals.selectedBlock != null) && (Globals.blockToAdd != null) && (Globals.blockToAdd.y < Globals.WORLDHEIGHT && Globals.blockToAdd.y > 0) && (Globals.selectedBlock.y < Globals.WORLDHEIGHT && Globals.selectedBlock.y > 0)) {
 			float padding = 0.001f;
 			GL11.glBegin(GL11.GL_QUADS);
 			Shape.createCube(Globals.selectedBlock.x - padding, Globals.selectedBlock.y - padding, Globals.selectedBlock.z - padding, Block.TransparentGray.getColor(), Block.TransparentGray.getTexCoords(), 1 + (2 * padding));
@@ -485,14 +450,11 @@ public class ChunkManager {
 		String key = key(chunkX, chunkZ);
 		removeChunkFromActive(key);
 		Chunk temp = loadedChunks.get(key);
-		if (temp.blocks[internX][internY][internZ] != 9) {
-			temp.blocks[internX][internY][internZ] = blockType;
-			loadedChunks.remove(key);
-			loadedChunks.put(key, temp);
-			activeChunks.remove(key);
-			loadChunkToActive(chunkX, chunkZ);
-			// activeChunks.put(key, temp);
-			// activeChunks.get(key).load();
-		}
+		temp.blocks[internX][internY][internZ] = blockType;
+		loadedChunks.remove(key);
+		loadedChunks.put(key, temp);
+		activeChunks.remove(key);
+		loadChunkToActive(chunkX, chunkZ);
+		//Potentially Call Save Chunk Via Threading Spot
 	}
 }// end class

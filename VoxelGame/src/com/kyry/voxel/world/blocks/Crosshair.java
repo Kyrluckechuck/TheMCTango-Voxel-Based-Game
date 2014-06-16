@@ -8,7 +8,7 @@ public class Crosshair extends Block {
 
 	@Override
 	public short getId() {
-		return 17;
+		return 177;
 	}
 
 	@Override
@@ -19,16 +19,13 @@ public class Crosshair extends Block {
 	@Override
 	public float[] getTexCoords() {
 		float actualSize = Globals.TextureSize;
-		float size = Spritesheet.tiles.uniformSize();
+		float size = Spritesheet.blocks.uniformSize();
 		int height = (int) (getId() / (float) actualSize);
-		if (height == (getId() / (float) actualSize)) {
-			return new float[] { (getId() - (actualSize * height)) * size,
-					(height) * size };
-		} else {
-			return new float[] { (getId() - (actualSize * height)) * size,
-					(height) * size };
-		}
-		// Height is (+1) to account for the fact it's actually 1 larger than
-		// the column.
+		return new float[] { (getId() - (actualSize * height)) * size, (height) * size };
+	}
+
+	@Override
+	public String getName() {
+		return "Crosshair";
 	}
 }

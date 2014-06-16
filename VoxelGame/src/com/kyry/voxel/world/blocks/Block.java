@@ -17,19 +17,21 @@ public abstract class Block {
 	 */
 	
 	public static HashMap<Short, Block> tileMap = new HashMap<Short, Block>();
+	private String blockName;
 	
 	public static Block Air = new BlockAir();
 	public static Block Void = new BlockVoid();
 	public static Block Grass = new BlockGrass();
-	public static Block CrackedStone = new BlockCrackedStone();
+	public static Block Stone = new BlockStone();
 	public static Block Dirt = new BlockDirt();
 	public static Block Sand = new BlockSand();
 	public static Block Brick = new BlockBrick();
 	public static Block Glass = new BlockGlass();
-	public static Block Wireframe = new BlockWireframe();
+	public static Block CobbleStone = new BlockCobblestone();
 	public static Block Adamantium = new BlockAdamantium();
 	public static Block TransparentGray = new TileTransparentGray();
 	public static Block Crosshair = new Crosshair();
+	public static Block Wireframe = new BlockWireframe();
 	public static Block Skybox1 = new BlockSkybox1();
 	public static Block Skybox2 = new BlockSkybox1();
 	public static Block Skybox3 = new BlockSkybox1();
@@ -45,6 +47,9 @@ public abstract class Block {
 	public boolean isDestroyable() {
 		return true;
 	}	
+	public String getName() {
+		return "Grr";
+	}
 	
 	public static Block getTile(short id) {
 		return tileMap.get(id);
@@ -54,15 +59,16 @@ public abstract class Block {
 		tileMap.put((short) 0, Air);
 		tileMap.put((short) 1, Void);
 		tileMap.put((short) 2, Grass);
-		tileMap.put((short) 3, CrackedStone);
+		tileMap.put((short) 3, Stone);
 		tileMap.put((short) 4, Dirt);
 		tileMap.put((short) 5, Sand);
 		tileMap.put((short) 6, Brick);
 		tileMap.put((short) 7, Glass);
-		tileMap.put((short) 8, Wireframe);
+		tileMap.put((short) 8, CobbleStone);
 		tileMap.put((short) 9, Adamantium);
-		tileMap.put((short) 16, TransparentGray);
-		tileMap.put((short) 17, Crosshair);
+		tileMap.put((short) 176, TransparentGray);
+		tileMap.put((short) 177, Crosshair);
+		tileMap.put((short) 178, Wireframe);
 		tileMap.put((short) 209, Skybox1);
 		tileMap.put((short) 224, Skybox2);
 		tileMap.put((short) 225, Skybox3);

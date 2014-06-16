@@ -19,7 +19,7 @@ public class BlockAdamantium extends Block {
 	@Override
 	public float[] getTexCoords() {
 		float actualSize = Globals.TextureSize;
-		float size = Spritesheet.tiles.uniformSize();
+		float size = Spritesheet.blocks.uniformSize();
 		int height = (int) (getId() / (float)actualSize);
 		return new float[] { (getId()-(size*height)) * size, height * size };
 	}
@@ -27,4 +27,8 @@ public class BlockAdamantium extends Block {
 	public boolean isDestroyable() {
 		return false;
 	}	
+	@Override
+	public String getName() {
+		return "Adamantium";
+	}
 }

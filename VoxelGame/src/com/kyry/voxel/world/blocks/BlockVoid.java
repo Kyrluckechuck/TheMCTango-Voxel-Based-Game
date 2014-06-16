@@ -4,7 +4,6 @@ import com.kyry.voxel.utilities.Spritesheet;
 import com.nishu.utils.Color4f;
 
 public class BlockVoid extends Block {
-
 	@Override
 	public short getId() {
 		return 1;
@@ -18,5 +17,10 @@ public class BlockVoid extends Block {
 	@Override
 	public float[] getTexCoords() {
 		return new float[] { 0f, 0f };
+	}
+	
+	@Override
+	public String getName() {
+		return "Void";
 	}
 }
