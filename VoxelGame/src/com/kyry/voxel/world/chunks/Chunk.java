@@ -10,39 +10,18 @@ import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glNewList;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Vector2f;
 
-import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilities.Globals;
-import com.kyry.voxel.world.World;
-import com.kyry.voxel.world.WorldManager;
-import com.kyry.voxel.world.Skybox;
 import com.kyry.voxel.world.blocks.Block;
-import com.kyry.voxel.world.entities.mobs.Player;
-import com.kyry.voxel.world.physics.CollisionLibrary;
 //import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.nishu.utils.ShaderProgram;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
-public class Chunk implements Serializable {
+public class Chunk {
 
 	public Vector2f pos;
 	// public short[][][] chunks;

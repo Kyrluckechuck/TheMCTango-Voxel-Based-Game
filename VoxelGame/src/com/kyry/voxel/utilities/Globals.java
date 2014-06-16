@@ -1,5 +1,6 @@
 package com.kyry.voxel.utilities;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -39,7 +40,7 @@ public class Globals {
 	public static float gravity = 0.016f * (Globals.FPS);// is the
 															// acceleration
 	public static float jumpPower = 2.5f;
-	public static float jumpFrames = 0.25f;
+	public static float jumpFrames = 0.15f;
 	public static float jumpCounter = 0f;
 	// initial position of the player
 	public static final Vector3f initPos = new Vector3f(4f, 50f, 4f);
@@ -68,6 +69,7 @@ public class Globals {
 	public static float rayConstant = 5f;
 	public static int rayDistance = 5;//(int) viewDistance;
 	
+	public static ArrayList<String> chunkToSave = new ArrayList<String>(); // How many chunks have been loaded
 	public static int chunksLoaded = 0; // How many chunks have been loaded
 	public static int chunksActive = 0;  // How many chunks are active
 	public static int chunksFrustum = 0; // How many chunks are in the visible

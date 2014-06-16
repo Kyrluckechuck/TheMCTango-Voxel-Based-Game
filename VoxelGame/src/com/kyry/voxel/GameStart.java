@@ -1,12 +1,24 @@
 package com.kyry.voxel;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
+import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_NICEST;
+import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glHint;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.io.File;
 import java.nio.FloatBuffer;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
@@ -15,7 +27,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.World;
-import com.kyry.voxel.world.chunks.Chunk;
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
@@ -118,8 +129,8 @@ public class GameStart extends Screen {
 //		Queue<Chunk> toRemove = new ConcurrentLinkedQueue<Chunk>();
 //		Queue<Chunk> toAdd = new ConcurrentLinkedQueue<Chunk>();
 //		new BackgroundProcessing().start();
-		new GameStart();
 		
+        new GameStart();
 		
 	}
 }

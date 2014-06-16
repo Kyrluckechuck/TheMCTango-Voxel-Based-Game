@@ -1,34 +1,14 @@
 package com.kyry.voxel.world;
 
-import static org.lwjgl.opengl.GL11.*;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilities.Globals;
-import com.kyry.voxel.utilities.Frustum;
 import com.kyry.voxel.utilities.Spritesheet;
-import com.kyry.voxel.world.blocks.Block;
-import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.chunks.ChunkManager;
 import com.kyry.voxel.world.entities.mobs.MobManager;
 import com.kyry.voxel.world.entities.mobs.Player;
-import com.kyry.voxel.world.physics.CollisionLibrary;
-import com.nishu.utils.Shader;
-import com.nishu.utils.ShaderProgram;
 
 public class WorldManager {
 
@@ -39,7 +19,7 @@ public class WorldManager {
 	//public ArrayList<Chunk> loadedChunks;
 	//public ArrayList<Chunk> activeChunks;
 
-	private ShaderProgram shader;
+//	private ShaderProgram shader;
 	public static ChunkManager chunkManager;
 
 	public WorldManager() {
@@ -58,7 +38,7 @@ public class WorldManager {
 	private void createWorld() {
 		Vector3f pos3f = Player.camera.getPos();
 		Vector2f pos2f = ChunkManager.blockToChunk(pos3f);
-		int y = 0;
+//		int y = 0;
 		for (int x = (int) (pos2f.getX() - Globals.WORLDRADIUS); x <= pos2f.getX() + Globals.WORLDRADIUS; x++) {
 			//for (int y = (int) (pos.getY() - Globals.WORLDRADIUS); y <= pos.getY() +Globals.WORLDRADIUS; y++) {
 				for (int z = (int) (pos2f.getY() - Globals.WORLDRADIUS); z <= pos2f.getY() + Globals.WORLDRADIUS; z++) {

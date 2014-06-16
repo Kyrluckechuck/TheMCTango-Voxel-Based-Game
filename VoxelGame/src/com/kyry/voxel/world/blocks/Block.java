@@ -17,7 +17,6 @@ public abstract class Block {
 	 */
 	
 	public static HashMap<Byte, Block> tileMap = new HashMap<Byte, Block>();
-	private String blockName;
 	
 	public static Block Air = new BlockAir();
 	public static Block Void = new BlockVoid();

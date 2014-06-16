@@ -1,6 +1,5 @@
 package com.kyry.voxel.world.blocks;
 
-import com.kyry.voxel.utilities.Spritesheet;
 import com.nishu.utils.Color4f;
 
 public class BlockVoid extends Block {
@@ -18,7 +17,7 @@ public class BlockVoid extends Block {
 	public float[] getTexCoords() {
 		return new float[] { 0f, 0f };
 	}
-	
+
 	@Override
 	public String getName() {
 		return "Void";

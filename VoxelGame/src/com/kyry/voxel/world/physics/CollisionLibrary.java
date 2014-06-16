@@ -1,17 +1,12 @@
 package com.kyry.voxel.world.physics;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
-import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilities.Globals;
-import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.chunks.ChunkManager;
 
 public class CollisionLibrary {

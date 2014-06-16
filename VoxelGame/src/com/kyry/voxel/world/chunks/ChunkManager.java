@@ -2,7 +2,6 @@ package com.kyry.voxel.world.chunks;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,26 +9,19 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.kyry.voxel.geometry.AABB;
 import com.kyry.voxel.geometry.Shape;
-import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.Frustum;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.SimplexNoise;
-import com.kyry.voxel.world.World;
 import com.kyry.voxel.world.blocks.Block;
-import com.kyry.voxel.world.entities.mobs.MobManager;
 import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
-import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;
 
 public class ChunkManager {
@@ -37,7 +29,7 @@ public class ChunkManager {
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
 	public static HashMap<String, Chunk> loadedChunks = new HashMap<String, Chunk>();
-	public static Random rand = rand = new Random();
+//	public static Random rand = rand = new Random();
 	// public static MobManager mobManager;
 
 	private static ShaderProgram shader;
@@ -121,7 +113,7 @@ public class ChunkManager {
 	}
 
 	// SAVE / LOAD
-	private static void saveChunk(float f, float h, byte[][][] blocks) { // Save
+	public static void saveChunk(float f, float h, byte[][][] blocks) { // Save
 																			// chunk
 																			// to
 																			// data
@@ -264,6 +256,7 @@ public class ChunkManager {
 
 	}
 
+	@SuppressWarnings("static-access")
 	public static void createChunk(int f, int h) {
 		int sizeAll = Globals.CHUNKSIZE;
 		int worldHeight = Globals.WORLDHEIGHT;
@@ -423,6 +416,7 @@ public class ChunkManager {
 		loadedChunks.put(key, temp);
 		activeChunks.remove(key);
 		loadChunkToActive(chunkX, chunkZ);
+		Globals.chunkToSave.add(key);
 		//Potentially Call Save Chunk Via Threading Spot
 	}
 }// end class

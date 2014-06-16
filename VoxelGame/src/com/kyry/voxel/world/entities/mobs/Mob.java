@@ -1,9 +1,7 @@
 package com.kyry.voxel.world.entities.mobs;
 
-import org.lwjgl.util.vector.Vector3f;
-
-import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.GameObject;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.entities.Camera;
 import com.kyry.voxel.world.entities.Entity;
 

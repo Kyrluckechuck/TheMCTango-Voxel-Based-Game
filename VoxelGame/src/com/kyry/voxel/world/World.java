@@ -1,26 +1,51 @@
 package com.kyry.voxel.world;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FOG;
+import static org.lwjgl.opengl.GL11.GL_FRONT;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_MODULATE;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_ENV_MODE;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glTexEnvi;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import java.awt.Font;
+import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.opengl.TextureImpl;
 
-import com.nishu.utils.GameLoop;
-import com.nishu.utils.Screen;
-import com.kyry.voxel.geometry.Shape;
 //import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.Spritesheet;
 import com.kyry.voxel.world.blocks.Block;
+import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.chunks.ChunkManager;
-import com.kyry.voxel.world.entities.mobs.Player;
+import com.nishu.utils.Screen;
 
 public class World extends Screen {
 
@@ -43,6 +68,7 @@ public class World extends Screen {
 		HUD.font = new TrueTypeFont(tempFont, true);
 
 		worldManager = new WorldManager();
+
 	}
 
 	@Override
@@ -60,6 +86,27 @@ public class World extends Screen {
 	public void update() {
 		input();
 		worldManager.update();
+		saveModifiedChunks();
+
+	}
+
+	private void saveModifiedChunks() {
+		if (Globals.chunkToSave.size() > 0) {
+			ExecutorService executor = Executors.newCachedThreadPool();// Executors.newFixedThreadPool(2);//2
+																		// Threads
+			String key = Globals.chunkToSave.get(0);
+			Chunk temp = ChunkManager.activeChunks.get(key);
+			executor.submit(new SavePool(temp, key));
+			executor.shutdown();
+			System.out.println("Chunk Save Submitted.");
+/*			try {
+				executor.awaitTermination(1, TimeUnit.MINUTES);
+			} catch (InterruptedException e) {
+			}*/
+			Globals.chunkToSave.remove(0);
+			System.out.println("Chunk Save Completed.");
+
+		}
 	}
 
 	private void input() {
@@ -140,17 +187,15 @@ public class World extends Screen {
 
 		glLoadIdentity(); // Reset 3D rendering matrix environment
 
-/*		if (renderText) {
-			ready2D(); // Setup 2D matrix rendering environment
-			HUD.renderHUD(); //Render ALL Heads Up Display Elements
-		}*/
+		/*
+		 * if (renderText) { ready2D(); // Setup 2D matrix rendering environment
+		 * HUD.renderHUD(); //Render ALL Heads Up Display Elements }
+		 */
 
-//			ready2D(); // Setup 2D matrix rendering environment
-			HUD.renderHUD(); //Render ALL Heads Up Display Elements
+		// ready2D(); // Setup 2D matrix rendering environment
+		HUD.renderHUD(); // Render ALL Heads Up Display Elements
 
 	}
-
-
 
 	public static void ready2D() {
 		glCullFace(GL_BACK);
@@ -162,7 +207,6 @@ public class World extends Screen {
 		glViewport(0, 0, Globals.WIDTH, Globals.HEIGHT);
 		glMatrixMode(GL_MODELVIEW);
 	}
-
 
 	private void gameLogic() {
 		worldManager.logic();
@@ -213,5 +257,31 @@ public class World extends Screen {
 	public void dispose() {
 		Display.destroy();
 		System.exit(0);
+	}
+
+}
+
+class SavePool implements Runnable {
+
+	private Chunk data;
+	private String id;
+
+	public SavePool(Chunk data, String id) {
+		this.id = id;
+		this.data = data;
+	}
+
+	public void run() {
+		try {
+			// Save edited File (delete, save new)
+			// Files.delete(path);
+			Vector2f pos = data.pos;
+			String path = ChunkManager.filePath((int) pos.getX(), (int) pos.getY());
+			File dir = new File(path);
+			dir.delete();
+			ChunkManager.saveChunk(pos.getX(), pos.getY(), data.blocks);
+		} catch (Exception e) {
+		}
+		System.out.println("Chunk: " + id + " Should Theoretically Have Updated Successfully.");
 	}
 }

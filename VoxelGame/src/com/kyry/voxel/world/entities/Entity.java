@@ -20,6 +20,7 @@ public class Entity {
 		this(camera, new Vector3f(camera.getX(), camera.getY(), camera.getZ()), new Vector3f(camera.getPitch(), camera.getYaw(), camera.getRoll()), id);
 	}
 
+	@SuppressWarnings("static-access")
 	public Entity(Camera camera, Vector3f pos, Vector3f rot, int id) {
 		this(pos, rot, id);
 		this.camera = camera;
@@ -35,6 +36,7 @@ public class Entity {
 		return camera;
 	}
 
+	@SuppressWarnings("static-access")
 	public void setCamera(Camera camera) {
 		this.camera = camera;
 	}

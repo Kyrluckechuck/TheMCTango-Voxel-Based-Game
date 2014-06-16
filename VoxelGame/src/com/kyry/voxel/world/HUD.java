@@ -75,9 +75,9 @@ public class HUD {
 		font.drawString(10, 165, "playerSpeed X: " + Globals.playerSpeed.x + " Y: " + Globals.playerSpeed.y + " Z: " + Globals.playerSpeed.z, Globals.textColor);
 		font.drawString(10, 190, "Selected Block Type: " + Globals.blockToAddType, Globals.textColor);
 
-		font.drawString(screenXMid*2 - 155, 55, "Selected", Globals.textColor);
-		font.drawString(screenXMid*2 - 170, 70, "Block Type:", Globals.textColor);
-		font.drawString(screenXMid*2 - 155, 85, Block.getTile(Globals.blockToAddType).getName(), Globals.textColor);
+/*		font.drawString(screenXMid*2 - 155, 55, "Selected", Globals.textColor);
+		font.drawString(screenXMid*2 - 170, 70, "Block Type:", Globals.textColor);*/
+		font.drawString(screenXMid*2 - 120, 125, Block.getTile(Globals.blockToAddType).getName(), Globals.textColor);
 		
 		font.drawString(10, 205, " ", Color.white);
 

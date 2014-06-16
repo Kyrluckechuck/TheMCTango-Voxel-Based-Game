@@ -1,13 +1,9 @@
 package com.kyry.voxel.world.entities.mobs;
 
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.opengl.GL11;
 
-import com.kyry.voxel.geometry.Shape;
-import com.kyry.voxel.geometry.Sphere;
 import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.WorldManager;
-import com.kyry.voxel.world.blocks.Block;
 import com.kyry.voxel.world.entities.Camera;
 //import com.kyry.voxel.world.physics.PhysicsWorld;
 

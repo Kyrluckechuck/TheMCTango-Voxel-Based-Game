@@ -1,26 +1,27 @@
 package com.kyry.voxel.world.entities;
 
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_TRANSFORM_BIT;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.kyry.voxel.geometry.AABB;
-import com.kyry.voxel.geometry.Sphere;
 //import com.bulletphysics.linearmath.Transform;
 import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.WorldManager;
-import com.kyry.voxel.world.blocks.Block;
-import com.kyry.voxel.world.chunks.Chunk;
 import com.kyry.voxel.world.chunks.ChunkManager;
-import com.kyry.voxel.world.entities.mobs.Player;
 import com.kyry.voxel.world.physics.CollisionLibrary;
 //import com.kyry.voxel.world.physics.PhysicsWorld;
-import com.nishu.utils.Time;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class Camera extends Entity {
 

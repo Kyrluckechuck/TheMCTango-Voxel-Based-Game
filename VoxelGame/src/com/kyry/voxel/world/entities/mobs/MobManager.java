@@ -6,10 +6,9 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 
 import java.util.ArrayList;
 
-import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.utilities.GameObject;
+import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.entities.Camera;
-import com.nishu.utils.Vector3f;
 
 public class MobManager implements GameObject {
 
