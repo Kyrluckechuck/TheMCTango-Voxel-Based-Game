@@ -337,9 +337,6 @@ public class Camera extends Entity {
 							int actualFaceY = faceY;
 							int actualFaceZ = faceZ;
 
-							// int faceX = (int) (x - takeDist);
-							// int faceY = (int) (y - takeDist);
-							// int faceZ = (int) (z - takeDist);
 							int faceChunkX = ChunkManager.blockToChunk1f(faceX);
 							int faceChunkZ = ChunkManager.blockToChunk1f(faceZ);
 							faceX = faceX - faceChunkX * Globals.CHUNKSIZE;

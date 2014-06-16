@@ -146,9 +146,9 @@ public class ChunkManager {
 
 	}
 
-	public static Chunk loadChunkToMem(int x, int z) { // Add chunk from file to
-														// memory chunk list
-		if (isCreated(x, z)) {
+	/* Add chunk from file to memory chunk list */
+	public static Chunk loadChunkToMem(int x, int z) {
+//		if (isCreated(x, z)) {
 			try {
 				FileInputStream saveFile = new FileInputStream(filePath(x, z));
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
@@ -166,10 +166,10 @@ public class ChunkManager {
 				createChunk(x, z);
 				return (loadChunkToMem(x, z));
 			}
-		} else {
-			createChunk(x, z);
-			return (loadChunkToMem(x, z));
-		}
+//		} else {
+//			createChunk(x, z);
+//			return (loadChunkToMem(x, z));
+//		}
 	}
 
 	public static void loadChunkToPhys(int x, int z) { // Add chunk from file to

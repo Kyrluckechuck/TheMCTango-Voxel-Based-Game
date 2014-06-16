@@ -59,9 +59,9 @@ private static short p[] = { (short) rn.nextInt(255), (short) rn.nextInt(255), (
 	//private static short p[] = new short[256];
 
 	public SimplexNoise() {
-		/*for (int x = 0; x < 256; x++) {
+		for (int x = 0; x < 256; x++) {
 			p[x] = (short) Globals.rand.nextInt(255);
-		}*/
+		}
 	}
 
 	// To remove the need for index wrapping, double the permutation table

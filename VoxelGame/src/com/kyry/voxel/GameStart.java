@@ -3,6 +3,7 @@ package com.kyry.voxel;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
+import java.io.File;
 import java.nio.FloatBuffer;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -113,6 +114,7 @@ public class GameStart extends Screen {
 	public static void main(String[] args) {
 		Window.createWindow(Globals.WIDTH, Globals.HEIGHT, "Voxels", true);
 		Display.setVSyncEnabled(true);
+		System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
 //		Queue<Chunk> toRemove = new ConcurrentLinkedQueue<Chunk>();
 //		Queue<Chunk> toAdd = new ConcurrentLinkedQueue<Chunk>();
 //		new BackgroundProcessing().start();

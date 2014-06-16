@@ -160,30 +160,11 @@ public class Chunk implements Serializable {
 					}
 				}
 			}
-			/*
-			 * for (int x = 0; x < sizeX; x++) { for (int y = 0; y < sizeY; y++)
-			 * { for (int z = 0; z < sizeZ; z++) { if ((blocks[x][y][z] != 0 &&
-			 * !checkTileNotInView(x, y, z))) {
-			 * temp.add(ChunkManager.key(x,y,z)); // temp[x][y][z] = true; } //
-			 * else{ // temp[x][y][z] = false; // } } } }
-			 */
+
 			System.out.println("Total blocks rendered for this chunk: " + temp.size());
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
-			// int sizeAll = Globals.CHUNKSIZE;
-			/*
-			 * Vector3f loadChunkVector = ChunkManager.blockToChunk(
-			 * Player.camera.getX(), Player.camera.getY(),
-			 * Player.camera.getZ());
-			 */
 
-			/*
-			 * for (int x = 0; x < sizeX; x++) { for (int y = 0; y < sizeY; y++)
-			 * { for (int z = 0; z < sizeZ; z++) { if ((temp[x][y][z])) {
-			 * Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z,
-			 * Block.getTile(blocks[x][y][z]).getColor(),
-			 * Block.getTile(blocks[x][y][z]).getTexCoords(), 1); } } } }
-			 */
 			for (int q = 0; q < temp.size(); q++) {
 
 				int x = ChunkManager.keyX(temp.get(q));
