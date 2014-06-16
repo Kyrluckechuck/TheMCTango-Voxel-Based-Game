@@ -16,7 +16,7 @@ public abstract class Block {
 	 * right - sixth
 	 */
 	
-	public static HashMap<Short, Block> tileMap = new HashMap<Short, Block>();
+	public static HashMap<Byte, Block> tileMap = new HashMap<Byte, Block>();
 	private String blockName;
 	
 	public static Block Air = new BlockAir();
@@ -27,7 +27,7 @@ public abstract class Block {
 	public static Block Sand = new BlockSand();
 	public static Block Brick = new BlockBrick();
 	public static Block Glass = new BlockGlass();
-	public static Block CobbleStone = new BlockCobblestone();
+	public static Block Cobblestone = new BlockCobblestone();
 	public static Block Adamantium = new BlockAdamantium();
 	public static Block TransparentGray = new TileTransparentGray();
 	public static Block Crosshair = new Crosshair();
@@ -40,7 +40,7 @@ public abstract class Block {
 	public static Block Skybox6 = new BlockSkybox1();
 
 
-	public abstract short getId();
+	public abstract byte getId();
 	public abstract Color4f getColor();
 	public abstract float[] getTexCoords();
 	
@@ -51,29 +51,29 @@ public abstract class Block {
 		return "Grr";
 	}
 	
-	public static Block getTile(short id) {
+	public static Block getTile(byte id) {
 		return tileMap.get(id);
 	}
 	
 	public static void createTileMap() {
-		tileMap.put((short) 0, Air);
-		tileMap.put((short) 1, Void);
-		tileMap.put((short) 2, Grass);
-		tileMap.put((short) 3, Stone);
-		tileMap.put((short) 4, Dirt);
-		tileMap.put((short) 5, Sand);
-		tileMap.put((short) 6, Brick);
-		tileMap.put((short) 7, Glass);
-		tileMap.put((short) 8, CobbleStone);
-		tileMap.put((short) 9, Adamantium);
-		tileMap.put((short) 176, TransparentGray);
-		tileMap.put((short) 177, Crosshair);
-		tileMap.put((short) 178, Wireframe);
-		tileMap.put((short) 209, Skybox1);
-		tileMap.put((short) 224, Skybox2);
-		tileMap.put((short) 225, Skybox3);
-		tileMap.put((short) 226, Skybox4);
-		tileMap.put((short) 227, Skybox5);
-		tileMap.put((short) 241, Skybox6);
+		tileMap.put((byte) 0, Air);
+		tileMap.put((byte) 1, Void);
+		tileMap.put((byte) 2, Grass);
+		tileMap.put((byte) 3, Stone);
+		tileMap.put((byte) 4, Dirt);
+		tileMap.put((byte) 5, Sand);
+		tileMap.put((byte) 6, Brick);
+		tileMap.put((byte) 7, Glass);
+		tileMap.put((byte) 8, Cobblestone);
+		tileMap.put((byte) 9, Adamantium);
+		tileMap.put((byte) 48, TransparentGray);
+		tileMap.put((byte) 49, Crosshair);
+		tileMap.put((byte) 50, Wireframe);
+		tileMap.put((byte) 81, Skybox1);
+//		tileMap.put((short) 96, Skybox2);
+//		tileMap.put((short) 97, Skybox3);
+//		tileMap.put((short) 98, Skybox4);
+//		tileMap.put((short) 99, Skybox5);
+//		tileMap.put((short) 113, Skybox6);
 	}
 }

@@ -16,7 +16,7 @@ public class BlockGrass extends Block {
 	 */
 	
 	@Override
-	public short getId() {
+	public byte getId() {
 		return 2;
 	}
 

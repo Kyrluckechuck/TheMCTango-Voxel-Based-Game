@@ -85,7 +85,7 @@ public class HUD {
 
 	}
 
-	private static void renderHUDObject(short texture, float x1, float y1, float x2, float y2) {
+	private static void renderHUDObject(byte texture, float x1, float y1, float x2, float y2) {
 		/* Get texture coordinates (on spritesheet) */
 		float[] texCoords = Block.getTile(texture).getTexCoords();
 		glBegin(GL_QUADS);
@@ -116,14 +116,14 @@ public class HUD {
 
 	private static void renderPlayerBlock() {
 		/* Draw semi-isometric view of block */
-		short renderBlock = Globals.blockToAddType;
+		byte renderBlock = Globals.blockToAddType;
 		float x1SelectedOutline = Globals.WIDTH / 3 * 2.5f;
 		float y1SelectedOutline = Globals.HEIGHT - 75;
 		float size = 300; // Size parameter
 		render3DHUDObject(renderBlock, x1SelectedOutline, y1SelectedOutline, size);
 	}
 
-	private static void render3DHUDObject(short textureID, float x1, float y1, float ratio) {
+	private static void render3DHUDObject(byte textureID, float x1, float y1, float ratio) {
 		/* First offset (was mainly instituted for fine-tuning) */
 		float tidOffset = ratio / 6f; 
 		/* Rotate offset for slight turning of the image */

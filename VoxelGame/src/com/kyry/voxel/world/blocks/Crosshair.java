@@ -7,8 +7,8 @@ import com.nishu.utils.Color4f;
 public class Crosshair extends Block {
 
 	@Override
-	public short getId() {
-		return 177;
+	public byte getId() {
+		return 49;
 	}
 
 	@Override

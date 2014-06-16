@@ -5,7 +5,7 @@ import com.nishu.utils.Color4f;
 
 public class BlockVoid extends Block {
 	@Override
-	public short getId() {
+	public byte getId() {
 		return 1;
 	}
 

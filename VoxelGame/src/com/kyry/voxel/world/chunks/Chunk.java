@@ -53,7 +53,7 @@ public class Chunk implements Serializable {
 	public boolean isActive;
 
 	public Random rand;
-	public short[][][] blocks;
+	public byte[][][] blocks;
 	// boolean[][][] temp = new
 	// boolean[Globals.CHUNKSIZE][Globals.WORLDHEIGHT][Globals.CHUNKSIZE];
 	// public ArrayList<Vector3f> temp = new ArrayList<Vector3f>();
@@ -66,7 +66,7 @@ public class Chunk implements Serializable {
 		this(shader, type, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
 	}
 */
-	public Chunk(ShaderProgram shader, Vector2f grr, short[][][] loadedTiles) {
+	public Chunk(ShaderProgram shader, Vector2f grr, byte[][][] loadedTiles) {
 		this.pos = new Vector2f(grr.getX(), grr.getY());
 		this.shader = shader;
 //		this.type = type;
@@ -74,15 +74,7 @@ public class Chunk implements Serializable {
 		initGL();
 		init();
 	}
-/*	public Chunk(ShaderProgram shader, int type, Vector2f grr, short[][][] loadedTiles) {
-		this.pos = new Vector3f(grr.getX(), 0, grr.getY());
-		this.shader = shader;
-		this.type = type;
-		this.blocks = loadedTiles;// loads blocks
-		initGL();
-		init();
-	}*/
-
+	
 	public void set() {
 
 	}

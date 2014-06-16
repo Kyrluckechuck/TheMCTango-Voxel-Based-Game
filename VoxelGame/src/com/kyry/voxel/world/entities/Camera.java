@@ -297,9 +297,12 @@ public class Camera extends Entity {
 			x = (int) (getX() + (Globals.ray.x * i * 0.25));
 			y = (int) (getY() + (Globals.ray.y * i * 0.25));
 			z = (int) (getZ() + (Globals.ray.z * i * 0.25));
-			/*
-			 * if (x <= 0) x--; if (z <= 0) z--;
-			 */
+
+			if (x < 0)
+				x--;
+			if (z < 0)
+				z--;
+
 			int chunkX = ChunkManager.blockToChunk1f(x);
 			int chunkZ = ChunkManager.blockToChunk1f(z);
 
@@ -324,9 +327,12 @@ public class Camera extends Entity {
 							int faceX = (int) (getX() + (Globals.ray.x * (i * 0.25 - takeDist)));
 							int faceY = (int) (getY() + (Globals.ray.y * (i * 0.25 - takeDist)));
 							int faceZ = (int) (getZ() + (Globals.ray.z * (i * 0.25 - takeDist)));
-							/*
-							 * if (faceX <= 0) faceX--; if (faceZ <= 0) faceZ--;
-							 */
+
+							if (faceX < 0)
+								faceX--;
+							if (faceZ < 0)
+								faceZ--;
+
 							int actualFaceX = faceX;
 							int actualFaceY = faceY;
 							int actualFaceZ = faceZ;

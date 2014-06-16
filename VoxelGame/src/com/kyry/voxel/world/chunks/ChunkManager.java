@@ -34,7 +34,6 @@ import com.nishu.utils.ShaderProgram;
 
 public class ChunkManager {
 
-	public static HashMap<String, Short> queue = new HashMap<String, Short>();
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
 	public static HashMap<String, Chunk> loadedChunks = new HashMap<String, Chunk>();
@@ -121,39 +120,8 @@ public class ChunkManager {
 
 	}
 
-	/*
-	 * public static boolean isCreated(int x, int y, int z){ try {
-	 * FileInputStream saveFile; saveFile = new FileInputStream(filePath(x, y,
-	 * z)); ObjectInputStream restore = new ObjectInputStream(saveFile);
-	 * short[][][] test = (short[][][]) restore.readObject(); restore.close();
-	 * return true; } catch (IOException | ClassNotFoundException e) {
-	 * //e.printStackTrace(); return false; }
-	 * 
-	 * 
-	 * //return isCreated(key(x, y, z));
-	 * 
-	 * }
-	 *//*
-		 * public static boolean isCreated(String s){ boolean result = false;
-		 * try{
-		 * 
-		 * result = chunkMap.get(s); } catch(Exception e){ } return result; }
-		 */
-	// /////////////////////////////////
-	/*
-	 * public void readChunk(int x, int y, int z){ //String s = "" + x + "_" + y
-	 * + "_"+ z; checkChunk(x, y, z ); }
-	 * 
-	 * public void checkChunk(int x, int y, int z){ if (isCreated(x, y, z)){
-	 * //can't make a chunk thats already made //Load the chunk somehow
-	 * //short[][][] blocks = Chunk.loadChunk(x,y,z); }else if(!isCreated(x, y,
-	 * z)){ //Chunk.createChunk(x,y,z);
-	 * System.out.println("Should have been created"); chunkMap.put(key(x,y,z),
-	 * true); //Chunk.createChunk(s); //Create the chunk, then load the chunk
-	 * somehow } }
-	 */
 	// SAVE / LOAD
-	private static void saveChunk(float f, float h, short[][][] blocks) { // Save
+	private static void saveChunk(float f, float h, byte[][][] blocks) { // Save
 																			// chunk
 																			// to
 																			// data
@@ -184,7 +152,7 @@ public class ChunkManager {
 			try {
 				FileInputStream saveFile = new FileInputStream(filePath(x, z));
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
-				Chunk chunk = new Chunk(shader, new Vector2f(x, z), (short[][][]) restore.readObject());
+				Chunk chunk = new Chunk(shader, new Vector2f(x, z), (byte[][][]) restore.readObject());
 				// Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new
 				// Vector2f(x, z), (short[][][]) restore.readObject());
 				restore.close();
@@ -299,7 +267,7 @@ public class ChunkManager {
 	public static void createChunk(int f, int h) {
 		int sizeAll = Globals.CHUNKSIZE;
 		int worldHeight = Globals.WORLDHEIGHT;
-		short[][][] blocks = new short[sizeAll][worldHeight][sizeAll];
+		byte[][][] blocks = new byte[sizeAll][worldHeight][sizeAll];
 		
 		
 		SimplexNoise noise = new SimplexNoise();
@@ -335,7 +303,7 @@ public class ChunkManager {
 						} else if (tileProb < 0 && tileProb >= -32) {
 							blocks[internX][internY][internZ] = Block.Stone.getId();
 						} else if (tileProb > 0 && tileProb <= 32) {
-							blocks[internX][internY][internZ] = Block.Brick.getId();
+							blocks[internX][internY][internZ] = Block.Cobblestone.getId();
 						} else if (tileProb > 32) {
 							blocks[internX][internY][internZ] = Block.Grass.getId();
 						}
@@ -438,7 +406,7 @@ public class ChunkManager {
 		}
 	}// end render
 
-	public static void changeBlock(Vector3f blockToAdd, short blockType) {
+	public static void changeBlock(Vector3f blockToAdd, byte blockType) {
 		int worldX = (int) blockToAdd.getX();
 		int worldY = (int) blockToAdd.getY();
 		int worldZ = (int) blockToAdd.getZ();

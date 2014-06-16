@@ -7,8 +7,8 @@ import com.nishu.utils.Color4f;
 public class BlockSkybox5 extends Block{
 
 	@Override
-	public short getId() {
-		return 227;
+	public byte getId() {
+		return 99;
 	}
 
 	@Override

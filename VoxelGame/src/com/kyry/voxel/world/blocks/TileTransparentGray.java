@@ -7,8 +7,8 @@ import com.nishu.utils.Color4f;
 public class TileTransparentGray extends Block {
 
 	@Override
-	public short getId() {
-		return 176;
+	public byte getId() {
+		return 48;
 	}
 
 	@Override

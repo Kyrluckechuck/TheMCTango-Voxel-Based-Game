@@ -7,7 +7,7 @@ import com.nishu.utils.Color4f;
 public class BlockSand extends Block{
 
 	@Override
-	public short getId() {
+	public byte getId() {
 		return 5;
 	}
 

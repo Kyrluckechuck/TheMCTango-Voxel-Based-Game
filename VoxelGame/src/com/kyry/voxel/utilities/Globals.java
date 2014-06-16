@@ -87,7 +87,7 @@ public class Globals {
     // rendered on screen	
 	public static Vector3f blockToAdd = new Vector3f(0, 0, 0);
 	public static Vector3f selectedBlock = new Vector3f(0, 0, 0);
-	public static short blockToAddType = 4;
+	public static byte blockToAddType = 4;
 	public static boolean noClip = true;
 	public static boolean  renderHUDText = true;
 }

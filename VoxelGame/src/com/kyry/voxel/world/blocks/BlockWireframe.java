@@ -7,8 +7,8 @@ import com.nishu.utils.Color4f;
 public class BlockWireframe extends Block {
 
 	@Override
-	public short getId() {
-		return 178;
+	public byte getId() {
+		return 50;
 	}
 
 	@Override
