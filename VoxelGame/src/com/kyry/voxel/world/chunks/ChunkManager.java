@@ -29,20 +29,18 @@ public class ChunkManager {
 	public static HashMap<String, Boolean> chunkMap = new HashMap<String, Boolean>();
 	public static HashMap<String, Chunk> activeChunks = new HashMap<String, Chunk>();
 	public static HashMap<String, Chunk> loadedChunks = new HashMap<String, Chunk>();
-//	public static Random rand = rand = new Random();
-	// public static MobManager mobManager;
 
 	private static ShaderProgram shader;
 
-	// Constructor
+	/* Constructor */
 	public ChunkManager() {
-		// mobManager = new MobManager();
+		/* Removed until shaders are required */
 		// Shader temp = new Shader("/shaders/chunk.vert",
 		// "/shaders/chunk.frag");
 		// shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 	}
 
-	// Helper methods
+	/* Helper methods */
 	public static String key(float x, float z) {// creates a key for the chunk
 		return new String((int) x + "_" + (int) z);
 	}
@@ -52,38 +50,38 @@ public class ChunkManager {
 		return new String((int) x + "_" + (int) y + "_" + (int) z);
 	}
 
-	public static String key(Vector2f vec) {// creates a key for the chunk
+	/* Creates a key for the chunk */
+	public static String key(Vector2f vec) {
 		return new String((int) vec.getX() + "_" + (int) vec.getY());
 	}
 
-	public static String key(Vector3f vec) {// creates a key for the chunk
+	/* Creates a key for the chunk */
+	public static String key(Vector3f vec) {
 		return new String((int) vec.getX() + "_" + (int) vec.getY() + "_" + (int) vec.getZ());
 	}
 
+	/* Returns just the XCoordinate (First) */
 	public static int keyX(String s) {
 		return Integer.parseInt(s.split("_")[0]);
 	}
-
+	/* Returns just the YCoordinate (Second) */
 	public static int keyY(String s) {
 		return Integer.parseInt(s.split("_")[1]);
 	}
-
+	/* Returns just the ZCoordinate (Third) */
 	public static int keyZ(String s) {
 		return Integer.parseInt(s.split("_")[2]);
 	}
-
+	
 	public static Vector2f blockToChunk(Vector3f v) {
 		return new Vector2f(blockToChunk1f(v.getX()), blockToChunk1f(v.getZ()));
-		// return new
-		// Vector3f(blockToChunk1f(v.x),blockToChunk1f(v.y),blockToChunk1f(v.z));
 	}
 
 	public static Vector2f blockToChunk(float x, float z) {
 		return new Vector2f(blockToChunk1f(x), blockToChunk1f(z));
-		// return new
-		// Vector2f(blockToChunk1f(x),blockToChunk1f(y),blockToChunk1f(z));
 	}
 
+	/* Converts world block coordinate to world chunk coordinate */
 	public static Vector3f blockToChunk(float x, float y, float z) {
 		return new Vector3f(blockToChunk1f(x), blockToChunk1f(y), blockToChunk1f(z));
 	}
@@ -98,36 +96,39 @@ public class ChunkManager {
 		return (int) i;
 	}
 
+	/* Default save path */
 	public static String filePath(int x, int z) {
-		return new String("E:\\Save\\" + x + "_" + z + ".dat");
+		return new String("C:\\Save\\" + x + "_" + z + ".dat");
 	}
 
+	/* Checks if the file has been created on disk already */
 	public static boolean isCreated(int x, int z) {
 		File f = new File(filePath(x, z));
 		if (f.exists() && !f.isDirectory()) {
 			return true;
 		} else
 			return false;
-		// return isCreated(key(x, y, z));
 
 	}
 
-	// SAVE / LOAD
-	public static void saveChunk(float f, float h, byte[][][] blocks) { // Save
-																			// chunk
-																			// to
-																			// data
-																			// file
+	/* The saving of a chunk to a data file */
+	public static void saveChunk(float f, float h, byte[][][] blocks) {
 		int x = (int) f;
-		// int y = (int) g;
 		int z = (int) h;
 		try {
+			/* Create filepath */
 			File dir = new File(filePath(x, z));
+			/* Makes the directory if non-existent */
 			dir.getParentFile().mkdir();
+			/* Opens output stream */
 			FileOutputStream saveFile = new FileOutputStream(filePath(x, z));
+			/* Alters stream for objects */
 			ObjectOutputStream save = new ObjectOutputStream(saveFile);
+			/*Writes only the (X, Y, Z) & blocktype to the data file */
 			save.writeObject(blocks);
+			/*Flush the stream */
 			save.flush();
+			/* Close the stream */
 			save.close();
 			System.out.println("(" + x + "," + z + ") Saved Successfully.");
 
@@ -140,32 +141,29 @@ public class ChunkManager {
 
 	/* Add chunk from file to memory chunk list */
 	public static Chunk loadChunkToMem(int x, int z) {
-//		if (isCreated(x, z)) {
 			try {
+				/* Opens input stream */
 				FileInputStream saveFile = new FileInputStream(filePath(x, z));
+				/* Alters stream for objects */
 				ObjectInputStream restore = new ObjectInputStream(saveFile);
+				/* Creates a chunk with default shader, chunk (X, Z) coordinates, and the read in chunk data */
 				Chunk chunk = new Chunk(shader, new Vector2f(x, z), (byte[][][]) restore.readObject());
-				// Chunk chunk = new Chunk(shader, World.MIXEDCHUNK, new
-				// Vector2f(x, z), (short[][][]) restore.readObject());
+				/* Closes stream */
 				restore.close();
+				/* Puts the loaded chunk into loadedChunks (memory) */
 				loadedChunks.put(key(x, z), chunk);
 				Globals.chunksLoaded++;
 				System.out.println("(" + x + "," + z + ") Loaded Successfully.");
 
 				return chunk;
 			} catch (Exception e) {
-				// Take a second try through, creating the chunk forcefully.
+				/* Take a second try through, creating the chunk forcefully. */
 				createChunk(x, z);
 				return (loadChunkToMem(x, z));
 			}
-//		} else {
-//			createChunk(x, z);
-//			return (loadChunkToMem(x, z));
-//		}
 	}
-
-	public static void loadChunkToPhys(int x, int z) { // Add chunk from file to
-		// memory chunk list
+	/* Add blocks rendered in that chunk to the physics environment */
+	public static void loadChunkToPhys(int x, int z) {
 		String key = key(x, z);
 
 		ArrayList<String> temp = activeChunks.get(key).getRenderedBlocks();
@@ -175,27 +173,21 @@ public class ChunkManager {
 			i = ChunkManager.keyX(temp.get(q));
 			o = ChunkManager.keyY(temp.get(q));
 			u = ChunkManager.keyZ(temp.get(q));
+			/*Checks if it exists already */
 			if (!CollisionLibrary.hasBlock(x, z, i, o, u)) {
+				/*If not, create it */
 				CollisionLibrary.newBlock(x, z, i, o, u);
 				Globals.PhysBlocksLoaded++;
 			}
-			// This basically adds ONLY the blocks that were rendered to the
-			// physics environment
 		}
 		System.out.println("Chunk (" + x + ", " + z + ") added to PhysWorld");
 
 	}
-
-	public static void removeChunkFromPhys(int x, int z) { // Add chunk from
-															// file to
-		// memory chunk list
+	
+	/* Remove blocks rendered in that chunk from the physics environment */
+	public static void removeChunkFromPhys(int x, int z) {
 		String key = key(x, z);
 		System.out.println("Chunk (" + x + ", " + z + ") removed from PhysWorld");
-		// for (Map.Entry<String, Chunk> entry : activeChunks.entrySet()) {
-		// System.out.println("Key = " + entry.getKey() + ", Value = " +
-		// entry.getValue());
-		// }
-		// System.out.println(key);
 		ArrayList<String> temp = activeChunks.get(key).getRenderedBlocks();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
@@ -203,43 +195,43 @@ public class ChunkManager {
 			i = ChunkManager.keyX(temp.get(q));
 			o = ChunkManager.keyY(temp.get(q));
 			u = ChunkManager.keyZ(temp.get(q));
-
+			/* Remove the block */
 			CollisionLibrary.removeBlock(x, z, i, o, u);
 			Globals.PhysBlocksLoaded--;
-			// This basically removes ONLY the blocks that had been rendered to
-			// the physics environment
 		}
 
 	}
-
-	public static void loadChunkToActive(int chunkX, int chunkZ) { // Add chunk from
-															// memory to active
-															// chunk list
+	/*Add chunk from memory to chunks needing to be rendered */
+	public static void loadChunkToActive(int chunkX, int chunkZ) {
 
 		for (int potentialX = chunkX - 1; potentialX <= chunkX + 1; potentialX++) {
 			for (int potentialZ = chunkZ - 1; potentialZ <= chunkZ + 1; potentialZ++) {
+				/* Check if chunk is already in memory */
 				if (!loadedChunks.containsKey(key(potentialX, potentialZ))) {
+					/* Checks if file already exists for the chunk */
 					if (!isCreated(potentialX, potentialZ)) {
+						/*Creates chunk, then loads it recursively */
 						createChunk(potentialX, potentialZ);
 						loadChunkToMem(potentialX, potentialZ);
 
 					} else {
+						/*Just load the chunk */
 						loadChunkToMem(potentialX, potentialZ);
 					}
 				}
 			}
 		}
-
+		/* Put the chunk into the render list */
 		activeChunks.put(key(chunkX, chunkZ), loadedChunks.get(key(chunkX, chunkZ)));
 		Globals.chunksActive++;
+		/* Calculate the blocks needing to be rendered */
 		activeChunks.get(key(chunkX, chunkZ)).load();
+		/*Load physics from chunk */
 		loadChunkToPhys(chunkX, chunkZ);
 
 	}
-
-	public static void removeChunkFromActive(String s) { // Remove chunk
-		// from active
-		// chunk list
+	/* Remove chunk from render list */
+	public static void removeChunkFromActive(String s) { 
 		int x = ChunkManager.keyX(s);
 		int z = ChunkManager.keyY(s);
 
@@ -251,6 +243,7 @@ public class ChunkManager {
 		// from active
 		// chunk list
 		removeChunkFromPhys(x, z);
+		activeChunks.get(key(x, z)).dispose();
 		activeChunks.remove(key(x, z));
 		Globals.chunksActive--;
 
@@ -409,14 +402,23 @@ public class ChunkManager {
 		int internY = (int) worldY;
 		int internZ = (int) worldZ - chunkZ * Globals.CHUNKSIZE;
 		String key = key(chunkX, chunkZ);
+		/* Remove the chunk from the ActiveChunks list */
 		removeChunkFromActive(key);
+		/* Load a temporary copy of the internal memory's chunk */
 		Chunk temp = loadedChunks.get(key);
+		/* Modify Block to be new type */
 		temp.blocks[internX][internY][internZ] = blockType;
+		Globals.PhysBlocksLoaded -= temp.temp.size();
+		Globals.RenderBlocksLoaded -= temp.temp.size();
+		/* Dispose of old chunk's memory data */
+		loadedChunks.get(key).dispose();
+		/* Remove old chunk from memory */
 		loadedChunks.remove(key);
+		/* Put the new chunk into memory */
 		loadedChunks.put(key, temp);
-		activeChunks.remove(key);
+		/* Load new chunk to ActiveChunks list */
 		loadChunkToActive(chunkX, chunkZ);
+		/*Add Chunk To Be Saved Via Another Thread */
 		Globals.chunkToSave.add(key);
-		//Potentially Call Save Chunk Via Threading Spot
 	}
 }// end class

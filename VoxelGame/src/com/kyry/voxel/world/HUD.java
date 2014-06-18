@@ -17,14 +17,18 @@ import com.nishu.utils.GameLoop;
 
 public class HUD {
 
-	static float screenObjOffset = 50; // Offset for object size
-	static float screenXMid = Globals.WIDTH / 2; // Middle of screen (X-axis)
-	static float screenYMid = Globals.HEIGHT / 2; // Middle of screen (Y-axis)
-	static TrueTypeFont font; // Define font to be used
+	/* Offset for object size */
+	static float screenObjOffset = 50;
+	/* Middle of screen (X-axis) */
+	static float screenXMid = Globals.WIDTH / 2;
+	/* Middle of screen (Y-axis) */
+	static float screenYMid = Globals.HEIGHT / 2;
+	/* Define font to be used */
+	static TrueTypeFont font;
 
 	public static void renderHUD() {
+		/* Setup screen to render for 2D */
 		World.ready2D();
-
 		/* Render the current block to be placed */
 		renderPlayerBlock();
 		/* Render 2D crosshair image and currently selected block in top right */
@@ -44,14 +48,14 @@ public class HUD {
 		float y2Crosshair = screenYMid + screenObjOffset / 2;
 		renderHUDObject(Block.Crosshair.getId(), x1Crosshair, y1Crosshair, x2Crosshair, y2Crosshair);
 
-		/* Selected Object In Hand */
+		/* Selected Object In Hand In Top Corner*/
 		float x1Selected = screenXMid * 2 - screenObjOffset * 2 - 10;
 		float y1Selected = 0 + 10;
 		float x2Selected = screenXMid * 2 - 10;
 		float y2Selected = 0 + screenObjOffset * 2 + 10;
 		renderHUDObject(Globals.blockToAddType, x1Selected, y1Selected, x2Selected, y2Selected);
 
-		/* Gray Background For Object In Hand (ease of sight) */
+		/* Gray Background In Top Corner For Object In Hand (ease of sight) */
 		float x1SelectedOutline = screenXMid * 2 - screenObjOffset * 2 - 10 * 2;
 		float y1SelectedOutline = 0;
 		float x2SelectedOutline = screenXMid * 2 + 10;
@@ -75,10 +79,9 @@ public class HUD {
 		font.drawString(10, 165, "playerSpeed X: " + Globals.playerSpeed.x + " Y: " + Globals.playerSpeed.y + " Z: " + Globals.playerSpeed.z, Globals.textColor);
 		font.drawString(10, 190, "Selected Block Type: " + Globals.blockToAddType, Globals.textColor);
 
-/*		font.drawString(screenXMid*2 - 155, 55, "Selected", Globals.textColor);
-		font.drawString(screenXMid*2 - 170, 70, "Block Type:", Globals.textColor);*/
 		font.drawString(screenXMid*2 - 120, 125, Block.getTile(Globals.blockToAddType).getName(), Globals.textColor);
-		
+		/* There was a strange bug in the text loading method where if this line is not present, 
+		 * the text render the screen black when the colour switched */
 		font.drawString(10, 205, " ", Color.white);
 
 		TextureImpl.unbind(); // Unbind the texture used for font
@@ -115,7 +118,7 @@ public class HUD {
 	}
 
 	private static void renderPlayerBlock() {
-		/* Draw semi-isometric view of block */
+		/* Draw semi-isometric view of block to be placed in hand */
 		byte renderBlock = Globals.blockToAddType;
 		float x1SelectedOutline = Globals.WIDTH / 3 * 2.5f;
 		float y1SelectedOutline = Globals.HEIGHT - 75;

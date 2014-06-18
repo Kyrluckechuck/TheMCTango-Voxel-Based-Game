@@ -116,4 +116,7 @@ public class GameLoop {
 	public static int getFPS(){
 		return currentFPS;
 	}
+	public static void setFPS(int fps){
+		currentFPS = fps;
+	}
 }

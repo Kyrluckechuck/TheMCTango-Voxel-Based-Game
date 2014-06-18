@@ -24,78 +24,60 @@ import com.nishu.utils.ShaderProgram;
 public class Chunk {
 
 	public Vector2f pos;
-	// public short[][][] chunks;
-	// public short[][][] blocks;
-	public ShaderProgram shader;
+	// public ShaderProgram shader;
 
-	public int vcID, sizeX, sizeY, sizeZ, worldX, worldZ, internX, internY, internZ;//, type; // worldY,
+	public int vcID, sizeX, sizeY, sizeZ, worldX, worldZ, internX, internY, internZ;
 	public boolean isActive;
 
 	public Random rand;
 	public byte[][][] blocks;
-	// boolean[][][] temp = new
-	// boolean[Globals.CHUNKSIZE][Globals.WORLDHEIGHT][Globals.CHUNKSIZE];
-	// public ArrayList<Vector3f> temp = new ArrayList<Vector3f>();
 	public ArrayList<String> temp = new ArrayList<String>();
 
 	public Chunk(ShaderProgram shader, int x, int z) {
 		this(shader, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
 	}
-/*	public Chunk(ShaderProgram shader, int type, int x, int z) {
-		this(shader, type, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
-	}
-*/
+
 	public Chunk(ShaderProgram shader, Vector2f grr, byte[][][] loadedTiles) {
 		this.pos = new Vector2f(grr.getX(), grr.getY());
-		this.shader = shader;
-//		this.type = type;
-		this.blocks = loadedTiles;// loads blocks
+		// this.shader = shader;
+		this.blocks = loadedTiles;
 		initGL();
 		init();
 	}
-	
+
 	public void set() {
 
 	}
 
 	public void initGL() {
-		rand = new Random(); // initialize random number generator
+		/* Initialize random number generator */
+		rand = new Random();
 
-		sizeX = Globals.CHUNKSIZE;// TBH, idk -> LOL I do
+		sizeX = Globals.CHUNKSIZE;
 		sizeY = Globals.WORLDHEIGHT;
 		sizeZ = Globals.CHUNKSIZE;
-
-		// internX = (int) ( Player.camera.getX() - pos.getX() *
-		// Globals.CHUNKSIZE); //Internal chunk coords
-		// internY = (int) ( Player.camera.getY() - pos.getY() *
-		// Globals.CHUNKSIZE);
-		// internZ = (int) ( Player.camera.getZ() - pos.getZ() *
-		// Globals.CHUNKSIZE);
-
-		worldX = (int) pos.getX() * Globals.CHUNKSIZE; // World chunk coords
-		// worldY = 0;//(int) pos.getY() * Globals.CHUNKSIZE;
+		/* World chunk coords */
+		worldX = (int) pos.getX() * Globals.CHUNKSIZE;
 		worldZ = (int) pos.getY() * Globals.CHUNKSIZE;
-
-		vcID = glGenLists(1); // Generate blank list for vcID
-
-		// blocks = new short[sizeX][sizeY][sizeZ];
-		// loadChunk(x,y,z);
-
-		// loadChunk((int) pos.getX(), (int) pos.getY(), (int) pos.getZ());
-		// loadChunk(0,0,0);
+		/* Generate blank display list */
+		vcID = glGenLists(1);
 
 	}
 
 	public void init() {
+		/* Removed and changed the loading process to speed up rendering */
 		// rebuild();
 	}
 
 	public void load() {
 		/*
-		 * for (Map.Entry<String, Chunk> entry :
-		 * ChunkManager.loadedChunks.entrySet()) { System.out.println("Key = " +
-		 * entry.getKey() + ", Value = " + entry.getValue()); }
+		 * ***This method is used to help diagnose bugs, it basically just
+		 * prints all contents of a HashMap*** for (Map.Entry<String, Chunk>
+		 * entry : ChunkManager.loadedChunks.entrySet()) {
+		 * System.out.println("Key = " + entry.getKey() + ", Value = " +
+		 * entry.getValue()); }
 		 */
+		/* Build what needs to be rendered of the chunk */
 		rebuild();
 	}
 
@@ -103,60 +85,45 @@ public class Chunk {
 	}
 
 	public void render() {
-//		if (type != World.AIRCHUNK) {
-			// shader.use();
-			// int texLoc = GL20.glGetUniformLocation(shader.getProgram(),
-			// "u_texture");
-			// GL20.glUniform1i(texLoc, 0);
-			glCallList(vcID);
+		// shader.use();
+		// int texLoc = GL20.glGetUniformLocation(shader.getProgram(),
+		// "u_texture");
+		// GL20.glUniform1i(texLoc, 0);
+		/* Render Display List */
+		glCallList(vcID);
 
-			// shader.release();
-			// System.out.println("MixedChunk");
-//		}
-//		if (type != World.MIXEDCHUNK) {
-//			System.out.println("AirChunk");
-//		}
+		// shader.release();
 	}
 
 	public void rebuild() {
 		temp = new ArrayList<String>();
-//		if (type != World.AIRCHUNK) {
-			for (int x = 0; x < sizeX; x++) {
-				for (int y = 0; y < sizeY; y++) {
-					for (int z = 0; z < sizeZ; z++) {
-						// if ((blocks[x][y][z] = 0)) { //RIGHT HERE IS WHERE THAT CHECK AROUND AIR
-						// if ((blocks[x-1][y][z] = 0)) {
-						// if ((blocks[x+1][y][z] = 0)) {
-						// if ((blocks[x+1][y-1][z] = 0)) {
-						// etc
-						if ((y>-1)&&(blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
-							temp.add(ChunkManager.key(x, y, z));
-							// temp[x][y][z] = true;
-						}
-						// else{
-						// temp[x][y][z] = false;
-						// }
+		for (int x = 0; x < sizeX; x++) {
+			for (int y = 0; y < sizeY; y++) {
+				for (int z = 0; z < sizeZ; z++) {
+					if ((y > -1) && (blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
+						/* In short, build a list of things needed to be rendered */
+						temp.add(ChunkManager.key(x, y, z));
 					}
 				}
 			}
+		}
 
-			System.out.println("Total blocks rendered for this chunk: " + temp.size());
-			glNewList(vcID, GL_COMPILE);
-			glBegin(GL_QUADS);
+		System.out.println("Total blocks rendered for this chunk: " + temp.size());
+		glNewList(vcID, GL_COMPILE);
+		glBegin(GL_QUADS);
 
-			for (int q = 0; q < temp.size(); q++) {
+		for (int q = 0; q < temp.size(); q++) {
 
-				int x = ChunkManager.keyX(temp.get(q));
-				int y = ChunkManager.keyY(temp.get(q));
-				int z = ChunkManager.keyZ(temp.get(q));
+			int x = ChunkManager.keyX(temp.get(q));
+			int y = ChunkManager.keyY(temp.get(q));
+			int z = ChunkManager.keyZ(temp.get(q));
+			/* Render all blocks within the list created previously */
+			Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z, Block.getTile(blocks[x][y][z]).getColor(), Block.getTile(blocks[x][y][z]).getTexCoords(), 1);
+			Globals.RenderBlocksLoaded++;
+		}
+		glEnd();
+		glEndList();
 
-				Shape.createCube((int) worldX + x, (int) y, (int) worldZ + z, Block.getTile(blocks[x][y][z]).getColor(), Block.getTile(blocks[x][y][z]).getTexCoords(), 1);
-				Globals.RenderBlocksLoaded++;
-			}
-			glEnd();
-			glEndList();
-
-//		}
 	}
 
 	private boolean checkTileNotInView(int x, int y, int z) {
@@ -171,9 +138,7 @@ public class Chunk {
 				int z1 = (int) (((int) pos.getY() * Globals.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
-				// z1)) + " " + grr);
-				if (grr.blocks[Globals.CHUNKSIZE-1][y][z] != 0)
+				if (grr.blocks[Globals.CHUNKSIZE - 1][y][z] != 0)
 					facesHidden[0] = true;
 				else
 					facesHidden[0] = false;
@@ -194,8 +159,6 @@ public class Chunk {
 				int z1 = (int) (((int) pos.getY() * Globals.CHUNKSIZE) + z);
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
-				// z1)) + " " + grr);
 				if (grr.blocks[0][y][z] != 0)
 					facesHidden[1] = true;
 				else
@@ -234,9 +197,7 @@ public class Chunk {
 				int z1 = (int) (((int) pos.getY() * Globals.CHUNKSIZE) + (z - 1));
 				Chunk grr = ChunkManager.loadedChunks.get(ChunkManager.key(ChunkManager.blockToChunk(x1, z1)));
 
-				// System.out.println(ChunkManager.key(ChunkManager.blockToChunk(x1,
-				// z1)) + " " + grr);
-				if (grr.blocks[Globals.CHUNKSIZE-1][y][z] != 0)
+				if (grr.blocks[Globals.CHUNKSIZE - 1][y][z] != 0)
 					facesHidden[4] = true;
 				else
 					facesHidden[4] = false;
@@ -275,7 +236,7 @@ public class Chunk {
 	}
 
 	public void dispose() {
-		shader.dispose();
+		// shader.dispose();
 		glDeleteLists(vcID, 1);
 	}
 
@@ -291,8 +252,8 @@ public class Chunk {
 	 * loadChunkZ = (int) (Player.camera.getZ() / Globals.CHUNKSIZE);
 	 * 
 	 * if (x < pos.getX() || x > pos.getX() + Globals.CHUNKSIZE || y <
-	 * pos.getY() || y > pos.getY() + Globals.CHUNKSIZE || z < pos.getZ() || z
-	 * > pos.getZ() + Globals.CHUNKSIZE) return 1; return blocks[x][y][z]; }
+	 * pos.getY() || y > pos.getY() + Globals.CHUNKSIZE || z < pos.getZ() || z >
+	 * pos.getZ() + Globals.CHUNKSIZE) return 1; return blocks[x][y][z]; }
 	 */
 
 	public void setActive(boolean isActive) {
@@ -307,13 +268,14 @@ public class Chunk {
 		return new Vector2f(pos.getX(), pos.getY());
 	}
 
-//	public int getType() {
-//		return type;
-//	}
-	public ArrayList<String> getRenderedBlocks(){
+	// public int getType() {
+	// return type;
+	// }
+	public ArrayList<String> getRenderedBlocks() {
 		return temp;
 	}
-	public void setChunk(Chunk c){
-		
+
+	public void setChunk(Chunk c) {
+
 	}
 }

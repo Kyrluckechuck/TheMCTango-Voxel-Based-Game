@@ -3,6 +3,7 @@ package com.kyry.voxel.geometry;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Sphere {
+	/* Instantiate the center and a float array for the radius */
 	public Vector3f center;
 	public float radius;
 

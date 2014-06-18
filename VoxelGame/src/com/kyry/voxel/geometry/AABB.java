@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.kyry.voxel.utilities.Globals;
 
 public class AABB {
+	/* Instantiate the center and a float array for the radius */
 	public Vector3f center;
 	public float r[];
 
@@ -22,7 +23,7 @@ public class AABB {
 				+ (size * .5f), z + (size * .5f));
 
 		r = new float[3];
-		r[0] = (size * 0.5f); // size*0.5 to make it radius
+		r[0] = (size * 0.5f); // size*0.5 to make it radius, not diameter
 		r[1] = (size * 0.5f);
 		r[2] = (size * 0.5f);
 	}

@@ -11,75 +11,69 @@ import com.kyry.voxel.world.entities.mobs.MobManager;
 import com.kyry.voxel.world.entities.mobs.Player;
 
 public class WorldManager {
-
+	/* Initialization of player's size, Mob Manager and Chunk Manager*/
 	MobManager mobManager;
 	public static Sphere playerSphereUpper = new Sphere(0.25f);
 	public static Sphere playerSphereLower = new Sphere(0.25f);
 
-	//public ArrayList<Chunk> loadedChunks;
-	//public ArrayList<Chunk> activeChunks;
-
-//	private ShaderProgram shader;
+//	private ShaderProgram shader; //Ignored due to performance woe's
 	public static ChunkManager chunkManager;
 
 	public WorldManager() {
-		//initGL();
+		/* Initialize and create world */
 		init();
 		createWorld();
 	}
 
 	private void init() {
+		/* Instantiate */
 		mobManager = new MobManager();
 		chunkManager = new ChunkManager();
-		//loadedChunks = new ArrayList<Chunk>();
-		//activeChunks = new ArrayList<Chunk>();
 	}
 
 	private void createWorld() {
+		/* Get player's coordinates */
 		Vector3f pos3f = Player.camera.getPos();
+		/* Get player's coordinates in Chunk (X, Y) */
 		Vector2f pos2f = ChunkManager.blockToChunk(pos3f);
-//		int y = 0;
+		/* Load chunks around player (8 around him making it a cube (9 including his chunk )) */
 		for (int x = (int) (pos2f.getX() - Globals.WORLDRADIUS); x <= pos2f.getX() + Globals.WORLDRADIUS; x++) {
-			//for (int y = (int) (pos.getY() - Globals.WORLDRADIUS); y <= pos.getY() +Globals.WORLDRADIUS; y++) {
 				for (int z = (int) (pos2f.getY() - Globals.WORLDRADIUS); z <= pos2f.getY() + Globals.WORLDRADIUS; z++) {
 					ChunkManager.loadChunkToActive(x, z);
 					Globals.chunksActive++;
 				}
-			//}
 		}
 	}
 
 
 	public void update() {
+		/* Updating */
 		mobManager.update();
 		chunkManager.update();
 	}
 
 	public void mapRender() {
+		/* Reset chunks in frustum count */
 		Globals.chunksFrustum = 0;
-
+		/* Bind the spritesheet */
 		Spritesheet.blocks.bind();
-		
+		/* Render Chunks */
 		chunkManager.render();
+		/* Render player stuff */
 		mobManager.mobRender();
-		
-		// renders RAY! keep
-/*		glBegin(GL_QUADS);
-		Shape.createCube(mobManager.getPlayer().getX() + Globals.ray.x,
-				mobManager.getPlayer().getY() + Globals.ray.y,
-				mobManager.getPlayer().getZ() + Globals.ray.z,
-				Block.getTile(Block.Void.getId()).getColor(),
-				Block.getTile(Block.Void.getId()).getTexCoords(), 0.0099f);
-		glEnd();*/
 	}// end render
 
 	public void skyBoxRender() {
+		/* Render Skybox */
 		Skybox.skyRender();
 	}
 
 	public void logic() {
+		/*Ray Cast */
 		getMobManager().getPlayer().getCamera().castRay();
+		/* Apply changes to camera */
 		getMobManager().getPlayer().getCamera().applyTranslations();
+		/* Apply physics */
 		getMobManager().getPlayer().getCamera().applyPhysics();
 	}
 

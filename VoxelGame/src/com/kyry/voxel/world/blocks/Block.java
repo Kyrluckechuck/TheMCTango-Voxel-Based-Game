@@ -15,9 +15,9 @@ public abstract class Block {
 	 * left - fifth
 	 * right - sixth
 	 */
-	
+	/* Define hashmap for tile mapping */
 	public static HashMap<Byte, Block> tileMap = new HashMap<Byte, Block>();
-	
+	/*Create blocks and instantiate objects */
 	public static Block Air = new BlockAir();
 	public static Block Void = new BlockVoid();
 	public static Block Grass = new BlockGrass();
@@ -31,6 +31,7 @@ public abstract class Block {
 	public static Block TransparentGray = new TileTransparentGray();
 	public static Block Crosshair = new Crosshair();
 	public static Block Wireframe = new BlockWireframe();
+	/* All are the same image due to graphic bug if rendering the 6 different faces */
 	public static Block Skybox1 = new BlockSkybox1();
 	public static Block Skybox2 = new BlockSkybox1();
 	public static Block Skybox3 = new BlockSkybox1();
@@ -38,22 +39,25 @@ public abstract class Block {
 	public static Block Skybox5 = new BlockSkybox1();
 	public static Block Skybox6 = new BlockSkybox1();
 
-
+	/* create defaults */
 	public abstract byte getId();
 	public abstract Color4f getColor();
 	public abstract float[] getTexCoords();
 	
 	public boolean isDestroyable() {
+		/* Unused currently */
 		return true;
 	}	
+	/* Return default name (Should be overridden) */
 	public String getName() {
 		return "Grr";
 	}
-	
+	/* Return tile id based on mapping */
 	public static Block getTile(byte id) {
 		return tileMap.get(id);
 	}
 	
+	/* Actual mapping of spritesheet tiles with ID's */
 	public static void createTileMap() {
 		tileMap.put((byte) 0, Air);
 		tileMap.put((byte) 1, Void);

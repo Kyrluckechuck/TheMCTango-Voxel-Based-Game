@@ -31,6 +31,14 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
 
+/**
+ * Voxel Game. 
+ * Main game class containing 'main' method
+ * Creates gameLoop object to run game
+ * @author Justin & Eliel
+ * June 17th 2014
+ *   */
+
 public class GameStart extends Screen {
 
 	private GameLoop gameLoop;
@@ -47,13 +55,15 @@ public class GameStart extends Screen {
 
 	@Override
 	public void init() {
+		/* Set up the main camera */
 		initCamera();
-
+		/* Instantiate world */
 		world = new World();
 	}
 
 	@Override
 	public void initGL() {
+		/* Begin OpenGL preperations, resetting viewport, etc */
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -67,9 +77,7 @@ public class GameStart extends Screen {
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-		/*
-		 * if (Globals.fogEnabled) { GL11.glEnable(GL11.GL_FOG);
-		 */
+		/* This is for setting what the fog will look like */
 		{
 			FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
 			fogColours.put(new float[] { Globals.fogColor.r,
@@ -94,34 +102,46 @@ public class GameStart extends Screen {
 	@SuppressWarnings("static-access")
 	@Override
 	public void update() {
+		/* Catch when to close the program */
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			dispose();
 		}
+		/* Set the global FPS based on the gameLoop's FPS */
 		if (gameLoop.getFPS() > 1) {
 			Globals.FPS = gameLoop.getFPS();
 		} else {
+			/* Account for it being extremely poor (stops values from becoming indefinite in case they are divided by zero) */
 			Globals.FPS = 1f;
 		}
+		/* Update the world */
 		world.update();
 	}
 
 	@Override
 	public void worldRender() {
+		/* Clears the OpenGL buffer cache */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// background
 		// glClearColor(0.5f, 0f, 0.75f, 1f);
-
+		/* Render the world */
 		world.worldRender();
 
 	}
 
 	@Override
 	public void dispose() {
+		/*Clean Up */
 		world.dispose();
 	}
 	
 
-
+/**
+ * Main Method!
+ * Create the LWJGL window
+ * Enable VSync to remove tearing
+ * Set natives file path (Helps with loading via .jar file) 
+ * Start the game by calling the constructor
+ * */
 	public static void main(String[] args) {
 		Window.createWindow(Globals.WIDTH, Globals.HEIGHT, "Voxels", true);
 		Display.setVSyncEnabled(true);
@@ -129,7 +149,6 @@ public class GameStart extends Screen {
 //		Queue<Chunk> toRemove = new ConcurrentLinkedQueue<Chunk>();
 //		Queue<Chunk> toAdd = new ConcurrentLinkedQueue<Chunk>();
 //		new BackgroundProcessing().start();
-		
         new GameStart();
 		
 	}

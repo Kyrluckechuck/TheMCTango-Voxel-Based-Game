@@ -49,24 +49,24 @@ import com.nishu.utils.Screen;
 
 public class World extends Screen {
 
-	// public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
-
 	static WorldManager worldManager;
 
 	public World() {
+		/* Initialize */
 		initGL();
 		init();
 	}
 
 	@Override
 	public void init() {
-
+		/* Bind the spritesheet to the render buffer */
 		Spritesheet.blocks.bind();
+		/* Create the tilemap */
 		Block.createTileMap();
-
+		/* Create the HUD font */
 		Font tempFont = new Font("Arial", Font.BOLD, 16);
 		HUD.font = new TrueTypeFont(tempFont, true);
-
+		/* Initialize WorldManager */
 		worldManager = new WorldManager();
 
 	}
@@ -84,25 +84,29 @@ public class World extends Screen {
 
 	@Override
 	public void update() {
+		/* Get input */
 		input();
+		/* Update */
 		worldManager.update();
+		/*Save any chunks that have been modified to disk */
 		saveModifiedChunks();
 
 	}
 
 	private void saveModifiedChunks() {
 		if (Globals.chunkToSave.size() > 0) {
-			ExecutorService executor = Executors.newCachedThreadPool();// Executors.newFixedThreadPool(2);//2
-																		// Threads
+			/* Creates an executor service for threading */
+			ExecutorService executor = Executors.newCachedThreadPool();
+			/* Create the key for the chunk which needs to be saved */
 			String key = Globals.chunkToSave.get(0);
+			/* Get the modified chunk */
 			Chunk temp = ChunkManager.activeChunks.get(key);
+			/* Submit modified chunk to new executor thread */
 			executor.submit(new SavePool(temp, key));
+			/* Shut down executor service */
 			executor.shutdown();
 			System.out.println("Chunk Save Submitted.");
-/*			try {
-				executor.awaitTermination(1, TimeUnit.MINUTES);
-			} catch (InterruptedException e) {
-			}*/
+			/* Remove the chunk from the queue */
 			Globals.chunkToSave.remove(0);
 			System.out.println("Chunk Save Completed.");
 
@@ -112,17 +116,15 @@ public class World extends Screen {
 	private void input() {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
+				/* Toggle the rendering of the HUD via the F3 Key */
 				if (Keyboard.isKeyDown(Keyboard.KEY_F3)) {
 					Globals.renderHUDText = !Globals.renderHUDText;
 				}
+				/* Toggle noClip of player via the F4 Key */
 				if (Keyboard.isKeyDown(Keyboard.KEY_F4)) {
-					if (Globals.noClip)
-						Globals.PLAYER_SPEED -= 15f;
-					else
-						Globals.PLAYER_SPEED += 15f;
 					Globals.noClip = !Globals.noClip;
 				}
-				// KEY_F5 toggles textColor between Black and White
+				/* Toggle text colour via the F5 key (Black or White) */
 				if (Keyboard.isKeyDown(Keyboard.KEY_F5)) {
 					if (Globals.textColor == Color.white) {
 						Globals.textColor = Color.black;
@@ -130,14 +132,17 @@ public class World extends Screen {
 						Globals.textColor = Color.white;
 					}
 				}
+				/* Toggle the rendering of the Fog via the F8 Key */
 				if (Keyboard.isKeyDown(Keyboard.KEY_F8)) {
 					Globals.fogEnabled = !Globals.fogEnabled;
 				}
+				/* Get Keyboard Interactions */ 
 				getInteractionKeys();
 
 			}
 
 		}
+		/* Get Mouse Interactions */
 		getInteractionMouse();
 
 	}
@@ -145,7 +150,7 @@ public class World extends Screen {
 	private void getInteractionKeys() {
 
 		boolean cycleBlockType = Keyboard.isKeyDown(Keyboard.KEY_1);
-
+		/* Cycle through blocks to add */
 		if (cycleBlockType) {
 			if (Globals.blockToAddType < 8)
 				Globals.blockToAddType++;
@@ -158,12 +163,15 @@ public class World extends Screen {
 
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
-				boolean clickBlockDelete = Mouse.isButtonDown(0); // to remove
-																	// block
-				boolean clickBlockAdd = Mouse.isButtonDown(1); // to add block
+				/* To remove block */
+				boolean clickBlockDelete = Mouse.isButtonDown(0);
+				/* To add block */
+				boolean clickBlockAdd = Mouse.isButtonDown(1);
+				
 				if (clickBlockAdd && !clickBlockDelete) {
 					Mouse.setGrabbed(true);
 					if (Globals.blockToAdd != null) {
+						/* Place the new block */
 						ChunkManager.changeBlock(Globals.blockToAdd, Globals.blockToAddType);
 					}
 
@@ -171,6 +179,7 @@ public class World extends Screen {
 				if (!clickBlockAdd && clickBlockDelete) {
 					Mouse.setGrabbed(true);
 					if (Globals.selectedBlock != null)
+						/* Remove the selected block */
 						ChunkManager.changeBlock(Globals.selectedBlock, Block.Air.getId());
 				}
 
@@ -180,21 +189,16 @@ public class World extends Screen {
 
 	@Override
 	public void worldRender() {
-		ready3D(); // Setup 3D matrix rendering environment
-		gameLogic(); // Perform any logisitical changes
+		/* Setup 3D matrix rendering environment */
+		ready3D();
+		/* Perform any logisitical changes */
+		gameLogic();
+		/* Perform 3D renderings */
 		render3D();
-		// renderSkyBox();
-
-		glLoadIdentity(); // Reset 3D rendering matrix environment
-
-		/*
-		 * if (renderText) { ready2D(); // Setup 2D matrix rendering environment
-		 * HUD.renderHUD(); //Render ALL Heads Up Display Elements }
-		 */
-
-		// ready2D(); // Setup 2D matrix rendering environment
-		HUD.renderHUD(); // Render ALL Heads Up Display Elements
-
+		/* Reset 3D rendering matrix environment */
+		glLoadIdentity();
+		/* Render Heads Up Display (HUD) elements */
+		HUD.renderHUD();
 	}
 
 	public static void ready2D() {
@@ -209,10 +213,12 @@ public class World extends Screen {
 	}
 
 	private void gameLogic() {
+		/* Perform worldmanager logic */
 		worldManager.logic();
 	}
 
 	public void ready3D() {
+		/* if fogEnabled is true, enable fog rendering, else, disable */
 		if (Globals.fogEnabled) {
 			glEnable(GL_FOG);
 		} else {
@@ -230,9 +236,12 @@ public class World extends Screen {
 	}
 
 	private void render3D() {
-		worldManager.mapRender(); // Render world (interactable map)
+		/* Render world (interactable map) */
+		worldManager.mapRender();
+		/* Setup rendering environment for relative to player conditions */
 		readyPlayerRelative3D();
-		renderSkyBox(); // Render Skybox (outside of world, non-interactible)
+		/* Render Skybox (outside of world, non-interactible) */
+		renderSkyBox();
 
 	}
 
@@ -249,7 +258,7 @@ public class World extends Screen {
 	}
 
 	public void renderSkyBox() {
-
+		/* Render the skybox */
 		Skybox.skyRender();
 	}
 
@@ -262,10 +271,11 @@ public class World extends Screen {
 }
 
 class SavePool implements Runnable {
-
+	/* Allow the object to store the chunk */
 	private Chunk data;
 	private String id;
-
+	
+    /* Set the passed chunk as the Object's chunk */
 	public SavePool(Chunk data, String id) {
 		this.id = id;
 		this.data = data;
@@ -273,12 +283,14 @@ class SavePool implements Runnable {
 
 	public void run() {
 		try {
-			// Save edited File (delete, save new)
-			// Files.delete(path);
+			/* Get chunk's world (X, Y) */
 			Vector2f pos = data.pos;
+			/* Set file path */
 			String path = ChunkManager.filePath((int) pos.getX(), (int) pos.getY());
 			File dir = new File(path);
+			/* Remove the file */
 			dir.delete();
+			/* Save chunk with modifications */
 			ChunkManager.saveChunk(pos.getX(), pos.getY(), data.blocks);
 		} catch (Exception e) {
 		}

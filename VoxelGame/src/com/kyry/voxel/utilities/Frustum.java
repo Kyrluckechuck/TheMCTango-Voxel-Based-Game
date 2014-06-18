@@ -6,6 +6,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 public class Frustum {
+	/* Most of the Frustum check is based off of a predefined famous Frustum check algorithm 
+	 * which is freely available on the public domain*/
 	public float[][] m_Frustum = new float[6][4];
 	public static final int RIGHT = 0;
 	public static final int LEFT = 1;

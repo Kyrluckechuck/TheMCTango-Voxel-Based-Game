@@ -21,7 +21,6 @@ import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.WorldManager;
 import com.kyry.voxel.world.chunks.ChunkManager;
 import com.kyry.voxel.world.physics.CollisionLibrary;
-//import com.kyry.voxel.world.physics.PhysicsWorld;
 
 public class Camera extends Entity {
 
@@ -65,7 +64,6 @@ public class Camera extends Entity {
 		} else if (getPitch() - dy > maxU) {
 			setPitch(maxU);
 		}
-		// System.out.println(PhysicsWorld.checkCollision());
 	}
 
 	public void updateKeyboard(float deltaTime, float speed) {
@@ -82,38 +80,47 @@ public class Camera extends Entity {
 		Vector3f someOtherPosition = new Vector3f(camera.getX(), camera.getY() - playerHeight, camera.getZ());
 		WorldManager.playerSphereUpper.update(somePosition);
 		WorldManager.playerSphereLower.update(someOtherPosition);
-
+		/* If forward and right */
 		if (keyForward && keyRight && !keyLeft && !keyBackward) {// NE
 			playerMove(deltaDis, 0, -deltaDis);
 		}
+		/* If forward and left */
 		if (keyForward && keyLeft && !keyRight && !keyBackward) {// NW
 			playerMove(-deltaDis, 0, -deltaDis);
 		}
+		/* If just forward */
 		if (keyForward && !keyLeft && !keyRight && !keyBackward) {// N
 			playerMove(0, 0, -deltaDis);
 		}
+		/* If backward and left */
 		if (keyBackward && keyLeft && !keyRight && !keyForward) {// SW
 			playerMove(-deltaDis, 0, deltaDis);
 		}
+		/* If backward and right */
 		if (keyBackward && keyRight && !keyLeft && !keyForward) {// SE
 			playerMove(deltaDis, 0, deltaDis);
 		}
+		/* If just backward */
 		if (keyBackward && !keyForward && !keyLeft && !keyRight) {// S
 			playerMove(0, 0, deltaDis);
 		}
+		/* If just left */
 		if (keyLeft && !keyRight && !keyForward && !keyBackward) {// W
 			playerMove(-deltaDis, 0, 0);
 		}
+		/* If just right */
 		if (keyRight && !keyLeft && !keyForward && !keyBackward) {// E
 			playerMove(deltaDis, 0, 0);
 		}
-		if (keyUp && !keyDown) {// JUMP
-			// made into a method cause its more complex and dont want clutter
+		/* If just up */
+		if (keyUp && !keyDown) {// JUMP (Space)
 			jump(deltaDis);
 		}
-		if (keyDown && !keyUp) {// DOWN
+		/* If just down */
+		if (keyDown && !keyUp) {// DOWN (Shift)
 			playerMove(0, deltaDis, 0);
 		}
+		/* If noClip is disabled, enable gravity */
 		if (!Globals.noClip)
 			gravity();
 	}
@@ -123,16 +130,16 @@ public class Camera extends Entity {
 	}
 
 	private void jump(float deltaDis) {
+		/* If player can jump then jump */
 		if (Globals.jumpEnabled) {
-			// if player can jump, then freaking jump already
 			playerMove(0, -deltaDis * Globals.jumpPower, 0);
 			Globals.jumpCounter = 0;
 		} else if (!Globals.jumpEnabled && Globals.jumpCounter < Globals.jumpFrames) {
 			playerMove(0, -deltaDis * Globals.jumpPower, 0);
 			Globals.jumpCounter++;
 		}
+		/* If noClip is enabled, disable jumping */
 		if (!Globals.noClip) {
-			// only disable jump if not noclip
 			Globals.jumpEnabled = false;
 		} else {
 			Globals.jumpEnabled = true;
@@ -140,14 +147,14 @@ public class Camera extends Entity {
 	}
 
 	public void playerMove(float dX, float dY, float dZ) {
-		// Move Camera
+		/* Move Camera */
 		Vector3f someOldPositionUpper = new Vector3f(getX(), getY(), getZ());
 		Vector3f someOldPositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());
-
+		/* If noClip enabled, do special move */
 		if (Globals.noClip) {
-			// Globals.jumpEnabled = true;//not proper
 			noClipMove(dX * Globals.PLAYER_SPEED, dY * Globals.PLAYER_SPEED, dZ * Globals.PLAYER_SPEED);
-		} else if (!Globals.noClip) {// move normally
+		} else if (!Globals.noClip) {
+			/*Do normal moving */
 			float origX = getX();
 			float origY = getY();
 			float origZ = getZ();
@@ -155,15 +162,14 @@ public class Camera extends Entity {
 			float newX = (float) (getX() - (dX * (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ * Math.sin(Math.toRadians(getYaw()))));
 			float newY = (float) (getY() - dY);
 			float newZ = (float) (getZ() + (dX * (float) Math.cos(Math.toRadians(getYaw() - 90)) + dZ * Math.cos(Math.toRadians(getYaw()))));
-			// Move to next possible position
-			// boolean moveAllowed = tryMove(newX, newY, newZ);
-
-			if (!tryMove(newX, newY, newZ)) {// try X + Y + Z movement
-				if (!tryMove(newX, newY, origZ)) { // if not allowed try just X
-													// + Y movement
-					if (!tryMove(origX, newY, newZ)) { // if not allowed try
-														// just Z + Y movement
-						// if not allowed revert to original position
+			/* Move to next possible position */
+			/* Try X + Y + Z movement */
+			if (!tryMove(newX, newY, newZ)) {
+				/* If not allowed try just X + Y movement */
+				if (!tryMove(newX, newY, origZ)) {
+					/*  If not allowed try just Z + Y movement */
+					if (!tryMove(origX, newY, newZ)) {
+						/* If not allowed revert to original position */
 						setX(origX);
 						setY(origY);
 						setZ(origZ);
@@ -174,30 +180,6 @@ public class Camera extends Entity {
 
 				System.out.println("Collision!  - STAHPED MOVING");
 			}
-			// end new working code /|\ \|/ old dead code
-			/*
-			 * // Check if it collides boolean moveAllowed = true; Vector3f
-			 * playerPos = Player.camera.getPos(); for (int x = (int)
-			 * playerPos.getX() - 1; x <= (int) playerPos.getX() + 1; x++) { for
-			 * (int y = (int) playerPos.getY() - 1; y <= (int) playerPos.getY()
-			 * + 1; y++) { for (int z = (int) playerPos.getZ() - 1; z <= (int)
-			 * playerPos.getZ() + 1; z++) { String key =
-			 * ChunkManager.key(ChunkManager.blockToChunk(x, y, z)); AABB grr =
-			 * CollisionLibrary.BlockMap.get(key); // System.out.println(grr);
-			 * if
-			 * ((CollisionLibrary.testCircleAABB(WorldManager.playerSphereUpper,
-			 * grr)) ||
-			 * (CollisionLibrary.testCircleAABB(WorldManager.playerSphereLower,
-			 * grr))) { moveAllowed = false; break; // System.out.println(x); }
-			 * } }
-			 * 
-			 * } // if it does collide then revert to original position if
-			 * (!moveAllowed) { setX(origX); setY(origY); setZ(origZ);
-			 * WorldManager.playerSphereUpper.update(someOldPositionUpper);
-			 * WorldManager.playerSphereLower.update(someOldPositionLower);
-			 * System.out.println("Collision!  - STAHPED MOVING"); }
-			 */
-
 		}// End check if no clip
 	}
 
@@ -205,20 +187,19 @@ public class Camera extends Entity {
 		setX(newX);
 		setY(newY);
 		setZ(newZ);
-		// Move Player's Invisible Collision object
+		/* Move Player's Invisible Collision object */
 		Vector3f somePositionUpper = new Vector3f(getX(), getY(), getZ());
 		Vector3f somePositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());
 		WorldManager.playerSphereUpper.update(somePositionUpper);
 		WorldManager.playerSphereLower.update(somePositionLower);
-		// begin new working code \|/
 		boolean moveAllowed = true;
+		/* Cycle through possible collision blocks */
 		Iterator<Entry<String, AABB>> iterator = CollisionLibrary.BlockMap.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, AABB> entry = iterator.next();
 			if ((CollisionLibrary.testSphereAABB(WorldManager.playerSphereUpper, entry.getValue())) || (CollisionLibrary.testSphereAABB(WorldManager.playerSphereLower, entry.getValue()))) {
 				moveAllowed = false;
 				break;
-				// System.out.println(x);
 			}
 		}
 		return moveAllowed;
@@ -229,7 +210,7 @@ public class Camera extends Entity {
 
 		setX((float) (getX() - (dX * (float) Math.sin(Math.toRadians(getYaw() - 90)) + dZ * Math.sin(Math.toRadians(getYaw())))));
 		setY((float) (getY() + (dY * (float) Math.sin(Math.toRadians(getPitch() - 90)) + dZ * Math.sin(Math.toRadians(getPitch())))));
-		// Move Player
+		/* Move Player */
 		Vector3f somePositionUpper = new Vector3f(getX(), getY(), getZ());
 		Vector3f somePositionLower = new Vector3f(getX(), getY() - playerHeight, getZ());
 		WorldManager.playerSphereUpper.update(somePositionUpper);
@@ -238,7 +219,7 @@ public class Camera extends Entity {
 
 	private void gravity() {
 		float origY = getY();
-		// change in the y direction,by changing the speed
+		/* Change in the Y position, by changing the speed */
 		float dY = (1 / Globals.FPS) * (Globals.playerSpeed.getY() - Globals.gravity);
 
 		if (Globals.playerSpeed.getY() >= Globals.maxSpeed) {
@@ -255,10 +236,10 @@ public class Camera extends Entity {
 			if ((CollisionLibrary.testSphereAABB(WorldManager.playerSphereUpper, entry.getValue())) || (CollisionLibrary.testSphereAABB(WorldManager.playerSphereLower, entry.getValue()))) {
 				moveAllowed = false;
 				break;
-				// System.out.println(x);
 			}
 		}
-		if (!moveAllowed) {// if not allowed revert to original
+		/* If not allowed revert to original */
+		if (!moveAllowed) {
 			setY(origY);
 			WorldManager.playerSphereUpper.update(new Vector3f(getX(), getY(), getZ()));
 			WorldManager.playerSphereLower.update(new Vector3f(getX(), getY() - playerHeight, getZ()));
@@ -278,21 +259,20 @@ public class Camera extends Entity {
 
 	public void applyPhysics() {
 		Vector3f diffPos = new Vector3f((getX() - Globals.playerPrevPos.x), (getY() - Globals.playerPrevPos.y), (getZ() - Globals.playerPrevPos.z));
-		diffPos.scale(Globals.FPS);// scale it. delta Pos / time
+		/* scale it. delta Pos / time */
+		diffPos.scale(Globals.FPS);
 		Globals.playerSpeed = diffPos;
-
-		// Current are now the previous value for the next iteration
+		/* Current are now the previous value for the next iteration */
 		Globals.playerPrevPos = new Vector3f(getX(), getY(), getZ());
 	}
 
+	/* Basically see if ray collides within given range, if so, give block and possible face to place new block */
 	public void castRay() {
 		int x, y, z = 0;
 		defineRay();
-		// make it a unit vector
+		/* Make it a unit vector */
 		Globals.ray = (Vector3f) Globals.ray.scale((float) Math.pow(Globals.ray.length(), -1));
-		// System.out.println(Globals.ray.x); //Just had to comment this out
-		// for my own debugging purposes
-		// Pick correct block
+		/* Pick correct block */
 
 		for (int i = 0; i < (Globals.rayDistance * 4); i++) {
 			x = (int) (getX() + (Globals.ray.x * i * 0.25));
@@ -311,18 +291,13 @@ public class Camera extends Entity {
 			int internY = y;
 			int internZ = z - (chunkZ * Globals.CHUNKSIZE);
 			try {
-				if ((y < Globals.WORLDHEIGHT) && y >= 1) {// within bounds
-
-					// System.out.println("(" + chunkX + ", " + chunkZ + ")" +
-					// "blocks X:" + internX + " Y:" + internY + " Z:" +
-					// internZ);
+				/* Make sure it's within bounds */
+				if ((y < Globals.WORLDHEIGHT) && y >= 1) {
+					/* Make sure it's not air */
 					if (ChunkManager.loadedChunks.get(ChunkManager.key(chunkX, chunkZ)).blocks[internX][internY][internZ] > 0) {
-						// is not air
+						
 						Globals.selectedBlock = new Vector3f(x, y, z);
-						// System.out.println("picked a block! " +
-						// ChunkManager.blockToAdd.x
-						// + " " + ChunkManager.blockToAdd.y + " " +
-						// ChunkManager.blockToAdd.z );
+
 						for (int q = 1; q < 500; q++) {
 							float takeDist = (float) (q * 0.001);
 							int faceX = (int) (getX() + (Globals.ray.x * (i * 0.25 - takeDist)));
@@ -343,9 +318,6 @@ public class Camera extends Entity {
 							faceX = faceX - faceChunkX * Globals.CHUNKSIZE;
 							faceZ = faceZ - faceChunkZ * Globals.CHUNKSIZE;
 
-							// System.out.println("(" + faceChunkX + ", " +
-							// faceChunkZ + ")" + "blocks X:" + faceX + " Y:" +
-							// faceY + " Z:" + faceZ);
 							if ((ChunkManager.loadedChunks.get(ChunkManager.key(faceChunkX, faceChunkZ)).blocks[faceX][faceY][faceZ] == 0)
 									&& (new Vector3f((int) WorldManager.playerSphereLower.getX(), (int) WorldManager.playerSphereLower.getY(), (int) WorldManager.playerSphereLower.getZ()) != new Vector3f((int) x, (int) y, (int) z))
 									&& (new Vector3f((int) WorldManager.playerSphereUpper.getX(), (int) WorldManager.playerSphereUpper.getY(), (int) WorldManager.playerSphereUpper.getZ()) != new Vector3f((int) x, (int) y, (int) z))) {

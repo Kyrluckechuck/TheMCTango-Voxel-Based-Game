@@ -26,7 +26,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 
 public class Texture {
-	
+	/* Definitions */
 	public int id, width, height;
 	
 	private Texture(int id, int width, int height) {
@@ -36,7 +36,9 @@ public class Texture {
 	}
 	
 	public static Texture loadTexture(String location) {
+		/* Defines a base image */
 		BufferedImage image = null;
+		/* Attempts to read the image in */
 		try {
 			image = ImageIO.read(Texture.class.getClassLoader().getResourceAsStream(location));
 		} catch (IOException e) {
@@ -61,13 +63,15 @@ public class Texture {
 		buffer.flip();
 		
 		int id = glGenTextures();
+		/* Bind the texture */
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-		
+		/* Return the texture */
 		return new Texture(id, image.getWidth(), image.getHeight());
 	}
 	
 	public void bind() {
+		/* OpenGL Bind Procedure */
 		glEnable(GL_TEXTURE_2D);
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
