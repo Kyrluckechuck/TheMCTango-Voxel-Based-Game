@@ -224,6 +224,8 @@ public class Camera extends Entity {
 
 		if (Globals.playerSpeed.getY() >= Globals.maxSpeed) {
 			dY = (1 / Globals.FPS) * (Globals.maxSpeed - Globals.gravity);
+		} else if(Globals.playerSpeed.getY() <= (-1*Globals.maxSpeed)) {
+				dY = (1 / Globals.FPS) * ((-1*Globals.maxSpeed) - Globals.gravity);
 		}
 		setY((getY() + dY));
 

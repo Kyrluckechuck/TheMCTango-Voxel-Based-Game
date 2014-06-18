@@ -6,7 +6,7 @@ import com.kyry.voxel.world.entities.Camera;
 import com.kyry.voxel.world.entities.Entity;
 
 public class Mob extends Entity implements GameObject{
-
+	/* Definitions */
 	private int mobID;
 	private boolean isDead;
 
@@ -22,10 +22,10 @@ public class Mob extends Entity implements GameObject{
 	@Override
 	public void update() {
 	}
-
+	/* Move the mob */
 	public void mobMove() {
 		getCamera().updateMouse();
-		getCamera().updateKeyboard((float)(1/Globals.FPS), 2f);
+		getCamera().updateKeyboard((float)(1/Globals.FPS), 4f);
 		setPos(getCamera().getX(), getCamera().getY(), getCamera().getZ());
 		setRot(getCamera().getPitch(), getCamera().getYaw(), getCamera().getRoll());
 	}
@@ -37,19 +37,19 @@ public class Mob extends Entity implements GameObject{
 	@Override
 	public void mobDispose() {
 	}
-	
+	/* Get mob ID */
 	public int getID() {
 		return mobID;
 	}
-	
+	/* Set what type of mob it is */
 	public void set(int mobID) {
 		this.mobID = mobID;
 	}
-	
+	/* Check if the mob is dead */
 	public boolean isDead() {
 		return isDead;
 	}
-	
+	/* Kill/Resurrect the mob */
 	public void setDead(boolean isDead) {
 		this.isDead = isDead;
 	}

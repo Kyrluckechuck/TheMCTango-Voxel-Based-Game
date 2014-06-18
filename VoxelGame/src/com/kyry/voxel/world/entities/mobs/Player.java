@@ -17,11 +17,11 @@ public class Player extends Mob {
 		WorldManager.playerSphereUpper.update(somePosition);
 		WorldManager.playerSphereLower.update(someOtherPosition);
 	}
-
+	/* Update mob logic */
 	public void update() {
 		mobMove();
 	}
-
+	/* For testing purposes */
 	public void mobRender() {
 //		GL11.glBegin(GL11.GL_QUADS);
 //		Vector3f playerPos= PhysicsWorld.playerBody.getWorldTransform(PhysicsWorld.DEFAULT_TRANSFORM).origin;
@@ -29,7 +29,6 @@ public class Player extends Mob {
 //				Block.getTile(Block.Void.getId()).getColor(),
 //				Block.getTile(Block.Void.getId()).getTexCoords(), 0.01f);
 //		GL11.glEnd();
-		//System.out.println("HEYY!");
 	}
 
 	public void mobDispose() {

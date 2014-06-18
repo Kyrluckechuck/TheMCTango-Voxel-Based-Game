@@ -187,7 +187,7 @@ public class ChunkManager {
 	/* Remove blocks rendered in that chunk from the physics environment */
 	public static void removeChunkFromPhys(int x, int z) {
 		String key = key(x, z);
-		System.out.println("Chunk (" + x + ", " + z + ") removed from PhysWorld");
+		try {
 		ArrayList<String> temp = activeChunks.get(key).getRenderedBlocks();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
@@ -199,7 +199,10 @@ public class ChunkManager {
 			CollisionLibrary.removeBlock(x, z, i, o, u);
 			Globals.PhysBlocksLoaded--;
 		}
-
+		System.out.println("Chunk (" + x + ", " + z + ") removed from PhysWorld");
+		} catch (NullPointerException e){
+			System.out.println("Chunk (" + x + ", " + z + ") failed to remove");
+		}
 	}
 	/*Add chunk from memory to chunks needing to be rendered */
 	public static void loadChunkToActive(int chunkX, int chunkZ) {

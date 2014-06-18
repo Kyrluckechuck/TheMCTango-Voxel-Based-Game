@@ -10,13 +10,13 @@ import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.chunks.ChunkManager;
 
 public class CollisionLibrary {
-	// public static ArrayList<AABB> BlockList = new ArrayList<AABB>();
+	/* Definitions */
 	public static HashMap<String, AABB> BlockMap = new HashMap<String, AABB>();
-
+	/* Create new block with default size */
 	public static void newBlock(float f, float h, float x, float y, float z) {
 		newBlock(f, h, x, y, z, 1);
 	}
-
+	/* Create new block with specified size */
 	public static void newBlock(float chunkX, float chunkZ, float x, float y, float z, float r) {
 		String key = ChunkManager.key((int) (chunkX*Globals.CHUNKSIZE + x), (int) y, (int) (chunkZ*Globals.CHUNKSIZE + z));
 		// BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
@@ -24,7 +24,7 @@ public class CollisionLibrary {
 		Globals.PhysBlocksLoaded++;
 
 	}
-
+	/* Check if the block exists */
 	public static boolean hasBlock(float chunkX, float chunkZ, float x, float y, float z) {
 		String key = ChunkManager.key((int) (chunkX*Globals.CHUNKSIZE + x), (int) y, (int) (chunkZ*Globals.CHUNKSIZE + z));
 		// BlockList.add(new AABB(chunkX, chunkY, chunkZ, x, y, z, r));
@@ -34,23 +34,16 @@ public class CollisionLibrary {
 			return false;
 		}
 	}
-
+	/* Remove block based on internal block (X, Y, Z) and chunk (X, Z) coordinates*/
 	public static void removeBlock(int chunkX, int chunkZ, int x, int y, int z) {
 		removeBlock((int) (chunkX*Globals.CHUNKSIZE + x), y, (int) (chunkZ*Globals.CHUNKSIZE + z));
 	}
-
+	/* Remove block based on world block (X, Y, Z) coordinates*/
 	private static void removeBlock(int x, int y, int z) {
 		String key = ChunkManager.key(x, y, z);
-		/*
-		 * Iterator<Entry<String, AABB>> iterator =
-		 * BlockMap.entrySet().iterator(); while (iterator.hasNext()){
-		 * Entry<String, AABB> entry = iterator.next();
-		 * if(key.equals(entry.getKey())){ iterator.remove();//remove the object
-		 * } }
-		 */
 		BlockMap.remove(key);
 	}
-
+	/* Test for AABB-> AABB collision */
 	public static boolean testAABBAABB(final AABB box1, final AABB box2) {
 		if (Math.abs(box1.center.x - box2.center.x) > (box1.r[0] + box2.r[0]))
 			return false;
@@ -60,23 +53,22 @@ public class CollisionLibrary {
 			return false;
 		return true;
 	}
-
+	/* Test sphere -> sphere collision */
 	public static boolean testCircleCircle(final Sphere c1, final Sphere c2) {
 		Vector3f dest = new Vector3f(0, 0, 0);
 		Vector3f.sub(c1.center, c2.center, dest);
 		final float distSQ = dest.x * dest.x + dest.y * dest.y + dest.z * dest.z;
-		// final float distSQ = c1.center.distSQ(c2.center);
 		final float radiusSum = c1.radius + c2.radius;
 
 		return distSQ <= radiusSum * radiusSum;
 	}
-
+	/* Test distance of AABB*/
 	public static float sqDistPointAABB(final Vector3f p, final AABB aabb) {
 		float sqDist = 0.0f;
 		float v;
 		float minX, minY, minZ, maxX, maxY, maxZ;
 
-		// get the minX, maxX, minY, maxY and minZ, maxZ points of the AABB
+		/* Get the minX, maxX, minY, maxY and minZ, maxZ points of the AABB */
 		minX = aabb.center.x - aabb.r[0];
 		maxX = aabb.center.x + aabb.r[0];
 
@@ -86,7 +78,7 @@ public class CollisionLibrary {
 		minZ = aabb.center.z - aabb.r[2];
 		maxZ = aabb.center.z + aabb.r[2];
 
-		// test the bounds against the points X axis
+		/* Test the bounds against the points X axis */
 		v = p.x;
 
 		if (v < minX)
@@ -94,7 +86,7 @@ public class CollisionLibrary {
 		if (v > maxX)
 			sqDist += (v - maxX) * (v - maxX);
 
-		// test the bounds against the points Y axis
+		/* Test the bounds against the points Y axis */
 		v = p.y;
 
 		if (v < minY)
@@ -102,7 +94,7 @@ public class CollisionLibrary {
 		if (v > maxY)
 			sqDist += (v - maxY) * (v - maxY);
 
-		// test the bounds against the points Z axis
+		/* Test the bounds against the points Z axis */
 		v = p.z;
 
 		if (v < minZ)
@@ -112,9 +104,9 @@ public class CollisionLibrary {
 
 		return sqDist;
 	}
-
+	/* Test sphere -> AABB collision */
 	public static boolean testSphereAABB(final Sphere sphere, final AABB cube) {
-		// get the squared distance between circle center and the AABB
+		/* Get the squared distance between circle center and the AABB */
 		float sqDist = sqDistPointAABB(sphere.center, cube);
 		float r = sphere.radius;
 
