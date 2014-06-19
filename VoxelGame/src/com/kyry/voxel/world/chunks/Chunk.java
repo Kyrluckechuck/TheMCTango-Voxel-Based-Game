@@ -11,6 +11,8 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glNewList;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -18,6 +20,7 @@ import org.lwjgl.util.vector.Vector2f;
 import com.kyry.voxel.geometry.Shape;
 import com.kyry.voxel.utilities.Globals;
 import com.kyry.voxel.world.blocks.Block;
+import com.kyry.voxel.world.entities.mobs.Player;
 //import com.kyry.voxel.world.physics.PhysicsWorld;
 import com.nishu.utils.ShaderProgram;
 
@@ -28,10 +31,9 @@ public class Chunk {
 
 	public int vcID, sizeX, sizeY, sizeZ, worldX, worldZ, internX, internY, internZ;
 	public boolean isActive;
-
 	public Random rand;
 	public byte[][][] blocks;
-	public ArrayList<String> temp = new ArrayList<String>();
+	public List<String> temp = new LinkedList<String>();
 
 	public Chunk(ShaderProgram shader, int x, int z) {
 		this(shader, new Vector2f(x, z), ChunkManager.loadChunkToMem(x, z).blocks);
@@ -96,13 +98,19 @@ public class Chunk {
 	}
 
 	public void rebuild() {
-		temp = new ArrayList<String>();
+		temp = new LinkedList<String>();
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				for (int z = 0; z < sizeZ; z++) {
-					if ((y > -1) && (blocks[x][y][z] != 0 && !checkTileNotInView(x, y, z))) {
-						/* In short, build a list of things needed to be rendered */
-						temp.add(ChunkManager.key(x, y, z));
+					if ((y > -1) && (blocks[x][y][z] != 0 && !checkTileVisibility(x, y, z))) {
+						/*
+						 * In short, build a list of things needed to be
+						 * rendered
+						 */
+						if (((x + worldX) >= Globals.playerPos.getX() - 15) || ((x + worldX) <= Globals.playerPos.getX() + 15))
+							if (((z + worldZ) >= Globals.playerPos.getZ() - 15) || ((z + worldZ) <= Globals.playerPos.getZ() + 15))
+								if ((y >= Globals.playerPos.getY() - 15) || (y <= Globals.playerPos.getY() + 15))
+									temp.add(ChunkManager.key(x, y, z));
 					}
 				}
 			}
@@ -126,7 +134,7 @@ public class Chunk {
 
 	}
 
-	private boolean checkTileNotInView(int x, int y, int z) {
+	private boolean checkTileVisibility(int x, int y, int z) {
 		boolean facesHidden[] = new boolean[6];
 		/*
 		 * for(int q = 0; q < 6; q++){ if (y==14){ facesHidden[q] = false; }
@@ -232,6 +240,7 @@ public class Chunk {
 		} else {
 			facesHidden[5] = false;
 		}
+
 		return facesHidden[0] && facesHidden[1] && facesHidden[2] && facesHidden[3] && facesHidden[4] && facesHidden[5];
 	}
 
@@ -271,7 +280,7 @@ public class Chunk {
 	// public int getType() {
 	// return type;
 	// }
-	public ArrayList<String> getRenderedBlocks() {
+	public List<String> getRenderedBlocks() {
 		return temp;
 	}
 

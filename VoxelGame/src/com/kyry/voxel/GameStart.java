@@ -21,6 +21,7 @@ import java.io.File;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -106,6 +107,16 @@ public class GameStart extends Screen {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			dispose();
 		}
+/*		if (Keyboard.isKeyDown(Keyboard.KEY_F10)) {
+			Globals.fullscreen = !Globals.fullscreen;
+			Window.dispose();
+			try {
+				Display.setFullscreen(Globals.fullscreen);
+				Window.createWindow(Globals.WIDTH, Globals.HEIGHT, "VoxelGame", true);
+				} catch (LWJGLException e) {
+				e.printStackTrace();
+			}
+		}*/
 		/* Set the global FPS based on the gameLoop's FPS */
 		if (gameLoop.getFPS() > 1) {
 			Globals.FPS = gameLoop.getFPS();
@@ -143,8 +154,8 @@ public class GameStart extends Screen {
  * Start the game by calling the constructor
  * */
 	public static void main(String[] args) {
-		Window.createWindow(Globals.WIDTH, Globals.HEIGHT, "Voxels", true);
 		Display.setVSyncEnabled(true);
+		Window.createWindow(Globals.WIDTH, Globals.HEIGHT, "VoxelGame", true);
 		System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
 //		Queue<Chunk> toRemove = new ConcurrentLinkedQueue<Chunk>();
 //		Queue<Chunk> toAdd = new ConcurrentLinkedQueue<Chunk>();

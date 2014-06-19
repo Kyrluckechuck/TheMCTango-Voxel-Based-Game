@@ -5,6 +5,8 @@ import static org.lwjgl.opengl.GL11.glDeleteLists;
 import static org.lwjgl.opengl.GL11.glGenLists;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.kyry.voxel.utilities.GameObject;
 import com.kyry.voxel.utilities.Globals;
@@ -12,7 +14,7 @@ import com.kyry.voxel.world.entities.Camera;
 
 public class MobManager implements GameObject {
 	/* Definitions */
-	private ArrayList<Mob> mobs;
+	private List<Mob> mobs;
 	public Player player;
 
 	private int mobRenderID;
@@ -23,7 +25,7 @@ public class MobManager implements GameObject {
 	}
 	
 	private void init() {
-		mobs = new ArrayList<Mob>();
+		mobs = new LinkedList<Mob>();
 		player = new Player(new Camera(Globals.initPos.x, Globals.initPos.y, Globals.initPos.z, 5, 131,
 				0, 1, 90, -90, 1), 0);
 	}

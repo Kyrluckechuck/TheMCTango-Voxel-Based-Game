@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
@@ -166,7 +168,7 @@ public class ChunkManager {
 	public static void loadChunkToPhys(int x, int z) {
 		String key = key(x, z);
 
-		ArrayList<String> temp = activeChunks.get(key).getRenderedBlocks();
+		List<String> temp = activeChunks.get(key).getRenderedBlocks();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
 
@@ -188,7 +190,7 @@ public class ChunkManager {
 	public static void removeChunkFromPhys(int x, int z) {
 		String key = key(x, z);
 		try {
-		ArrayList<String> temp = activeChunks.get(key).getRenderedBlocks();
+		List<String> temp = activeChunks.get(key).getRenderedBlocks();
 		int i, o, u;
 		for (int q = 0; q < temp.size(); q++) {
 
@@ -317,7 +319,7 @@ public class ChunkManager {
 		// Basically will check if chunk is in the "bufferzone" if not then
 		// load, chunk, if not then delete
 		// DELETE
-		ArrayList<String> toRemove = new ArrayList<String>();
+		List<String> toRemove = new LinkedList<String>();
 		Iterator<Entry<String, Chunk>> iterator = activeChunks.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Chunk> entry = iterator.next();

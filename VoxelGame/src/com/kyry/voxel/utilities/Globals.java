@@ -1,6 +1,8 @@
 package com.kyry.voxel.utilities;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -14,6 +16,8 @@ public class Globals {
 	/*Window Height & Width */
 	public static final int WIDTH = 1280; // Window Width
 	public static final int HEIGHT = 720; // Window Height
+	/* Full Screen status (Default false) */
+	public static boolean fullscreen = false;
 	/* Current FPS */
 	public static float FPS = 30;
 	/* Instantiate a new 'Random' object for chunk gen */
@@ -77,7 +81,7 @@ public class Globals {
 	/* How far away the raycasting will check */
 	public static int rayDistance = 5;
 	/* The chunks in queue to be saved */
-	public static ArrayList<String> chunkToSave = new ArrayList<String>();
+	public static List<String> chunkToSave = new LinkedList<String>();
 	/* How many chunks have been loaded */
 	public static int chunksLoaded = 0;
 	/* How many chunks are active */

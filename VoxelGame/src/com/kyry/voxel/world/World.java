@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -88,7 +89,7 @@ public class World extends Screen {
 		input();
 		/* Update */
 		worldManager.update();
-		/*Save any chunks that have been modified to disk */
+		/* Save any chunks that have been modified to disk */
 		saveModifiedChunks();
 
 	}
@@ -136,7 +137,8 @@ public class World extends Screen {
 				if (Keyboard.isKeyDown(Keyboard.KEY_F8)) {
 					Globals.fogEnabled = !Globals.fogEnabled;
 				}
-				/* Get Keyboard Interactions */ 
+
+				/* Get Keyboard Interactions */
 				getInteractionKeys();
 
 			}
@@ -167,7 +169,7 @@ public class World extends Screen {
 				boolean clickBlockDelete = Mouse.isButtonDown(0);
 				/* To add block */
 				boolean clickBlockAdd = Mouse.isButtonDown(1);
-				
+
 				if (clickBlockAdd && !clickBlockDelete) {
 					Mouse.setGrabbed(true);
 					if (Globals.blockToAdd != null) {
@@ -274,8 +276,8 @@ class SavePool implements Runnable {
 	/* Allow the object to store the chunk */
 	private Chunk data;
 	private String id;
-	
-    /* Set the passed chunk as the Object's chunk */
+
+	/* Set the passed chunk as the Object's chunk */
 	public SavePool(Chunk data, String id) {
 		this.id = id;
 		this.data = data;

@@ -5,6 +5,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import com.kyry.voxel.utilities.Globals;
+
 public class Window {
 
 	public static void createWindow(int width, int height, boolean mouseCaptured) {
@@ -21,6 +23,8 @@ public class Window {
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
 			Display.setTitle(title);
+//			Display.setFullscreen(Globals.fullscreen);
+			setDisplayResolution(Globals.WIDTH, Globals.HEIGHT, Globals.fullscreen);
 			Mouse.setGrabbed(mouseCaptured);
 			Display.create();
 		} catch (LWJGLException e) {
